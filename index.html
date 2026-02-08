@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="ja" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>小嶋 明 (Akira Kojima) | Portfolio</title>
+  <meta name="description" content="GitHub作品・制御/シミュレーション・CG/画像処理のポートフォリオ" />
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <style>
+    /* -------------------------------
+       Theme tokens (Dark/Light)
+    -------------------------------- */
+    :root{
+      --bg:#0b0f14;
+      --fg:#e7eef7;
+      --muted:#b9c7d8;
+
+      --card:#131d2a;
+      --border:#2a3b52;
+
+      --nav:#0b0f14;
+      --hero1: rgba(124,196,255,.18);
+      --hero2: rgba(255,124,196,.10);
+
+      --shadow: rgba(0,0,0,.25);
+      --imgbg: rgba(0,0,0,.22);
+
+      --accent: #7cc4ff;
+      --accent2: #9fe1ff;
+    }
+
+    html[data-theme="light"]{
+      --bg:#f7f9fc;
+      --fg:#0b1220;
+      --muted:#4a5a70;
+
+      --card:#ffffff;
+      --border:#d7deea;
+
+      --nav:#ffffff;
+      --hero1: rgba(43,124,255,.10);
+      --hero2: rgba(255,124,196,.08);
+
+      --shadow: rgba(18,28,45,.08);
+      --imgbg: rgba(18,28,45,.04);
+
+      --accent:#0b66c3;
+      --accent2:#0b66c3;
+    }
+
+    /* help browsers */
+    html[data-theme="dark"]{ color-scheme: dark; }
+    html[data-theme="light"]{ color-scheme: light; }
+
+    body{
+      background: var(--bg);
+      color: var(--fg);
+      font-size: 16.5px;
+      line-height: 1.65;
+    }
+
+    /* Typography */
+    .text-muted{ color: var(--muted) !important; }
+    .section-title{
+      letter-spacing: .2px;
+      color: var(--fg);
+      font-weight: 800;
+    }
+    .section-title::before{
+      content:"";
+      display:inline-block;
+      width:10px;height:10px;
+      border-radius:999px;
+      background: color-mix(in srgb, var(--accent) 80%, transparent);
+      margin-right:10px;
+      transform: translateY(-1px);
+    }
+    .card-title, .name-title{ color: var(--fg); }
+
+    /* Layout */
+    .border-subtle{ border-color: var(--border) !important; }
+    .anchor{ scroll-margin-top: 84px; }
+
+    /* Navbar */
+    .navbar{
+      background: var(--nav) !important;
+      border-bottom: 1px solid var(--border) !important;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Hero */
+    .hero{
+      background:
+        radial-gradient(1200px 600px at 10% 0%, var(--hero1), transparent 60%),
+        radial-gradient(1200px 600px at 80% 20%, var(--hero2), transparent 60%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Card */
+    .card{
+      background: var(--card);
+      border-color: var(--border) !important;
+      box-shadow: 0 10px 30px var(--shadow);
+      border-radius: 14px;
+    }
+
+    /* Separator (works well on dark + light) */
+    hr.border-subtle{
+      border: 0 !important;
+      height: 1px;
+      opacity: 1 !important;
+      background: linear-gradient(
+        90deg,
+        rgba(0,0,0,0) 0%,
+        var(--border) 20%,
+        var(--border) 80%,
+        rgba(0,0,0,0) 100%
+      );
+      margin: 28px 0;
+    }
+
+    /* Media: image-heavy, consistent aspect */
+    .media-box{
+      background: color-mix(in srgb, var(--imgbg) 100%, transparent);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .media-hero{
+      /* large showcase */
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--imgbg);
+    }
+    .media-hero img, .media-hero video{
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* keep UI readable */
+      display:block;
+    }
+    .media-grid{
+      display:grid;
+      gap:10px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 992px){
+      .media-grid{ grid-template-columns: 1fr 1fr; }
+    }
+    .media-thumb{
+      aspect-ratio: 16 / 9;
+      overflow:hidden;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--imgbg);
+    }
+    .media-thumb img, .media-thumb video{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;   /* more visual impact */
+      display:block;
+    }
+
+    /* Badges */
+    .badge-img{
+      height: 20px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+      vertical-align: middle;
+    }
+    .tech-list{
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .tech-list li{ margin: 2px 0; }
+
+    /* Buttons */
+    .btn-outline-info{
+      --bs-btn-color: var(--accent2);
+      --bs-btn-border-color: color-mix(in srgb, var(--accent) 65%, transparent);
+      --bs-btn-hover-bg: color-mix(in srgb, var(--accent) 12%, transparent);
+      --bs-btn-hover-border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+      --bs-btn-hover-color: var(--fg);
+      --bs-btn-active-bg: color-mix(in srgb, var(--accent) 18%, transparent);
+      --bs-btn-active-border-color: color-mix(in srgb, var(--accent) 80%, transparent);
+    }
+    .btn-soft{
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--card) 70%, transparent);
+    }
+
+    /* Lightbox */
+    .lightbox-overlay{
+      position:fixed; inset:0; z-index:9999;
+      background:rgba(0,0,0,.85);
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none;
+      transition: opacity .25s ease;
+      cursor:zoom-out;
+      padding:24px;
+    }
+    .lightbox-overlay.active{
+      opacity:1; pointer-events:auto;
+    }
+    .lightbox-overlay img,
+    .lightbox-overlay video{
+      max-width:90vw; max-height:90vh;
+      object-fit:contain;
+      border-radius:8px;
+      box-shadow:0 8px 40px rgba(0,0,0,.5);
+      transform:scale(.92);
+      transition: transform .25s ease;
+    }
+    .lightbox-overlay iframe{
+      width: min(90vw, 960px);
+      aspect-ratio: 16 / 9;
+      border:none;
+      border-radius:8px;
+      box-shadow:0 8px 40px rgba(0,0,0,.5);
+      transform:scale(.92);
+      transition: transform .25s ease;
+    }
+    .lightbox-overlay.active img,
+    .lightbox-overlay.active video,
+    .lightbox-overlay.active iframe{
+      transform:scale(1);
+    }
+    .media-hero img, .media-hero video,
+    .media-thumb img, .media-thumb video{
+      cursor:zoom-in;
+    }
+
+    /* Print (PDF) */
+    @page{
+      margin: 10mm 12mm;
+      size: A4;
+    }
+    @media print{
+      nav, .no-print{ display:none !important; }
+      body{
+        background:#fff !important;
+        color:#000 !important;
+        font-size: 11px !important;
+        line-height: 1.5 !important;
+      }
+      .text-muted{ color:#444 !important; }
+
+      /* ── Bootstrapの2カラムを印刷でも維持 ── */
+      .row{ display:flex !important; flex-wrap:wrap !important; }
+      .col-lg-5{ flex:0 0 auto !important; width:41.6667% !important; }
+      .col-lg-7{ flex:0 0 auto !important; width:58.3333% !important; }
+      .col-lg-6{ flex:0 0 auto !important; width:50% !important; }
+      .col-12.col-lg-6{ flex:0 0 auto !important; width:50% !important; }
+      .g-3{ --bs-gutter-x:0.5rem !important; --bs-gutter-y:0.5rem !important; }
+
+      /* ── カード ── */
+      .card{
+        box-shadow:none !important;
+        border:1px solid #ccc !important;
+        border-radius:8px !important;
+        padding: 6px !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .card .h5, .card .card-title{ font-size:12px !important; }
+      .card p{ font-size:10px !important; margin-bottom:2px !important; }
+      .tech-list{ font-size:9px !important; margin-top:2px !important; padding-left:14px !important; }
+      .tech-list li{ margin:0 !important; }
+
+      /* ── メディア（画像を縮小） ── */
+      .media-box{
+        border:1px solid #ccc !important;
+        background:#fff !important;
+        padding:4px !important;
+      }
+      .media-hero{
+        aspect-ratio:16/9;
+        max-height:160px;
+        border:1px solid #ccc !important;
+        background:#fff !important;
+      }
+      .media-hero img, .media-hero video{ object-fit:contain; }
+      .media-thumb, .media-thumb img{
+        border:1px solid #ccc !important;
+        background:#fff !important;
+      }
+      .media-grid{
+        display:grid !important;
+        grid-template-columns:1fr 1fr !important;
+        gap:4px !important;
+      }
+      .media-thumb{
+        max-height:110px;
+      }
+
+      /* ── バッジ: SVG印刷で二重レンダリングされるため非表示 ── */
+      .badge-img{ display:none !important; }
+
+      /* ── セクション見出し ── */
+      .section-title{
+        font-size:13px !important;
+        margin-bottom:2px !important;
+      }
+      .d-flex.mb-3{ margin-bottom:0.25rem !important; }
+
+      /* ── セクション見出しの孤立・重なり防止 ── */
+      section > .d-flex:first-child{
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+      }
+      section > .row{
+        break-before: avoid !important;
+        page-break-before: avoid !important;
+      }
+      /* ── ボタン類 ── */
+      .btn-video{
+        display:inline-block !important;
+        font-size:10px !important;
+        padding:1px 6px !important;
+        border:1px solid #aaa !important;
+        color:#333 !important;
+        pointer-events:none;
+      }
+      .btn-video[data-nico]::after{
+        content:" (nicovideo.jp/watch/" attr(data-nico) ")" !important;
+        font-size:7px !important;
+        color:#666 !important;
+      }
+      .btn-outline-info{
+        font-size:10px !important;
+        padding:1px 6px !important;
+        border:1px solid #aaa !important;
+        color:#333 !important;
+      }
+
+      /* ── リンク ── */
+      a{ color:#000 !important; text-decoration:none !important; }
+      /* RepoリンクにURL表示 */
+      a.btn-outline-info[href^="https://github.com/kojima8924/"]::after{
+        content:" (" attr(href) ")" !important;
+        font-size:7px !important;
+        color:#666 !important;
+        word-break:break-all;
+      }
+
+      /* ── ヒーローのボタン・Core表示 ── */
+      .hero .btn{ font-size:9px !important; padding:1px 5px !important; }
+      .hero .small, .hero .mt-3.small{ font-size:9px !important; margin-top:2px !important; }
+      .hero .d-flex.gap-2{ gap:0.25rem !important; }
+      .hero .mt-3{ margin-top:0.25rem !important; }
+
+      /* ── 区切り線 ── */
+      hr.border-subtle{
+        background:#ddd !important;
+        border:none !important;
+        height:1px !important;
+        margin:8px 0 !important;
+        overflow:visible !important;
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+      }
+
+      /* ── Hero ── */
+      .hero{
+        border-bottom:none !important;
+        padding-top:0 !important;
+        padding-bottom:0.15rem !important;
+      }
+      .hero.py-5{
+        padding-top:0 !important;
+        padding-bottom:0.15rem !important;
+      }
+      .hero .display-6{ font-size:18px !important; margin-bottom:2px !important; }
+      .hero .lead{ font-size:10px !important; line-height:1.35 !important; margin-bottom:4px !important; }
+
+      /* ── 全体余白の縮小 ── */
+      main.container{ padding-top:0.15rem !important; padding-bottom:0 !important; }
+      .py-2{ padding-top:0.05rem !important; padding-bottom:0.05rem !important; }
+      #contact{ margin-bottom:0 !important; padding-top:0 !important; padding-bottom:0 !important; }
+      #contact .card{ padding:4px 6px !important; }
+      #contact .mt-3{ margin-top:0.25rem !important; }
+
+      /* ── ページ分割の制御 ── */
+      /* sectionレベルではavoidしない（巨大な空白の原因になる） */
+      section{ break-inside: auto; page-break-inside: auto; }
+
+      /* ── 制御セクションの前で改ページ（見出し孤立防止） ── */
+      #github + hr.border-subtle{ display:none !important; }
+      #control{
+        break-before: page !important;
+        page-break-before: always !important;
+      }
+
+      /* ── CG/画像処理の重なり防止 ── */
+      #cg{
+        break-before: page !important;
+        page-break-before: always !important;
+      }
+      #control + hr.border-subtle{ display:none !important; }
+
+      /* ── 印刷時 h-100 無効化（flex高さの計算ズレ防止） ── */
+      .h-100{ height:auto !important; }
+
+      /* ── section-title::before ドットを印刷で非表示 ── */
+      .section-title::before{ display:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Top bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" aria-label="メインナビゲーション">
+    <div class="container">
+      <a class="navbar-brand fw-semibold" href="#">小嶋 明 (Akira Kojima) / Portfolio</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div id="nav" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto gap-lg-2 align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="#github">GitHub</a></li>
+          <li class="nav-item"><a class="nav-link" href="#control">制御/シミュ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#cg">CG/画像処理</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">連絡先</a></li>
+
+          <!-- Theme toggle -->
+          <li class="nav-item ms-lg-2 no-print">
+            <button id="themeToggle" class="btn btn-soft btn-sm text-muted" type="button" aria-label="Toggle theme">
+              🌙 Dark
+            </button>
+          </li>
+
+          <!-- PDF: download + print -->
+          <li class="nav-item ms-lg-2 no-print">
+            <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio.pdf" download>
+              PDF Download
+            </a>
+          </li>
+          <li class="nav-item ms-lg-2 no-print">
+            <button class="btn btn-outline-info btn-sm" type="button" onclick="window.print()">
+              Print to PDF
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero py-5">
+    <div class="container">
+      <div class="row gy-4 align-items-center">
+        <div class="col-12 col-lg">
+          <h1 class="display-6 fw-bold mb-2 name-title">小嶋 明 (Akira Kojima)</h1>
+          <p class="lead text-muted mb-3 fw-semibold">
+            ・2018年に東京大学(理科一類)に入学<br>
+            ・2022年に卒業、東京大学新領域創成科学研究科人間環境学専攻に修士課程で進学<br>
+            ・2024年に修士号取得、同大学同専攻に博士課程で進学<br>
+            ・現在は博士課程の2年生として在籍中<br>
+            <br>
+            研究室では電気インピーダンストモグラフィに基づく触覚センサ(圧力分布センサ)を研究しています。<br>
+            センサの高解像度化に向けて、シミュレーションで生成した訓練データを用いて畳み込みニューラルネットワークを学習させ、限られた計測電位から正確な圧力分布の再構成を試みています。<br>
+            高校時代からプログラミングを趣味としており、競技プログラミングサイトのAtCoderで水色のランクにおり、言語は主にPython/C++を使い、研究ではKeras(機械学習ライブラリ)を用いています。
+          </p>
+
+          <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noreferrer">GitHub: kojima8924</a>
+            <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com">Mail: a.kojima8924@gmail.com</a>
+          </div>
+
+          <div class="mt-3 small text-muted">
+            <span style="font-variant-caps: all-small-caps; letter-spacing:.5px;">Core</span>：
+            Python / C++ / GLSL / ニューラルネットワーク / 画像処理・レンダリング基礎
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container py-4">
+
+    <!-- GitHub -->
+    <section id="github" class="anchor py-2">
+      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 section-title mb-0">GitHub</h2>
+      </div>
+
+      <div class="row g-3">
+        <!-- ChatGPT-Windows -->
+        <div class="col-12">
+          <article class="card p-3">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h3 class="h5 mb-0 card-title">ChatGPT-Windows</h3>
+              <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Windows" target="_blank" rel="noreferrer">Repo</a>
+                <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922374" type="button">Video</button>
+              </div>
+            </div>
+
+            <!-- Align “shown elements” badges with the explanation-badges -->
+            <div class="mt-2">
+              <img class="badge-img" alt="Python"   src="https://img.shields.io/badge/Python-3.10%2B-blue">
+              <img class="badge-img" alt="GUI"      src="https://img.shields.io/badge/GUI-PySide6%20(Qt6)-green">
+              <img class="badge-img" alt="Platform" src="https://img.shields.io/badge/Platform-Windows-lightgrey">
+              <img class="badge-img" alt="License"  src="https://img.shields.io/badge/License-MIT-yellow">
+              <img class="badge-img" alt="Claude"  src="https://img.shields.io/badge/Claude_Code-555?logo=claude">
+            </div>
+
+            <div class="row g-3 mt-1 align-items-start">
+              <div class="col-12 col-lg-5">
+                <p class="text-muted mb-2">
+                  ChatGPT APIを日常的に使うための常駐型デスクトップクライアント。<br>
+                  コピーしたテキストを簡単に翻訳/補完/要約などの処理をできる。<br>
+                  ホットキーで呼び出し、クリップボード連携、レスポンスのストリーミング表示などを実装した。<br>
+                  APIキーはWindows資格情報マネージャーに安全に保存できる。
+                </p>
+
+                <div class="text-muted small">
+                  <strong>Tech</strong>
+                  <ul class="tech-list">
+                    <li>ChatGPT API / Streaming</li>
+                    <li>Global hotkey / Tray app</li>
+                    <li>Clipboard integration</li>
+                    <li>Credential Manager for API key</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="col-12 col-lg-7">
+                <div class="media-box">
+                  <div class="media-hero">
+                    <img src="media/chatgpt-windows.png" alt="ChatGPT-Windows screenshot">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- ChatGPT-Web -->
+        <div class="col-12 col-lg-6">
+          <article class="card p-3 h-100">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h3 class="h5 mb-0 card-title">ChatGPT-Web</h3>
+              <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Web" target="_blank" rel="noreferrer">Repo</a>
+                <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922369" type="button">Video</button>
+              </div>
+            </div>
+
+            <div class="mt-2">
+              <img class="badge-img" alt="JavaScript"   src="https://img.shields.io/badge/JavaScript-ES6%2B-yellow">
+              <img class="badge-img" alt="Platform" src="https://img.shields.io/badge/Platform-Web-lightgrey">
+              <img class="badge-img" alt="License"  src="https://img.shields.io/badge/License-MIT-yellow">
+              <img class="badge-img" alt="Claude"  src="https://img.shields.io/badge/Claude_Code-555?logo=claude">
+            </div>
+
+            <div class="media-box mt-2">
+              <div class="media-hero">
+                <img src="media/chatgpt-web.png" alt="ChatGPT-Web screenshot" loading="lazy">
+              </div>
+            </div>
+
+            <p class="text-muted mt-2 mb-2">
+              HTML1枚で動くChatGPTフロントエンド。<br>
+              入力テキストの続きをモデルに生成させる「ゴーストテキスト」機能を実装した。<br>
+              テキストに一定時間入力がないときに自動で補完を提案し、キーボード中心の操作で効率的に文章作成ができる。<br>
+              Tab/←/→キーでゴーストテキストの全体または1文字ずつの確定が可能。<br>
+              ※簡易的にAPIキーはlocalStorageに保存しているため、セキュリティに注意が必要。
+            </p>
+
+            <div class="text-muted small">
+              <strong>Tech</strong>
+              <ul class="tech-list">
+                <li>Single HTML file</li>
+                <li>Text auto-completion / ghost text</li>
+                <li>ChatGPT API</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+        <!-- scriptvedit -->
+        <div class="col-12 col-lg-6">
+          <article class="card p-3 h-100">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h3 class="h5 mb-0 card-title">scriptvedit</h3>
+              <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/scriptvedit" target="_blank" rel="noreferrer">Repo</a>
+                <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922487" type="button">Video（音量注意）</button>
+              </div>
+            </div>
+
+            <div class="mt-2">
+              <img class="badge-img" alt="Python"   src="https://img.shields.io/badge/Python-3.10%2B-blue">
+              <img class="badge-img" alt="Platform" src="https://img.shields.io/badge/Platform-Windows-lightgrey">
+              <img class="badge-img" alt="License"  src="https://img.shields.io/badge/License-MIT-yellow">
+              <img class="badge-img" alt="Claude"  src="https://img.shields.io/badge/Claude_Code-555?logo=claude">
+            </div>
+
+            <div class="media-box mt-2">
+              <div class="media-hero">
+                <img src="media/scriptvedit.png" alt="scriptvedit screenshot" loading="lazy">
+              </div>
+            </div>
+
+            <p class="text-muted mt-2 mb-2">
+              動画編集をCLIでDSL風のPythonで実行するためのPythonライブラリ。<br>
+              画像/動画/音声の読み込み、編集、エフェクト適用、テキスト描画などの基本的な編集機能を備えている。<br>
+              エフェクトの引数に関数を書くことで，サインカーブなどの時間変化する効果を簡単に実装できる。<br>
+                FFmpegをバックエンドに使用している。
+            </p>
+
+            <div class="text-muted small">
+              <strong>Tech</strong>
+              <ul class="tech-list">
+                <li>CLI video editor library</li>
+                <li>Effect functions with time-varying parameters</li>
+                <li>FFmpeg backend</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-subtle">
+
+    <!-- Control / Simulation -->
+    <section id="control" class="anchor py-2">
+      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 section-title mb-0">制御 / シミュレーション</h2>
+      </div>
+
+      <div class="row g-3">
+        <!-- Hand Drive -->
+        <div class="col-12 col-lg-6">
+          <article class="card p-3 h-100">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h3 class="h5 mb-0 card-title">ハンドドライブ</h3>
+              <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922395" type="button">Video</button>
+            </div>
+
+            <div class="mt-2">
+              <img class="badge-img" alt="JavaScript" src="https://img.shields.io/badge/JavaScript-ES6%2B-yellow">
+              <img class="badge-img" alt="Graphics" src="https://img.shields.io/badge/Graphics-Three.js-orange">
+              <img class="badge-img" alt="Platform" src="https://img.shields.io/badge/Platform-Web-lightgrey">
+            </div>
+
+            <div class="media-box mt-2">
+              <div class="media-hero">
+                <img src="media/handdrive.png" alt="Hand drive capture" loading="lazy">
+              </div>
+            </div>
+
+            <p class="text-muted mt-2 mb-2">
+              カメラで取得した手のキーポイントをリアルタイムに解析し、ステアリング・アクセル・ブレーキに変換するWebのデモアプリケーション。
+              手の傾きや握りの開閉のジェスチャで車両を操作できる。<br>
+              手の認識にはMediaPipe Handsを使用、3D車両モデルの描画にはThree.jsを使用し、シンプルな物理挙動も実装している。
+            </p>
+
+            <div class="text-muted small">
+              <strong>Tech</strong>
+              <ul class="tech-list">
+                <li>MediaPipe Hands / Webcam input</li>
+                <li>Gesture recognition</li>
+                <li>3D vehicle simulation (Three.js)</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <!-- Inverted Pendulum -->
+        <div class="col-12 col-lg-6">
+          <article class="card p-3 h-100">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h3 class="h5 mb-0 card-title">倒立振子</h3>
+              <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922355" type="button">Video</button>
+            </div>
+
+            <div class="mt-2">
+              <img class="badge-img" alt="C++" src="https://img.shields.io/badge/C++-11%2B-blue">
+              <img class="badge-img" alt="Physics" src="https://img.shields.io/badge/Physics-ODE-orange">
+            </div>
+
+            <div class="media-box mt-2">
+              <div class="media-hero">
+                <img src="media/invpend.png" alt="Inverted pendulum capture" loading="lazy">
+              </div>
+            </div>
+
+            <p class="text-muted mt-2 mb-2">
+              Open Dynamics Engine(ODE)を用いて倒立振子のシミュレーションと制御を実装。<br>
+              状態の可視化、PID制御器のチューニングに加え、ランダムな障害物とゴールを設定し、ルートの探索と左右の車輪の制御で倒立振子をゴールまで移動させるタスクを実装した。
+            </p>
+
+            <div class="text-muted small">
+              <strong>Tech</strong>
+              <ul class="tech-list">
+                <li>ODE physics simulation</li>
+                <li>PID control</li>
+                <li>Path planning / Vehicle control</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-subtle">
+
+    <!-- CG / Image processing -->
+    <section id="cg" class="anchor py-2">
+      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 section-title mb-0">CG / 画像処理</h2>
+      </div>
+
+      <div class="row g-3">
+        <!-- Raytracing CSG -->
+        <div class="col-12 col-lg-6">
+          <article class="card p-3 h-100">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h3 class="h5 mb-0 card-title">レイトレーシング（GLSL + CSG）</h3>
+              <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922403" type="button">Video</button>
+            </div>
+
+            <div class="mt-2">
+                <img class="badge-img" alt="C++" src="https://img.shields.io/badge/C++-11%2B-blue">
+                <img class="badge-img" alt="GLSL" src="https://img.shields.io/badge/OpenGL/GLSL-3.3-blue">
+            </div>
+
+            <div class="media-box mt-2">
+              <div class="media-hero">
+                <img src="media/raytrace-csg.png" alt="Raytracing CSG capture" loading="lazy">
+              </div>
+            </div>
+
+            <p class="text-muted mt-2 mb-2">
+              C++/GLSLによるリアルタイムレイトレーシング。Constructive Solid Geometry(CSG)による形状の和・差・積演算に加え、
+              環境光・拡散反射・鏡面反射・屈折・透過を実装した。<br>
+              GLSLのフラグメントシェーダでレイトレーシングを行い、リアルなレンダリングを実現している。       
+            </p>
+
+            <div class="text-muted small">
+              <strong>Tech</strong>
+              <ul class="tech-list">
+                <li>C++/GLSL ray tracing / CSG objects</li>
+                <li>Materials / lighting / recursion depth</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <!-- Raytracing Python -->
+        <div class="col-12 col-lg-6">
+          <article class="card p-3 h-100">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h3 class="h5 mb-0 card-title">レイトレーシング（Python）</h3>
+              <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922410" type="button">Video</button>
+            </div>
+
+            <div class="mt-2">
+              <img class="badge-img" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
+            </div>
+
+            <div class="media-box mt-2">
+              <div class="media-hero">
+                <img src="media/raytrace-python.png" alt="Raytracing Python capture" loading="lazy">
+              </div>
+            </div>
+
+            <p class="text-muted mt-2 mb-2">
+              Pythonでレイトレーシングをフルスクラッチ実装。
+              レイと球の交差判定、再帰的な反射・屈折などを一から書くことで、
+              レイトレーシングの仕組みを深く理解することを目的に制作した。
+            </p>
+
+            <div class="text-muted small">
+              <strong>Tech</strong>
+              <ul class="tech-list">
+                <li>Python ray tracing / sphere intersection</li>
+                <li>Materials / lighting / recursion depth</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <!-- Shadow Mapping -->
+        <div class="col-12 col-lg-6">
+          <article class="card p-3 h-100">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h3 class="h5 mb-0 card-title">シャドウマッピング</h3>
+            </div>
+
+            <div class="mt-2">
+              <img class="badge-img" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
+            </div>
+
+            <div class="media-box mt-2">
+              <div class="media-hero">
+                <img src="media/shadowmap.jpg" alt="Shadow mapping capture" loading="lazy">
+              </div>
+            </div>
+
+            <p class="text-muted mt-2 mb-2">
+              デプスマップベースのシャドウマッピングを実装。
+              シャドウアクネやピーターパン現象といった典型的な問題に対し，チューニングを行い，改善手法を試みた。
+            </p>
+
+            <div class="text-muted small">
+              <strong>Tech</strong>
+              <ul class="tech-list">
+                <li>Depth map-based shadow mapping</li>
+                <li>Shadow acne / Peter Panning tuning</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <!-- Wave & Paraboloid -->
+        <div class="col-12 col-lg-6">
+          <article class="card p-3 h-100">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h3 class="h5 mb-0 card-title">波と放物面のアニメーション</h3>
+              <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922419" type="button">Video</button>
+            </div>
+
+            <div class="mt-2">
+              <img class="badge-img" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
+            </div>
+
+            <div class="media-box mt-2">
+              <div class="media-hero">
+                <img src="media/wave-paraboloid.png" alt="Wave and paraboloid capture" loading="lazy">
+              </div>
+            </div>
+
+            <p class="text-muted mt-2 mb-2">
+              シャドウマッピングを実装する際の副産物として，ワイヤーフレームのアニメーションを制作。
+              伝播する波と，放物面の形状変化を描画した．
+            </p>
+
+            <div class="text-muted small">
+              <strong>Tech</strong>
+              <ul class="tech-list">
+                <li>Parametric surface / mesh update</li>
+                <li>line drawing / antialiasing</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <!-- Canny -->
+        <div class="col-12">
+          <article class="card p-3">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h3 class="h5 mb-0 card-title">Canny法（エッジ抽出）</h3>
+            </div>
+
+            <div class="mt-2">
+              <img class="badge-img" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
+            </div>
+
+            <p class="text-muted mt-2 mb-2">
+              Canny法エッジ検出をライブラリに頼らずフルスクラッチで実装。
+              アルゴリズムの仕組みを理解することを目的に制作した。
+            </p>
+
+            <!-- Image-heavy comparison -->
+            <div class="media-box mt-2">
+              <div class="media-grid">
+                <div>
+                  <div class="media-thumb">
+                    <img src="media/canny-original.png" alt="Canny original" loading="lazy">
+                  </div>
+                  <div class="small text-muted mt-2">入力画像</div>
+                </div>
+                <div>
+                  <div class="media-thumb">
+                    <img src="media/canny-edge.png" alt="Canny edge" loading="lazy">
+                  </div>
+                  <div class="small text-muted mt-2">出力（エッジ）</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-muted small mt-2">
+              <strong>Tech</strong>
+              <ul class="tech-list">
+                <li>Canny edge detection algorithm</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-subtle">
+
+    <!-- Contact -->
+    <section id="contact" class="anchor py-2 mb-4">
+      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 section-title mb-0">連絡先</h2>
+      </div>
+
+      <div class="card p-3">
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com">Mail: a.kojima8924@gmail.com</a>
+          <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noreferrer">GitHub: kojima8924</a>
+        </div>
+        <div class="text-muted small mt-2">
+          興味のあるテーマ：Python / C++ / 機械学習 / 画像処理
+        </div>
+
+        <div class="mt-3 d-flex flex-wrap gap-2 no-print">
+          <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio.pdf" download>PDF Download</a>
+          <button class="btn btn-outline-info btn-sm" type="button" onclick="window.print()">Print to PDF</button>
+        </div>
+      </div>
+
+      <div class="text-muted small mt-3">
+        © <span id="y">2026</span> Akira Kojima. All rights reserved.
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox-overlay" id="lightbox"></div>
+
+  <script>
+    // lightbox
+    (function(){
+      const overlay = document.getElementById("lightbox");
+
+      // 画像・動画クリックで拡大表示
+      document.querySelectorAll(".media-hero img, .media-hero video, .media-thumb img, .media-thumb video").forEach(el => {
+        el.addEventListener("click", e => {
+          e.stopPropagation();
+          let clone;
+          if(el.tagName === "VIDEO"){
+            clone = document.createElement("video");
+            clone.src = el.src;
+            clone.controls = true;
+            clone.autoplay = true;
+            clone.loop = true;
+          } else {
+            clone = document.createElement("img");
+            clone.src = el.src;
+            clone.alt = el.alt || "";
+          }
+          overlay.innerHTML = "";
+          overlay.appendChild(clone);
+          overlay.classList.add("active");
+          document.body.style.overflow = "hidden";
+        });
+      });
+
+      // Videoボタン → ニコニコ埋め込み
+      document.querySelectorAll(".btn-video[data-nico]").forEach(btn => {
+        btn.addEventListener("click", e => {
+          e.stopPropagation();
+          const id = btn.dataset.nico;
+          const iframe = document.createElement("iframe");
+          iframe.src = "https://embed.nicovideo.jp/watch/" + id + "?autoplay=1";
+          iframe.allow = "autoplay; fullscreen";
+          iframe.allowFullscreen = true;
+          overlay.innerHTML = "";
+          overlay.appendChild(iframe);
+          overlay.classList.add("active");
+          document.body.style.overflow = "hidden";
+        });
+      });
+
+      // オーバーレイクリックで閉じる
+      overlay.addEventListener("click", close);
+      document.addEventListener("keydown", e => {
+        if(e.key === "Escape") close();
+      });
+
+      function close(){
+        overlay.classList.remove("active");
+        document.body.style.overflow = "";
+        // 動画・iframe停止
+        const v = overlay.querySelector("video");
+        if(v) v.pause();
+        const f = overlay.querySelector("iframe");
+        if(f) f.src = "";
+      }
+    })();
+
+    // year
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    // theme toggle (persist)
+    (function(){
+      const root = document.documentElement;
+      const btn = document.getElementById("themeToggle");
+      const key = "portfolio-theme";
+
+      function apply(theme){
+        root.setAttribute("data-theme", theme);
+        const isLight = theme === "light";
+        // match navbar text color
+        document.querySelector(".navbar").classList.toggle("navbar-dark", !isLight);
+        document.querySelector(".navbar").classList.toggle("navbar-light", isLight);
+
+        btn.textContent = isLight ? "☀️ Light" : "🌙 Dark";
+        btn.classList.toggle("text-muted", true);
+      }
+
+      const saved = localStorage.getItem(key);
+      if(saved === "light" || saved === "dark"){
+        apply(saved);
+      } else {
+        // prefer system
+        const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+        apply(prefersLight ? "light" : "dark");
+      }
+
+      btn.addEventListener("click", () => {
+        const cur = root.getAttribute("data-theme") || "dark";
+        const next = (cur === "dark") ? "light" : "dark";
+        localStorage.setItem(key, next);
+        apply(next);
+      });
+    })();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

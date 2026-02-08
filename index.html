@@ -318,36 +318,44 @@
         break-before: avoid !important;
         page-break-before: avoid !important;
       }
-      /* ── ボタン類 ── */
-      .btn-video{
+      /* ── ボタン類（D案: 背景色 + ↗記号） ── */
+      a.btn-outline-info, a.btn-video{
         display:inline-block !important;
         font-size:10px !important;
         padding:1px 6px !important;
         border:1px solid #aaa !important;
-        color:#333 !important;
-        pointer-events:none;
+        color:#0b66c3 !important;
+        background:#eef4fb !important;
+        text-decoration:none !important;
       }
-      .btn-video[data-nico]::after{
-        content:" (nicovideo.jp/watch/" attr(data-nico) ")" !important;
+      /* ↗ をリンク末尾に（URL無しリンク用） */
+      a.btn-outline-info::after, a.btn-video::after{
+        content:" \2197" !important;
+      }
+      /* URL + ↗ 表示（URL付きリンク用） */
+      a.btn-outline-info[href^="https://github.com/kojima8924/"]::after{
+        content:" (" attr(href) ") \2197" !important;
         font-size:7px !important;
-        color:#666 !important;
+        color:#0b66c3 !important;
+        text-decoration:underline !important;
+        word-break:break-all;
       }
-      .btn-outline-info{
-        font-size:10px !important;
-        padding:1px 6px !important;
-        border:1px solid #aaa !important;
-        color:#333 !important;
+      a.btn-video[data-nico]::after{
+        content:" (nicovideo.jp/watch/" attr(data-nico) ") \2197" !important;
+        font-size:7px !important;
+        color:#0b66c3 !important;
+        text-decoration:underline !important;
+      }
+      a.btn-outline-info[href^="https://www.frontiersin.org/"]::after{
+        content:" (" attr(href) ") \2197" !important;
+        font-size:7px !important;
+        color:#0b66c3 !important;
+        text-decoration:underline !important;
+        word-break:break-all;
       }
 
       /* ── リンク ── */
       a{ color:#000 !important; text-decoration:none !important; }
-      /* RepoリンクにURL表示 */
-      a.btn-outline-info[href^="https://github.com/kojima8924/"]::after{
-        content:" (" attr(href) ")" !important;
-        font-size:7px !important;
-        color:#666 !important;
-        word-break:break-all;
-      }
 
       /* ── ヒーローのボタン・Core表示 ── */
       .hero .btn{ font-size:9px !important; padding:1px 5px !important; }
@@ -480,7 +488,7 @@
 
           <div class="d-flex flex-wrap gap-2">
             <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noreferrer">GitHub: kojima8924</a>
-            <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com">Mail: a.kojima8924@gmail.com</a>
+            <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com" target="_blank" rel="noreferrer">Mail: a.kojima8924@gmail.com</a>
           </div>
 
           <div class="mt-3 small text-muted">
@@ -508,7 +516,7 @@
               <h3 class="h5 mb-0 card-title">ChatGPT-Windows</h3>
               <div class="d-flex gap-2 flex-wrap">
                 <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Windows" target="_blank" rel="noreferrer">Repo</a>
-                <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922374" type="button">Video</button>
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922374" href="https://www.nicovideo.jp/watch/sm45922374" target="_blank" rel="noreferrer">Video</a>
               </div>
             </div>
 
@@ -559,7 +567,7 @@
               <h3 class="h5 mb-0 card-title">ChatGPT-Web</h3>
               <div class="d-flex gap-2 flex-wrap">
                 <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Web" target="_blank" rel="noreferrer">Repo</a>
-                <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922369" type="button">Video</button>
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922369" href="https://www.nicovideo.jp/watch/sm45922369" target="_blank" rel="noreferrer">Video</a>
               </div>
             </div>
 
@@ -601,7 +609,7 @@
               <h3 class="h5 mb-0 card-title">scriptvedit</h3>
               <div class="d-flex gap-2 flex-wrap">
                 <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/scriptvedit" target="_blank" rel="noreferrer">Repo</a>
-                <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922487" type="button">Video（音量注意）</button>
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922487" href="https://www.nicovideo.jp/watch/sm45922487" target="_blank" rel="noreferrer">Video（音量注意）</a>
               </div>
             </div>
 
@@ -652,7 +660,7 @@
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">ハンドドライブ</h3>
-              <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922395" type="button">Video</button>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922395" href="https://www.nicovideo.jp/watch/sm45922395" target="_blank" rel="noreferrer">Video</a>
             </div>
 
             <div class="mt-2">
@@ -689,7 +697,7 @@
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">倒立振子</h3>
-              <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922355" type="button">Video</button>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922355" href="https://www.nicovideo.jp/watch/sm45922355" target="_blank" rel="noreferrer">Video</a>
             </div>
 
             <div class="mt-2">
@@ -735,7 +743,7 @@
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">レイトレーシング（GLSL + CSG）</h3>
-              <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922403" type="button">Video</button>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922403" href="https://www.nicovideo.jp/watch/sm45922403" target="_blank" rel="noreferrer">Video</a>
             </div>
 
             <div class="mt-2">
@@ -770,7 +778,7 @@
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">レイトレーシング（Python）</h3>
-              <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922410" type="button">Video</button>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922410" href="https://www.nicovideo.jp/watch/sm45922410" target="_blank" rel="noreferrer">Video</a>
             </div>
 
             <div class="mt-2">
@@ -836,7 +844,7 @@
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">波と放物面のアニメーション</h3>
-              <button class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922419" type="button">Video</button>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922419" href="https://www.nicovideo.jp/watch/sm45922419" target="_blank" rel="noreferrer">Video</a>
             </div>
 
             <div class="mt-2">
@@ -1009,7 +1017,7 @@
 
       <div class="card p-3">
         <div class="d-flex flex-wrap gap-2">
-          <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com">Mail: a.kojima8924@gmail.com</a>
+          <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com" target="_blank" rel="noreferrer">Mail: a.kojima8924@gmail.com</a>
           <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noreferrer">GitHub: kojima8924</a>
         </div>
         <div class="text-muted small mt-2">
@@ -1062,6 +1070,7 @@
       // Videoボタン → ニコニコ埋め込み
       document.querySelectorAll(".btn-video[data-nico]").forEach(btn => {
         btn.addEventListener("click", e => {
+          e.preventDefault();
           e.stopPropagation();
           const id = btn.dataset.nico;
           const iframe = document.createElement("iframe");

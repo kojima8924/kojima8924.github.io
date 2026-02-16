@@ -619,7 +619,7 @@
               <h3 class="h5 mb-0 card-title">scriptvedit</h3>
               <div class="d-flex gap-2 flex-wrap">
                 <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/scriptvedit" target="_blank" rel="noopener noreferrer">Repo</a>
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922487" href="https://www.nicovideo.jp/watch/sm45922487" target="_blank" rel="noopener noreferrer">Video（音量注意）</a>
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45955598" href="https://www.nicovideo.jp/watch/sm45955598" target="_blank" rel="noopener noreferrer">Video（音量注意）</a>
               </div>
             </div>
 
@@ -637,18 +637,19 @@
             </div>
 
             <p class="text-muted mt-2 mb-2">
-              動画編集をCLIでDSL風のPythonで実行するためのPythonライブラリ。<br>
-              画像/動画/音声の読み込み、編集、エフェクト適用、テキスト描画などの基本的な編集機能を備えている。<br>
-              エフェクトの引数に関数を書くことで，サインカーブなどの時間変化する効果を簡単に実装できる。<br>
-              FFmpegをバックエンドに使用している。
+              Pythonで動画編集を行うDSLライブラリ。<br>
+              演算子オーバーロードによるDSL記法で、Transform・Effectの適用を直感的に記述できる。<br>
+              27種のイージング関数、キーフレーム補間、字幕テンプレート、定数畳み込み最適化などを搭載。<br>
+              FFmpegの式システムにコンパイルし、フレーム単位のパラメータ変化をリアルタイム評価する。
             </p>
 
             <div class="text-muted small">
               <strong>技術</strong>
               <ul class="tech-list">
-                <li>CLI動画編集ライブラリ</li>
-                <li>時間変化するパラメータによるエフェクト関数</li>
-                <li>FFmpegバックエンド</li>
+                <li>演算子オーバーロードDSL（|, &amp;, &lt;=）</li>
+                <li>AST→FFmpeg式コンパイラ + 定数畳み込み最適化</li>
+                <li>27種イージング / キーフレーム補間 / シーケンス制御</li>
+                <li>Playwright経由 字幕・吹き出しWebテンプレート</li>
               </ul>
             </div>
           </article>

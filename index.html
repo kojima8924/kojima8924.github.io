@@ -12,10 +12,33 @@
   <meta property="og:description" content="GitHub作品・制御/シミュレーション・CG/画像処理・研究のポートフォリオ" />
   <meta property="og:image" content="https://kojima8924.github.io/media/ogp.png" />
   <meta property="og:url" content="https://kojima8924.github.io/" />
+  <meta property="og:locale" content="ja_JP" />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="小嶋 明 (Akira Kojima) | Portfolio" />
+  <meta name="twitter:description" content="GitHub作品・制御/シミュレーション・CG/画像処理・研究のポートフォリオ" />
+  <link rel="canonical" href="https://kojima8924.github.io/" />
 
   <!-- Favicon -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
+  <!-- JSON-LD 構造化データ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "mainEntity": {
+      "@type": "Person",
+      "name": "小嶋 明",
+      "alternateName": "Akira Kojima",
+      "url": "https://kojima8924.github.io/",
+      "sameAs": [
+        "https://github.com/kojima8924"
+      ],
+      "email": "a.kojima8924@gmail.com",
+      "knowsAbout": ["Python", "C++", "機械学習", "画像処理", "制御工学", "CG"]
+    }
+  }
+  </script>
 
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -71,6 +94,7 @@
       color: var(--fg);
       font-size: 16.5px;
       line-height: 1.65;
+      transition: background-color .3s, color .3s;
     }
 
     /* Typography */
@@ -100,6 +124,12 @@
       background: var(--nav) !important;
       border-bottom: 1px solid var(--border) !important;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background-color .3s;
+    }
+    .navbar .nav-link.active{
+      color: var(--accent) !important;
+      font-weight: 600;
     }
 
     /* Hero */
@@ -116,6 +146,7 @@
       border-color: var(--border) !important;
       box-shadow: 0 10px 30px var(--shadow);
       border-radius: 14px;
+      transition: background-color .3s, border-color .3s;
     }
 
     /* Separator (works well on dark + light) */
@@ -219,6 +250,13 @@
     .lightbox-overlay.active{
       opacity:1; pointer-events:auto;
     }
+    .lightbox-close{
+      position:absolute; top:12px; right:16px;
+      background:none; border:none; color:#fff;
+      font-size:32px; line-height:1; cursor:pointer;
+      opacity:.7; z-index:10;
+    }
+    .lightbox-close:hover{ opacity:1; }
     .lightbox-overlay img,
     .lightbox-overlay video{
       max-width:90vw; max-height:90vh;
@@ -242,10 +280,23 @@
     .lightbox-overlay.active iframe{
       transform:scale(1);
     }
+    .media-hero, .media-thumb{
+      position:relative;
+    }
+    .media-hero::after, .media-thumb::after{
+      content:"\1F50D";
+      position:absolute; bottom:6px; right:6px;
+      font-size:14px; line-height:1;
+      background:rgba(0,0,0,.5); color:#fff;
+      border-radius:4px; padding:2px 5px;
+      opacity:.6; pointer-events:none;
+    }
     .media-hero img, .media-hero video,
     .media-thumb img, .media-thumb video{
       cursor:zoom-in;
     }
+
+    html{ scroll-behavior: smooth; }
 
     /* Print (PDF) */
     @page{
@@ -253,6 +304,14 @@
       size: A4;
     }
     @media print{
+      /* ── Chromium 印刷フリーズ対策 ── */
+      html{ scroll-behavior: auto !important; }
+      *, *::before, *::after{
+        transition: none !important;
+        animation: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
       nav, .no-print{ display:none !important; }
       body{
         background:#fff !important;
@@ -278,6 +337,11 @@
         padding: 6px !important;
         break-inside: avoid;
         page-break-inside: avoid;
+      }
+      /* 研究カードは高さが大きいため分割を許可 */
+      #research .card{
+        break-inside: auto !important;
+        page-break-inside: auto !important;
       }
       .card .h5, .card .card-title{ font-size:12px !important; }
       .card p{ font-size:10px !important; margin-bottom:2px !important; }
@@ -435,13 +499,14 @@
 
       /* ── section-title::before ドットを印刷で非表示 ── */
       .section-title::before{ display:none !important; }
+      .media-hero::after, .media-thumb::after{ display:none !important; }
     }
   </style>
 </head>
 
-<body>
+<body data-bs-spy="scroll" data-bs-target="#nav" data-bs-offset="100" tabindex="0">
   <!-- Top bar -->
-  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" aria-label="メインナビゲーション">
+  <nav class="navbar navbar-expand-lg sticky-top" data-bs-theme="dark" aria-label="メインナビゲーション">
     <div class="container">
       <a class="navbar-brand fw-semibold" href="#">小嶋 明 (Akira Kojima) / Portfolio</a>
 
@@ -451,7 +516,7 @@
 
       <div id="nav" class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto gap-lg-2 align-items-lg-center">
-          <li class="nav-item"><a class="nav-link" href="#github">GitHub</a></li>
+          <li class="nav-item"><a class="nav-link" href="#github">GitHub(個人開発)</a></li>
           <li class="nav-item"><a class="nav-link" href="#control">制御/シミュ</a></li>
           <li class="nav-item"><a class="nav-link" href="#cg">CG/画像処理</a></li>
           <li class="nav-item"><a class="nav-link" href="#research">研究</a></li>
@@ -472,7 +537,7 @@
           </li>
           <li class="nav-item ms-lg-2 no-print">
             <button class="btn btn-outline-info btn-sm" type="button" onclick="window.print()">
-              Print to PDF
+              Print
             </button>
           </li>
         </ul>
@@ -488,9 +553,10 @@
           <h1 class="display-6 fw-bold mb-2 name-title">小嶋 明 (Akira Kojima)</h1>
           <p class="lead text-muted mb-3 fw-semibold">
             ・2018年 東京大学（理科一類）入学<br>
-            ・2022年 同大学卒業、東京大学大学院 新領域創成科学研究科 人間環境学専攻 修士課程 進学<br>
-            ・2024年10月 修士課程修了（修士号取得）<br>
-            ・2024年 同専攻 博士課程に進学（在籍中、2026年4月退学予定）<br>
+            ・2022年 同大学 工学部 精密工学科 卒業、東京大学大学院 新領域創成科学研究科 人間環境学専攻 修士課程 進学<br>
+            ・2024年9月 修士課程修了（修士号取得）<br>
+            ・2024年10月 同専攻 博士課程に進学（在籍中、2026年3月退学予定）<br>
+            ・2023年・2024年 東京大学TA（有限要素法・物理シミュレーション）<br>
             ・現在：就職活動中<br><br>
             研究では、電気インピーダンストモグラフィ（EIT）に基づく触覚センサ（圧力分布センサ）を対象に、シミュレーションで生成した訓練データを用いてCNNを学習し、限られた計測電位から圧力分布を高精度に再構成する手法を検討しています。<br>
             趣味として高校時代からプログラミングに取り組み、AtCoderは水色ランクです。主な使用言語はPython/C++で、研究ではKerasを用いています。
@@ -498,7 +564,7 @@
 
           <div class="d-flex flex-wrap gap-2">
             <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub: kojima8924</a>
-            <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com" target="_blank" rel="noopener noreferrer">Mail: a.kojima8924@gmail.com</a>
+            <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com">Mail: a.kojima8924@gmail.com</a>
           </div>
 
           <div class="mt-3 small text-muted">
@@ -515,7 +581,7 @@
     <!-- GitHub -->
     <section id="github" class="anchor py-2">
       <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">GitHub</h2>
+        <h2 class="h4 section-title mb-0">GitHub（個人開発）</h2>
       </div>
 
       <div class="row g-3">
@@ -526,24 +592,24 @@
               <h3 class="h5 mb-0 card-title">ChatGPT-Windows</h3>
               <div class="d-flex gap-2 flex-wrap">
                 <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Windows" target="_blank" rel="noopener noreferrer">Repo</a>
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922374" href="https://www.nicovideo.jp/watch/sm45922374" target="_blank" rel="noopener noreferrer">Video</a>
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922374" href="https://www.nicovideo.jp/watch/sm45922374" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
               </div>
             </div>
 
             <!-- Align “shown elements” badges with the explanation-badges -->
             <div class="mt-2">
-              <img class="badge-img" alt="Python"   src="https://img.shields.io/badge/Python-3.10%2B-blue">
-              <img class="badge-img" alt="GUI"      src="https://img.shields.io/badge/GUI-PySide6%20(Qt6)-green">
-              <img class="badge-img" alt="Platform" src="https://img.shields.io/badge/Platform-Windows-lightgrey">
-              <img class="badge-img" alt="License"  src="https://img.shields.io/badge/License-MIT-yellow">
-              <img class="badge-img" alt="Claude"  src="https://img.shields.io/badge/Claude_Code-555?logo=claude">
+              <img class="badge-img" loading="lazy" alt="Python"   src="https://img.shields.io/badge/Python-3.10%2B-blue">
+              <img class="badge-img" loading="lazy" alt="GUI"      src="https://img.shields.io/badge/GUI-PySide6%20(Qt6)-green">
+              <img class="badge-img" loading="lazy" alt="Platform" src="https://img.shields.io/badge/Platform-Windows-lightgrey">
+              <img class="badge-img" loading="lazy" alt="License"  src="https://img.shields.io/badge/License-MIT-yellow">
+              <img class="badge-img" loading="lazy" alt="Claude"  src="https://img.shields.io/badge/Claude_Code-555?logo=claude">
             </div>
 
             <div class="row g-3 mt-1 align-items-start">
               <div class="col-12 col-lg-5">
                 <p class="text-muted mb-2">
                   ChatGPT APIを日常的に使うための常駐型デスクトップクライアント。<br>
-                  コピーしたテキストを簡単に翻訳/補完/要約などの処理をできる。<br>
+                  コピーしたテキストの翻訳・補完・要約などを手軽に行える。<br>
                   ホットキーで呼び出し、クリップボード連携、レスポンスのストリーミング表示などを実装した。<br>
                   APIキーはWindows資格情報マネージャーに安全に保存できる。
                 </p>
@@ -577,15 +643,15 @@
               <h3 class="h5 mb-0 card-title">ChatGPT-Web</h3>
               <div class="d-flex gap-2 flex-wrap">
                 <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Web" target="_blank" rel="noopener noreferrer">Repo</a>
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922369" href="https://www.nicovideo.jp/watch/sm45922369" target="_blank" rel="noopener noreferrer">Video</a>
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922369" href="https://www.nicovideo.jp/watch/sm45922369" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
               </div>
             </div>
 
             <div class="mt-2">
-              <img class="badge-img" alt="JavaScript"   src="https://img.shields.io/badge/JavaScript-ES6%2B-yellow">
-              <img class="badge-img" alt="Platform" src="https://img.shields.io/badge/Platform-Web-lightgrey">
-              <img class="badge-img" alt="License"  src="https://img.shields.io/badge/License-MIT-yellow">
-              <img class="badge-img" alt="Claude"  src="https://img.shields.io/badge/Claude_Code-555?logo=claude">
+              <img class="badge-img" loading="lazy" alt="JavaScript"   src="https://img.shields.io/badge/JavaScript-ES6%2B-yellow">
+              <img class="badge-img" loading="lazy" alt="Platform" src="https://img.shields.io/badge/Platform-Web-lightgrey">
+              <img class="badge-img" loading="lazy" alt="License"  src="https://img.shields.io/badge/License-MIT-yellow">
+              <img class="badge-img" loading="lazy" alt="Claude"  src="https://img.shields.io/badge/Claude_Code-555?logo=claude">
             </div>
 
             <div class="media-box mt-2">
@@ -597,9 +663,9 @@
             <p class="text-muted mt-2 mb-2">
               HTML1枚で動くChatGPTフロントエンド。<br>
               入力テキストの続きをモデルに生成させる「ゴーストテキスト」機能を実装した。<br>
-              テキストに一定時間入力がないときに自動で補完を提案し、キーボード中心の操作で効率的に文章作成ができる。<br>
+              一定時間入力が途切れると自動で補完を提案し、キーボード中心の操作で効率的に文章作成ができる。<br>
               Tab/←/→キーでゴーストテキストの全体または1文字ずつの確定が可能。<br>
-              ※簡易的にAPIキーはlocalStorageに保存しているため、セキュリティに注意が必要。
+              ※APIキーはlocalStorageに簡易的に保存しているため、セキュリティに注意が必要。
             </p>
 
             <div class="text-muted small">
@@ -619,20 +685,20 @@
               <h3 class="h5 mb-0 card-title">scriptvedit</h3>
               <div class="d-flex gap-2 flex-wrap">
                 <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/scriptvedit" target="_blank" rel="noopener noreferrer">Repo</a>
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45955598" href="https://www.nicovideo.jp/watch/sm45955598" target="_blank" rel="noopener noreferrer">Video（音量注意）</a>
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46022257" href="https://www.nicovideo.jp/watch/sm46022257" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
               </div>
             </div>
 
             <div class="mt-2">
-              <img class="badge-img" alt="Python"   src="https://img.shields.io/badge/Python-3.10%2B-blue">
-              <img class="badge-img" alt="Platform" src="https://img.shields.io/badge/Platform-Windows-lightgrey">
-              <img class="badge-img" alt="License"  src="https://img.shields.io/badge/License-MIT-yellow">
-              <img class="badge-img" alt="Claude"  src="https://img.shields.io/badge/Claude_Code-555?logo=claude">
+              <img class="badge-img" loading="lazy" alt="Python"   src="https://img.shields.io/badge/Python-3.10%2B-blue">
+              <img class="badge-img" loading="lazy" alt="Platform" src="https://img.shields.io/badge/Platform-Windows-lightgrey">
+              <img class="badge-img" loading="lazy" alt="License"  src="https://img.shields.io/badge/License-MIT-yellow">
+              <img class="badge-img" loading="lazy" alt="Claude"  src="https://img.shields.io/badge/Claude_Code-555?logo=claude">
             </div>
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/scriptvedit.png" alt="scriptvedit screenshot">
+                <img src="media/scriptvedit.png" alt="scriptvedit screenshot" loading="lazy">
               </div>
             </div>
 
@@ -671,25 +737,25 @@
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">ハンドドライブ</h3>
-              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922395" href="https://www.nicovideo.jp/watch/sm45922395" target="_blank" rel="noopener noreferrer">Video</a>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922395" href="https://www.nicovideo.jp/watch/sm45922395" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
             </div>
 
             <div class="mt-2">
-              <img class="badge-img" alt="JavaScript" src="https://img.shields.io/badge/JavaScript-ES6%2B-yellow">
-              <img class="badge-img" alt="Graphics" src="https://img.shields.io/badge/Graphics-Three.js-orange">
-              <img class="badge-img" alt="Platform" src="https://img.shields.io/badge/Platform-Web-lightgrey">
+              <img class="badge-img" loading="lazy" alt="JavaScript" src="https://img.shields.io/badge/JavaScript-ES6%2B-yellow">
+              <img class="badge-img" loading="lazy" alt="Graphics" src="https://img.shields.io/badge/Graphics-Three.js-orange">
+              <img class="badge-img" loading="lazy" alt="Platform" src="https://img.shields.io/badge/Platform-Web-lightgrey">
             </div>
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/handdrive.png" alt="Hand drive capture">
+                <img src="media/handdrive.png" alt="Hand drive capture" loading="lazy">
               </div>
             </div>
 
             <p class="text-muted mt-2 mb-2">
-              カメラで取得した手のキーポイントをリアルタイムに解析し、ステアリング・アクセル・ブレーキに変換するWebのデモアプリケーション。
+              カメラで取得した手のキーポイントをリアルタイムに解析し、ステアリング・アクセル・ブレーキに変換するWebデモアプリ。
               手の傾きや握りの開閉のジェスチャで車両を操作できる。<br>
-              手の認識にはMediaPipe Handsを使用、3D車両モデルの描画にはThree.jsを使用し、シンプルな物理挙動も実装している。
+              手の認識にはMediaPipe Hands、3D描画にはThree.jsを用い、シンプルな物理挙動も実装している。
             </p>
 
             <div class="text-muted small">
@@ -708,23 +774,23 @@
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">倒立振子</h3>
-              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922355" href="https://www.nicovideo.jp/watch/sm45922355" target="_blank" rel="noopener noreferrer">Video</a>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922355" href="https://www.nicovideo.jp/watch/sm45922355" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
             </div>
 
             <div class="mt-2">
-              <img class="badge-img" alt="C++" src="https://img.shields.io/badge/C++-11%2B-blue">
-              <img class="badge-img" alt="Physics" src="https://img.shields.io/badge/Physics-ODE-orange">
+              <img class="badge-img" loading="lazy" alt="C++" src="https://img.shields.io/badge/C++-11%2B-blue">
+              <img class="badge-img" loading="lazy" alt="Physics" src="https://img.shields.io/badge/Physics-ODE-orange">
             </div>
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/invpend.png" alt="Inverted pendulum capture">
+                <img src="media/invpend.png" alt="Inverted pendulum capture" loading="lazy">
               </div>
             </div>
 
             <p class="text-muted mt-2 mb-2">
               Open Dynamics Engine(ODE)を用いて倒立振子のシミュレーションと制御を実装。<br>
-              状態の可視化、PID制御器のチューニングに加え、ランダムな障害物とゴールを設定し、ルートの探索と左右の車輪の制御で倒立振子をゴールまで移動させるタスクを実装した。
+              状態の可視化、PID制御器のチューニングに加え、ランダムな障害物とゴールを設定し、経路探索と左右の車輪の制御で倒立振子をゴールまで移動させるタスクを実装した。
             </p>
 
             <div class="text-muted small">
@@ -754,17 +820,17 @@
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">レイトレーシング（GLSL + CSG）</h3>
-              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922403" href="https://www.nicovideo.jp/watch/sm45922403" target="_blank" rel="noopener noreferrer">Video</a>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922403" href="https://www.nicovideo.jp/watch/sm45922403" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
             </div>
 
             <div class="mt-2">
-                <img class="badge-img" alt="C++" src="https://img.shields.io/badge/C++-11%2B-blue">
-                <img class="badge-img" alt="GLSL" src="https://img.shields.io/badge/OpenGL/GLSL-3.3-blue">
+                <img class="badge-img" loading="lazy" alt="C++" src="https://img.shields.io/badge/C++-11%2B-blue">
+                <img class="badge-img" loading="lazy" alt="GLSL" src="https://img.shields.io/badge/OpenGL/GLSL-3.3-blue">
             </div>
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/raytrace-csg.png" alt="Raytracing CSG capture">
+                <img src="media/raytrace-csg.png" alt="Raytracing CSG capture" loading="lazy">
               </div>
             </div>
 
@@ -789,23 +855,22 @@
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">レイトレーシング（Python）</h3>
-              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922410" href="https://www.nicovideo.jp/watch/sm45922410" target="_blank" rel="noopener noreferrer">Video</a>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922410" href="https://www.nicovideo.jp/watch/sm45922410" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
             </div>
 
             <div class="mt-2">
-              <img class="badge-img" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
+              <img class="badge-img" loading="lazy" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
             </div>
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/raytrace-python.png" alt="Raytracing Python capture">
+                <img src="media/raytrace-python.png" alt="Raytracing Python capture" loading="lazy">
               </div>
             </div>
 
             <p class="text-muted mt-2 mb-2">
               Pythonでレイトレーシングをフルスクラッチ実装。
-              レイと球の交差判定、再帰的な反射・屈折などを一から書くことで、
-              レイトレーシングの仕組みを深く理解することを目的に制作した。
+              レイトレーシングの仕組みを深く理解するため、レイと球の交差判定や再帰的な反射・屈折などを一から実装した。
             </p>
 
             <div class="text-muted small">
@@ -826,18 +891,18 @@
             </div>
 
             <div class="mt-2">
-              <img class="badge-img" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
+              <img class="badge-img" loading="lazy" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
             </div>
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/shadowmap.jpg" alt="Shadow mapping capture">
+                <img src="media/shadowmap.jpg" alt="Shadow mapping capture" loading="lazy">
               </div>
             </div>
 
             <p class="text-muted mt-2 mb-2">
               デプスマップベースのシャドウマッピングを実装。
-              シャドウアクネやピーターパン現象といった典型的な問題に対し、チューニングを行い、改善手法を試みた。
+              シャドウアクネやピーターパン現象といった典型的なアーティファクトへの対策を実装した。
             </p>
 
             <div class="text-muted small">
@@ -855,21 +920,21 @@
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">波と放物面のアニメーション</h3>
-              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922419" href="https://www.nicovideo.jp/watch/sm45922419" target="_blank" rel="noopener noreferrer">Video</a>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922419" href="https://www.nicovideo.jp/watch/sm45922419" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
             </div>
 
             <div class="mt-2">
-              <img class="badge-img" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
+              <img class="badge-img" loading="lazy" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
             </div>
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/wave-paraboloid.png" alt="Wave and paraboloid capture">
+                <img src="media/wave-paraboloid.png" alt="Wave and paraboloid capture" loading="lazy">
               </div>
             </div>
 
             <p class="text-muted mt-2 mb-2">
-              シャドウマッピングを実装する際の副産物として、ワイヤーフレームのアニメーションを制作。
+              シャドウマッピング実装の副産物として、ワイヤーフレームのアニメーションを制作。
               伝播する波と、放物面の形状変化を描画した。
             </p>
 
@@ -891,7 +956,7 @@
             </div>
 
             <div class="mt-2">
-              <img class="badge-img" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
+              <img class="badge-img" loading="lazy" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
             </div>
 
             <p class="text-muted mt-2 mb-2">
@@ -904,13 +969,13 @@
               <div class="media-grid">
                 <div>
                   <div class="media-thumb">
-                    <img src="media/canny-original.png" alt="Canny original">
+                    <img src="media/canny-original.png" alt="Canny original" loading="lazy">
                   </div>
                   <div class="small text-muted mt-2">入力画像</div>
                 </div>
                 <div>
                   <div class="media-thumb">
-                    <img src="media/canny-edge.png" alt="Canny edge">
+                    <img src="media/canny-edge.png" alt="Canny edge" loading="lazy">
                   </div>
                   <div class="small text-muted mt-2">出力（エッジ）</div>
                 </div>
@@ -944,9 +1009,10 @@
             </div>
 
             <div class="mt-2">
-              <img class="badge-img" alt="Conference" src="https://img.shields.io/badge/Conference-SI2022-blue">
-              <img class="badge-img" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
-              <img class="badge-img" alt="ML" src="https://img.shields.io/badge/ML-Keras%2FCNN-orange">
+              <img class="badge-img" loading="lazy" alt="Conference" src="https://img.shields.io/badge/Conference-SI2022-blue">
+              <img class="badge-img" loading="lazy" alt="Conference" src="https://img.shields.io/badge/Conference-IROS%202022-blue">
+              <img class="badge-img" loading="lazy" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
+              <img class="badge-img" loading="lazy" alt="ML" src="https://img.shields.io/badge/ML-Keras%2FCNN-orange">
             </div>
 
             <div class="row g-3 mt-1 align-items-start">
@@ -954,8 +1020,9 @@
                 <p class="text-muted mb-2">
                   SI2022（国内）およびIROS 2022（国際）にてポスター発表を行った。<br>
                   電気インピーダンストモグラフィに基づく触覚センサにおいて、シミュレーションで生成した訓練データを用いて畳み込みニューラルネットワーク(CNN)を学習させ、限られた計測電位から高精度な圧力分布の再構成を実現し、空間分解能の向上を達成した。<br>
-                  実機での2点接触の試行から、訓練データに与えるノイズレベルを調整し、2点を弁別可能にした。<br>
-                  1点の接触シミュレーションにおいては、CNNの導入により、空間分解能と位置誤差が約22%まで改善された。
+                  実機での2点接触実験を踏まえ、訓練データに与えるノイズレベルを調整し、2点を弁別可能にした。<br>
+                  1点の接触シミュレーションにおいては、CNNの導入により、空間分解能と位置誤差が約22%まで改善された。<br>
+                  ロボットハンドの把持制御や医療応用への展開が期待される技術である。
                 </p>
                 <div class="text-muted small">
                     <strong>Authors</strong>: Akira Kojima, Shunsuke Yoshimoto, Akio Yamamoto
@@ -974,7 +1041,7 @@
               <div class="col-12 col-lg-7">
                 <div class="media-box">
                   <div class="media-hero">
-                    <img src="media/SI2022_poster.jpg" alt="SI2022 ポスター">
+                    <img src="media/SI2022_poster.jpg" alt="SI2022 ポスター" loading="lazy">
                   </div>
                 </div>
               </div>
@@ -991,9 +1058,9 @@
             </div>
 
             <div class="mt-2">
-              <img class="badge-img" alt="Journal" src="https://img.shields.io/badge/Journal-Frontiers_in_Robotics_and_AI-blue">
-              <img class="badge-img" alt="Year" src="https://img.shields.io/badge/Year-2023-green">
-              <img class="badge-img" alt="DOI" src="https://img.shields.io/badge/DOI-10.3389%2Ffrobt.2023.1157911-orange">
+              <img class="badge-img" loading="lazy" alt="Journal" src="https://img.shields.io/badge/Journal-Frontiers_in_Robotics_and_AI-blue">
+              <img class="badge-img" loading="lazy" alt="Year" src="https://img.shields.io/badge/Year-2023-green">
+              <img class="badge-img" loading="lazy" alt="DOI" src="https://img.shields.io/badge/DOI-10.3389%2Ffrobt.2023.1157911-orange">
             </div>
 
             <p class="text-muted mt-2 mb-2">
@@ -1028,7 +1095,7 @@
 
       <div class="card p-3">
         <div class="d-flex flex-wrap gap-2">
-          <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com" target="_blank" rel="noopener noreferrer">Mail: a.kojima8924@gmail.com</a>
+          <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com">Mail: a.kojima8924@gmail.com</a>
           <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub: kojima8924</a>
         </div>
         <div class="text-muted small mt-2">
@@ -1037,7 +1104,7 @@
 
         <div class="mt-3 d-flex flex-wrap gap-2 no-print">
           <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio.pdf" download>PDF Download</a>
-          <button class="btn btn-outline-info btn-sm" type="button" onclick="window.print()">Print to PDF</button>
+          <button class="btn btn-outline-info btn-sm" type="button" onclick="window.print()">Print</button>
         </div>
       </div>
 
@@ -1048,12 +1115,23 @@
   </main>
 
   <!-- Lightbox -->
-  <div class="lightbox-overlay" id="lightbox"></div>
+  <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="拡大表示" aria-hidden="true"></div>
 
   <script>
     // lightbox
     (function(){
       const overlay = document.getElementById("lightbox");
+
+      function openLightbox(){
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "lightbox-close";
+        closeBtn.textContent = "\u00d7";
+        closeBtn.addEventListener("click", e => { e.stopPropagation(); close(); });
+        overlay.prepend(closeBtn);
+        overlay.classList.add("active");
+        overlay.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
 
       // 画像・動画クリックで拡大表示
       document.querySelectorAll(".media-hero img, .media-hero video, .media-thumb img, .media-thumb video").forEach(el => {
@@ -1072,9 +1150,9 @@
             clone.alt = el.alt || "";
           }
           overlay.innerHTML = "";
+          clone.addEventListener("click", e => e.stopPropagation());
           overlay.appendChild(clone);
-          overlay.classList.add("active");
-          document.body.style.overflow = "hidden";
+          openLightbox();
         });
       });
 
@@ -1090,19 +1168,19 @@
           iframe.allowFullscreen = true;
           overlay.innerHTML = "";
           overlay.appendChild(iframe);
-          overlay.classList.add("active");
-          document.body.style.overflow = "hidden";
+          openLightbox();
         });
       });
 
       // オーバーレイクリックで閉じる
-      overlay.addEventListener("click", close);
+      overlay.addEventListener("click", e => { if(e.target === overlay) close(); });
       document.addEventListener("keydown", e => {
         if(e.key === "Escape") close();
       });
 
       function close(){
         overlay.classList.remove("active");
+        overlay.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "";
         // 動画・iframe停止
         const v = overlay.querySelector("video");
@@ -1111,6 +1189,16 @@
         if(f) f.src = "";
       }
     })();
+
+    // モバイルナビ: リンククリックで自動閉じ
+    document.querySelectorAll("#nav .nav-link").forEach(link => {
+      link.addEventListener("click", () => {
+        const navEl = document.getElementById("nav");
+        if(navEl.classList.contains("show")){
+          bootstrap.Collapse.getOrCreateInstance(navEl).hide();
+        }
+      });
+    });
 
     // year
     document.getElementById("y").textContent = new Date().getFullYear();
@@ -1125,14 +1213,14 @@
         root.setAttribute("data-theme", theme);
         const isLight = theme === "light";
         // match navbar text color
-        document.querySelector(".navbar").classList.toggle("navbar-dark", !isLight);
-        document.querySelector(".navbar").classList.toggle("navbar-light", isLight);
+        document.querySelector(".navbar").setAttribute("data-bs-theme", isLight ? "light" : "dark");
 
         btn.textContent = isLight ? "☀️ Light" : "🌙 Dark";
         btn.classList.toggle("text-muted", true);
       }
 
-      const saved = localStorage.getItem(key);
+      let saved;
+      try { saved = localStorage.getItem(key); } catch(e) {}
       if(saved === "light" || saved === "dark"){
         apply(saved);
       } else {
@@ -1144,12 +1232,31 @@
       btn.addEventListener("click", () => {
         const cur = root.getAttribute("data-theme") || "dark";
         const next = (cur === "dark") ? "light" : "dark";
-        localStorage.setItem(key, next);
+        try { localStorage.setItem(key, next); } catch(e) {}
         apply(next);
       });
+
+      // OS テーマ変更に追従（ユーザー手動設定がない場合のみ）
+      if(window.matchMedia){
+        window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", e => {
+          let s; try { s = localStorage.getItem(key); } catch(ex) {}
+          if(!s) apply(e.matches ? "light" : "dark");
+        });
+      }
     })();
+
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script>
+    // 印刷時に Scrollspy を一時無効化（Chromium フリーズ対策）
+    window.addEventListener("beforeprint", () => {
+      const spy = bootstrap.ScrollSpy.getInstance(document.body);
+      if(spy) spy.dispose();
+    });
+    window.addEventListener("afterprint", () => {
+      new bootstrap.ScrollSpy(document.body, { target: "#nav", offset: 100 });
+    });
+  </script>
 </body>
 </html>

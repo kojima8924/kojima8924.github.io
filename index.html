@@ -869,8 +869,8 @@
           <div class="row g-2 mb-3">
             <div class="col-12 col-md-4">
               <div class="chip-card">
-                <div class="t">💼 クライアント案件（開発中）</div>
-                <div class="d">詳細非公開のクライアント案件を開発中。</div>
+                <div class="t">💼 実案件（開発中）</div>
+                <div class="d">美容クリニック向けLINE応答AIを開発中。問い合わせ対応から予約案内、有人対応への切替までを支援。</div>
               </div>
             </div>
             <div class="col-12 col-md-4">
@@ -1005,8 +1005,19 @@
         <div class="col-12">
           <article class="card p-3 border-info">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">クライアント案件</h3>
-              <span class="badge rounded-pill text-bg-secondary">開発中・詳細非公開</span>
+              <h3 class="h5 mb-0 card-title">美容クリニック向けLINE応答AI</h3>
+              <span class="badge rounded-pill text-bg-secondary">開発中・匿名掲載</span>
+            </div>
+            <p class="text-muted mt-2 mb-1">
+              LINEの問い合わせに一次対応し、FAQ回答、予約フォームへの案内、必要時のスタッフへの引き継ぎまでを支援する仕組みを開発しています。
+            </p>
+            <p class="text-muted small mb-1">
+              <strong>担当:</strong> Difyの応答フロー、LINE Webhook、RAGナレッジ、状態管理を設計・実装し、回答品質と安全性を検証中。（施設を特定しない範囲で掲載許可済み）
+            </p>
+            <div class="mt-2">
+              <img class="badge-img" loading="lazy" alt="Dify" src="https://img.shields.io/badge/Platform-Dify-6941C6">
+              <img class="badge-img" loading="lazy" alt="LINE Webhook" src="https://img.shields.io/badge/LINE-Webhook-00C300">
+              <img class="badge-img" loading="lazy" alt="RAG" src="https://img.shields.io/badge/RAG-Knowledge-blue">
             </div>
           </article>
         </div>
@@ -1040,13 +1051,21 @@
             </p>
 
             <!-- サブ画像 -->
-            <div class="shot-row mt-2">
+            <div class="shot-row mt-2" aria-label="Clage Cook OSSのAndroid実機画面">
               <div>
                 <div class="media-phone">
-                  <img src="media/clagecook-oss-android.png" alt="Android版で回答を展開し、批評前の回答を表示した画面" loading="lazy">
+                  <img src="media/clagecook-oss-android-overview.jpg" alt="Clage Cook OSSのAndroid版で4社AIの回答状況と統合回答を表示した画面" loading="lazy">
                 </div>
                 <div class="small text-muted mt-2 text-center">
-                  同じアプリのAndroid版。回答を開くと、DEBATEで書き直す<strong>前</strong>の回答も残っている
+                  一覧：4社AIの回答と統合回答
+                </div>
+              </div>
+              <div>
+                <div class="media-phone">
+                  <img src="media/clagecook-oss-android.png" alt="Clage Cook OSSのAndroid版でClaudeの批評前の回答を展開した画面" loading="lazy">
+                </div>
+                <div class="small text-muted mt-2 text-center">
+                  詳細：DEBATE後も初回回答を保持
                 </div>
               </div>
             </div>

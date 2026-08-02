@@ -80,7 +80,7 @@ HTML = r"""
   .sub {
     margin: 13px 0 0;
     color: #a9bbcb;
-    font-size: 17px;
+    font-size: 19px;
     font-weight: 650;
     letter-spacing: .11em;
   }
@@ -173,6 +173,110 @@ HTML = r"""
     font-size: 14px;
     letter-spacing: .08em;
   }
+
+  /* Calm editorial layout: no generated imagery, glow, or decorative grid. */
+  body {
+    color: #edf1f4;
+    background: #111923;
+  }
+  body::before { display: none; }
+  .frame { border-color: rgba(220, 229, 236, .14); }
+  .copy {
+    left: 72px;
+    top: 72px;
+    width: 520px;
+  }
+  .kicker {
+    gap: 13px;
+    color: #9eb8c7;
+    font-size: 17px;
+    letter-spacing: .2em;
+  }
+  .kicker::before {
+    width: 32px;
+    height: 2px;
+    background: #b9a06c;
+  }
+  h1 {
+    margin: 34px 0 0;
+    font-size: 70px;
+    line-height: 1.02;
+    letter-spacing: .025em;
+    font-weight: 720;
+  }
+  .jp {
+    margin-top: 31px;
+    color: #e7ebee;
+    font-size: 34px;
+    font-weight: 650;
+  }
+  .sub {
+    margin-top: 14px;
+    color: #8f9ca9;
+    font-size: 17px;
+    letter-spacing: .09em;
+  }
+  .pill-row { gap: 9px; margin-top: 31px; }
+  .pill {
+    padding: 8px 13px;
+    border-color: rgba(158, 184, 199, .3);
+    border-radius: 7px;
+    color: #b8c3cc;
+    background: transparent;
+    font-size: 16px;
+    font-weight: 550;
+  }
+  .summary-panel {
+    position: absolute;
+    left: 650px;
+    top: 70px;
+    width: 480px;
+    height: 490px;
+    padding-left: 48px;
+    border-left: 1px solid rgba(184, 199, 210, .25);
+  }
+  .panel-label {
+    margin-bottom: 26px;
+    color: #788895;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .2em;
+  }
+  .focus-row {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 14px;
+    padding: 23px 0 25px;
+    border-top: 1px solid rgba(184, 199, 210, .16);
+  }
+  .focus-row .no {
+    padding-top: 4px;
+    color: #788895;
+    font-size: 15px;
+    letter-spacing: .08em;
+  }
+  .focus-row strong {
+    display: block;
+    color: #e7ebee;
+    font-size: 28px;
+    font-weight: 650;
+  }
+  .focus-row small {
+    display: block;
+    margin-top: 8px;
+    color: #93a0ab;
+    font-size: 18px;
+    line-height: 1.45;
+  }
+  .panel-note {
+    position: absolute;
+    left: 48px;
+    bottom: 0;
+    color: #9eb8c7;
+    font-size: 15px;
+    letter-spacing: .12em;
+  }
+  .footer { color: #667582; font-size: 16px; }
 </style>
 </head>
 <body>
@@ -180,24 +284,29 @@ HTML = r"""
     <main class="copy">
       <div class="kicker">PORTFOLIO</div>
       <h1>AKIRA<br>KOJIMA</h1>
-      <div class="jp">AI × 個人開発</div>
+      <div class="jp">AIを統合するアプリ開発</div>
       <p class="sub">SOFTWARE ENGINEERING / MACHINE LEARNING</p>
       <div class="pill-row">
-        <span class="pill">AI Tools</span>
-        <span class="pill">Systems</span>
+        <span class="pill">AI Apps</span>
+        <span class="pill">Integration</span>
         <span class="pill">Research</span>
       </div>
     </main>
-    <section class="system" aria-hidden="true">
-      <div class="line l1"></div><div class="line l2"></div><div class="line l3"></div>
-      <div class="line l4"></div><div class="line l5"></div>
-      <div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div><div class="dot d4"></div>
-      <div class="hub">AI<br>ECOSYSTEM<small>DAILY TOOLS</small></div>
-      <div class="node n1">Clage Cook<span>4-AI conference</span></div>
-      <div class="node n2">ChromiumforA<span>AI-enhanced browser</span></div>
-      <div class="node n3">scriptvedit<span>AI-ready video DSL</span></div>
-      <div class="node n4">Calcpy<span>Python calculator</span></div>
-      <div class="node n5">Research<span>ML × sensing</span></div>
+    <section class="summary-panel" aria-label="主な領域">
+      <div class="panel-label">FOCUS</div>
+      <div class="focus-row">
+        <span class="no">01</span>
+        <div><strong>AI Applications</strong><small>複数AIの統合と、実案件の会話設計</small></div>
+      </div>
+      <div class="focus-row">
+        <span class="no">02</span>
+        <div><strong>Product Integration</strong><small>ブラウザ改造とAIエージェント向けDSL</small></div>
+      </div>
+      <div class="focus-row">
+        <span class="no">03</span>
+        <div><strong>Research</strong><small>機械学習 × 触覚計測</small></div>
+      </div>
+      <div class="panel-note">DESIGN · VERIFY · DELIVER</div>
     </section>
     <div class="footer">KOJIMA8924.GITHUB.IO</div>
   </div>

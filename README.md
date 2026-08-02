@@ -4,7 +4,7 @@
 
 - 公開URL: https://kojima8924.github.io/
 - 実装: 単一の `index.html`、Bootstrap 5、Vanilla JavaScript
-- 主な内容: AI×個人開発、制御／シミュレーション、CG／画像処理、機械学習×計測の研究
+- 主な内容: AIを活用・統合したアプリ開発、機械学習×触覚計測の研究
 
 ## 構成
 
@@ -17,9 +17,17 @@
 
 ## 現在の公開状態
 
-AI×個人開発を含む刷新版を段階公開しています。ChromiumforAは説明を先に公開し、
-通常／AI評価後の実スクリーンショットとAndroid実機動画は安全な素材が揃い次第追加します。
-作品画面とOGP画像に生成AI画像は使いません。OGPはHTML/CSSで描画した概念図です。
+採用担当者が短時間で判断できるよう、主表示を「成果」「本人が決めた設計」「確認できる証拠」へ絞っています。
+
+- 開発中の美容クリニック向けLINE受付AIを、顧客情報を伏せて掲載
+- Clage Cook、ChromiumforA、scriptveditを主要作品として掲載
+- ChromiumforAは同一検索の通常表示／AI評価後を、実画面の安全な範囲で比較
+- 詳しい旧作品は折りたたみ、研究実績は要点と論文・ポスターへの導線に集約
+- SNS共有画像は生成AIを使わず、HTML/CSSから決定的に描画
+- 配布PDFは同じ主表示を2ページ・約4.0 MiBにまとめて生成
+
+ChromiumforAのAndroid実機動画は未掲載です。AIによるポートフォリオ評価欄も未実装で、
+本人が各サービスで生成した文章と実行条件を受け取ってから追加します。
 
 ## ローカル確認
 
@@ -46,7 +54,7 @@ python make_pdf.py
 スクリプトはローカルHTTPサーバーを一時的に起動し、印刷対象画像の読込を確認してからA4 PDFを生成します。
 `--source`、`--output`、`--timeout` で入出力と待ち時間を変更できます。
 
-SNS共有画像は生成AIを使わず、同じPlaywright環境でHTML/CSSから決定的に描画します。
+SNS共有画像は生成AIを使わず、同じPlaywright環境で落ち着いた編集デザインをHTML/CSSから描画します。
 
 ```powershell
 python make_ogp.py
@@ -59,4 +67,5 @@ python make_ogp.py
 2. PC／スマホ、dark／light、印刷時の改ページを確認する
 3. 作品画像、GitHub、論文、動画のリンク切れがないか確認する
 4. OGPのtitle、description、画像をページ内容と同期する
-5. `proposal/` や未公開素材がGit差分へ入っていないことを確認してからpushする
+5. 開発中案件の表現に顧客情報や未確認の実績が含まれないことを確認する
+6. `proposal/` や未公開素材がGit差分へ入っていないことを確認してからpushする

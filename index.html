@@ -277,6 +277,25 @@
       object-fit:contain;
       display:block;
     }
+    .cfa-feature-list{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+      list-style:none;
+      margin:0;
+      padding:0;
+    }
+    .cfa-feature-list li{
+      padding:9px 11px;
+      border:1px solid var(--border);
+      border-radius:9px;
+      background:color-mix(in srgb, var(--card) 88%, var(--accent) 12%);
+      color:var(--muted);
+      font-size:.9rem;
+    }
+    @media (min-width: 768px){
+      .cfa-feature-list{ grid-template-columns:1fr 1fr; }
+    }
     /* Badges */
     .badge-img{
       height: 20px;
@@ -760,6 +779,8 @@
       }
       .cfa-shot img{ object-fit:contain !important; }
       .cfa-shot::after{ display:none !important; }
+      .cfa-feature-list{ grid-template-columns:1fr 1fr !important; gap:3px !important; }
+      .cfa-feature-list li{ padding:3px 5px !important; font-size:8px !important; }
       .cfa-compare figcaption{
         font-size:8px !important;
         line-height:1.3 !important;
@@ -1012,15 +1033,14 @@
 
             <!-- 説明 -->
             <p class="text-muted mt-3 mb-2">
-              <strong>成果:</strong> Claude・ChatGPT・Gemini・Grokの回答を比較し、相互批評から統合まで行う会議アプリ。
-              個人版を毎日使い、公式APIへ直接接続するBYOK版をOSS公開しました。
+              <strong>成果:</strong> 4社AIの回答比較・相互批評・統合を行うBYOKアプリをOSS公開しました。
             </p>
             <p class="text-muted small mb-0">
               <strong>本人の設計:</strong> <code>!</code>コマンドによる会議操作、失敗時も完了済み回答を残す流れ、JSON / ZIPで他AIへ渡せる連携性。
             </p>
 
             <!-- サブ画像 -->
-            <div class="shot-row mt-2" hidden>
+            <div class="shot-row mt-2">
               <div>
                 <div class="media-phone">
                   <img src="media/clagecook-oss-android.png" alt="Android版で回答を展開し、批評前の回答を表示した画面" loading="lazy">
@@ -1039,6 +1059,7 @@
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">ChromiumforA — Google検索をAIで再評価</h3>
               <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-info btn-sm btn-video" href="https://www.nicovideo.jp/watch/ss46619697" target="_blank" rel="noopener noreferrer">&#9654; 実機操作（2倍速）</a>
                 <span class="badge rounded-pill text-bg-secondary">Private</span>
               </div>
             </div>
@@ -1065,12 +1086,38 @@
 
             <!-- 説明 -->
             <p class="text-muted mt-3 mb-2">
-              <strong>成果:</strong> 検索結果の本文をAIで再評価し、根拠コメントと順位変更をGoogleの既存カード上に実装しました。
+              <strong>成果:</strong> 検索結果のAI再評価と閲覧支援を、一つのAndroidブラウザへ統合しました。
             </p>
             <p class="text-muted small mb-1">
-              <strong>本人の設計:</strong> ブラウザ本体への組み込み方と操作・安全性を設計。トークン取得経路の問題は構造を変更し、攻撃再現テストで修正を確認しました。
+              <strong>本人の設計:</strong> Chromiumへの組み込み方、操作、安全性。トークン取得の問題は構造変更と攻撃再現テストで修正しました。
             </p>
-            <p class="text-muted small mb-0">※個人環境前提のためコードは非公開。画面と設計で紹介しています。</p>
+
+            <ul class="cfa-feature-list mt-2" aria-label="ChromiumforAの主な閲覧支援機能">
+              <li>Wikipedia要約・専用検索・関連項目</li>
+              <li>ページ要約・選択文AI</li>
+              <li>サイト別UI・動画再生補助</li>
+            </ul>
+            <div class="shot-row mt-3" aria-label="ChromiumforAのAndroid実機画面">
+              <div>
+                <div class="media-phone">
+                  <img src="media/cfa-ai-search-japanese.png" alt="「人工知能」のGoogle検索で、AIコメント取得後に再評価を完了したChromiumforAの実機画面" loading="lazy">
+                </div>
+                <div class="small text-muted mt-2 text-center">AI評価・並び替え完了</div>
+              </div>
+              <div>
+                <div class="media-phone">
+                  <img src="media/cfa-fab-menu.png" alt="Wikipedia表示中にChromiumforAのFABメニューを開いた実機画面" loading="lazy">
+                </div>
+                <div class="small text-muted mt-2 text-center">FABメニュー</div>
+              </div>
+              <div>
+                <div class="media-phone">
+                  <img src="media/cfa-page-summary.png" alt="Wikipediaの人工知能ページをAIで要約したChromiumforAの実機画面" loading="lazy">
+                </div>
+                <div class="small text-muted mt-2 text-center">ページ要約</div>
+              </div>
+            </div>
+            <p class="text-muted small mt-2 mb-0">※個人環境前提のためコードは非公開。画面と設計で紹介しています。</p>
           </article>
         </div>
 
@@ -1105,13 +1152,13 @@
             </p>
 
             <!-- サブ画像 -->
-            <div class="media-grid mt-2" hidden>
+            <div class="media-grid mt-2">
               <div>
                 <div class="media-thumb">
                   <img src="media/scriptvedit-perf.jpg" alt="レンダ高速化の実測値を紹介する場面" loading="lazy">
                 </div>
                 <div class="small text-muted mt-2">
-                  高速化の実測値も動画内で紹介。数字はこの動画自身を計測したもの
+                  この動画自身のレンダ時間を計測
                 </div>
               </div>
               <div>
@@ -1128,7 +1175,7 @@
         </div>
 
         <!-- Original -->
-        <div class="col-12" hidden>
+        <div class="col-12">
           <article id="clagecook-original" class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">Clage Cook Original — 4AI会議の母艦（非公開・毎日運用）</h3>
@@ -1144,22 +1191,9 @@
             <div class="row g-3 mt-1 align-items-start">
               <div class="col-12 col-md-6">
                 <p class="text-muted mb-2">
-                  OSS版の原型となった、自宅サーバ常駐の個人環境版。Androidアプリ（Kotlin/Compose）から
-                  質問を送ると、PC上のサーバが4つのAIを並列実行して統合回答を返す。<br><br>
-                  生成中の途中経過配信、停止ボタン、アプリを閉じても続く生成と開き直したときの復帰、
-                  会話ごとの文脈維持、4サービスの使用量を一目で見るホーム画面ウィジェットなど、
-                  <strong>毎日使う道具としての操作感</strong>をここで作り込んだ。
-                  この設計・UIの知見を、各社公式APIだけで動く公開版（上のOSS）として再実装している。
+                  4社AIの回答比較・統合をAndroidから毎日使える常駐システムとして運用。
+                  生成の継続・再接続後の復帰・使用量ウィジェットを設計し、公開OSS版へ発展させました。
                 </p>
-                <div class="text-muted small">
-                  <strong>技術</strong>
-                  <ul class="tech-list">
-                    <li>Kotlin / Jetpack Compose + FastAPI / SSE</li>
-                    <li>生成の停止・切断後の再接続・進行中会話の復帰</li>
-                    <li>使用量ウィジェット（タップ更新・取得制限時の直近値表示）</li>
-                    <li>Wi-Fi / Tailscale の自動フェイルオーバー接続</li>
-                  </ul>
-                </div>
               </div>
               <div class="col-12 col-md-6">
                 <div class="shot-row">
@@ -1183,7 +1217,7 @@
         </div>
 
         <!-- Calcpy -->
-        <div class="col-12" hidden>
+        <div class="col-12">
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">Calcpy — 電卓×Python（プロトタイプ）</h3>
@@ -1198,21 +1232,9 @@
             <div class="row g-3 mt-1 align-items-start">
               <div class="col-12 col-md-7">
                 <p class="text-muted mb-2">
-                  「電卓の使用感を保ったまま、必要なところだけPythonへ広げる」Android関数電卓。
-                  <code>sin(pi/4)</code> と入力すると 0.707… ではなく <code>√2/2</code> と
-                  <strong>厳密解</strong>で返る（SymPy）。<br><br>
-                  数学関数は6つの<strong>4方向フリックハブ</strong>に収め、タップでレイヤー循環・
-                  長押しで候補表示という独自の入力方式を設計。Python実行はUIと別プロセスに
-                  隔離し、暴走時はタイムアウトで切る。日常使いできる最小形を検証中。
+                  電卓の操作感にSymPyの厳密計算とPython REPLを統合したAndroidプロトタイプ。
+                  4方向フリック入力と、Python実行の別プロセス隔離を設計しました。
                 </p>
-                <div class="text-muted small">
-                  <strong>技術</strong>
-                  <ul class="tech-list">
-                    <li>Jetpack Compose / Chaquopy（端末内CPython 3.13）</li>
-                    <li>SymPy厳密計算 / セル型REPL（.pyファイルが正本）</li>
-                    <li>フリックハブ入力・別プロセス隔離実行</li>
-                  </ul>
-                </div>
               </div>
               <div class="col-12 col-md-5">
                 <div class="shot-row">
@@ -1268,15 +1290,11 @@
       </div>
 
       <article class="card p-3">
-        <ul class="text-muted mb-0 ps-3">
-          <li><strong>ChatGPT-Web / Windows:</strong> Web版で文章補完、Windows版で常駐UI・ストリーミング・資格情報管理を検証し、現在のAIアプリへ発展。</li>
-          <li><strong>Calcpy:</strong> 電卓の操作感にPython / SymPyの厳密計算を統合し、フリック入力と実行プロセス隔離を設計。</li>
-          <li><strong>基礎実装:</strong> 倒立振子制御、GLSL＋CSGレイトレーシング、Canny法などを実装。</li>
-        </ul>
+        <p class="text-muted mb-0">過去のAIアプリ、制御、CG・画像処理も、実画面と動画で紹介します。</p>
       </article>
 
-      <details class="card p-3 mt-3">
-        <summary class="fw-semibold">画像・動画を含む過去作品の詳細を見る</summary>
+      <details class="card p-3 mt-3" open>
+        <summary class="fw-semibold">過去作品の画像・動画</summary>
         <div class="mt-3">
 
     <!-- GitHub -->
@@ -1286,8 +1304,7 @@
       </div>
 
       <p class="text-muted mb-3">
-        Clage Cook以前に制作した、AIをデスクトップやブラウザの日常操作へ組み込む試みです。
-        ここで得た常駐UI・ストリーミング・文章補完の経験が、現在のAI基盤開発へ繋がっています。
+        常駐UI、ストリーミング、文章補完を検証し、現在のAIアプリへつなげました。
       </p>
 
       <div class="row g-3">
@@ -1314,21 +1331,9 @@
             <div class="row g-3 mt-1 align-items-start">
               <div class="col-12 col-lg-5">
                 <p class="text-muted mb-2">
-                  OpenAI APIを日常的に使うための常駐型デスクトップクライアント。<br>
-                  コピーしたテキストの翻訳・補完・要約などを手軽に行える。<br>
-                  ホットキーで呼び出し、クリップボード連携、レスポンスのストリーミング表示などを実装した。<br>
-                  APIキーはWindows資格情報マネージャーに安全に保存できる。
+                  翻訳・補完・要約をホットキーとクリップボードから呼び出せるWindows常駐クライアント。
+                  ストリーミング表示と、Windows資格情報マネージャーへのAPIキー保存を実装しました。
                 </p>
-
-                <div class="text-muted small">
-                  <strong>技術</strong>
-                  <ul class="tech-list">
-                    <li>OpenAI API / ストリーミング</li>
-                    <li>グローバルホットキー / 常駐アプリ</li>
-                    <li>クリップボード連携</li>
-                    <li>資格情報マネージャーによるAPIキー管理</li>
-                  </ul>
-                </div>
               </div>
 
               <div class="col-12 col-lg-7">
@@ -1363,21 +1368,9 @@
             <div class="row g-3 mt-1 align-items-start">
               <div class="col-12 col-lg-5">
                 <p class="text-muted mb-2">
-                  HTML1枚で動くChatGPTフロントエンド。<br>
-                  入力テキストの続きをモデルに生成させる「ゴーストテキスト」機能を実装した。<br>
-                  一定時間入力が途切れると自動で補完を提案し、キーボード中心の操作で効率的に文章作成ができる。<br>
-                  Tab/←/→キーでゴーストテキストの全体または1文字ずつの確定が可能。<br>
-                  ※ローカル検証用プロトタイプ。APIキーをlocalStorageへ保存するため、公開運用は想定していない。
+                  入力の続きをゴーストテキストで提案する単一HTMLプロトタイプ。
+                  Tabと矢印キーで全体・1文字単位を確定できます。※ローカル検証用。
                 </p>
-
-                <div class="text-muted small">
-                  <strong>技術</strong>
-                  <ul class="tech-list">
-                    <li>単一HTMLファイル</li>
-                    <li>テキスト自動補完 / ゴーストテキスト</li>
-                    <li>OpenAI API</li>
-                  </ul>
-                </div>
               </div>
 
               <div class="col-12 col-lg-7">
@@ -1423,19 +1416,8 @@
             </div>
 
             <p class="text-muted mt-2 mb-2">
-              カメラで取得した手のキーポイントをリアルタイムに解析し、ステアリング・アクセル・ブレーキに変換するWebデモアプリ。
-              手の傾きや握りの開閉のジェスチャで車両を操作できる。<br>
-              手の認識にはMediaPipe Hands、3D描画にはThree.jsを用い、シンプルな物理挙動も実装している。
+              Webカメラで捉えた手の傾きと開閉を、ステアリング・アクセル・ブレーキへ変換する3D運転デモです。
             </p>
-
-            <div class="text-muted small">
-              <strong>技術</strong>
-              <ul class="tech-list">
-                <li>MediaPipe Hands / Webカメラ入力</li>
-                <li>ジェスチャ認識</li>
-                <li>3D車両シミュレーション (Three.js)</li>
-              </ul>
-            </div>
           </article>
         </div>
 
@@ -1459,18 +1441,8 @@
             </div>
 
             <p class="text-muted mt-2 mb-2">
-              Open Dynamics Engine(ODE)を用いて倒立振子のシミュレーションと制御を実装。<br>
-              状態の可視化、PID制御器のチューニングに加え、ランダムな障害物とゴールを設定し、経路探索と左右の車輪の制御で倒立振子をゴールまで移動させるタスクを実装した。
+              PID制御で倒立姿勢を保ちながら、障害物を避けてゴールへ移動するシミュレーションです。
             </p>
-
-            <div class="text-muted small">
-              <strong>技術</strong>
-              <ul class="tech-list">
-                <li>ODE物理シミュレーション</li>
-                <li>PID制御</li>
-                <li>経路探索 / 車両制御</li>
-              </ul>
-            </div>
           </article>
         </div>
       </div>
@@ -1505,18 +1477,8 @@
             </div>
 
             <p class="text-muted mt-2 mb-2">
-              C++/GLSLによるリアルタイムレイトレーシング。Constructive Solid Geometry(CSG)による形状の和・差・積演算に加え、
-              環境光・拡散反射・鏡面反射・屈折・透過を実装した。<br>
-              GLSLのフラグメントシェーダでレイトレーシングを行い、リアルなレンダリングを実現している。       
+              CSGの和・差・積で形状を組み替え、反射・屈折・透過までリアルタイム描画しました。
             </p>
-
-            <div class="text-muted small">
-              <strong>技術</strong>
-              <ul class="tech-list">
-                <li>C++/GLSLレイトレーシング / CSGオブジェクト</li>
-                <li>マテリアル / ライティング / 再帰深度</li>
-              </ul>
-            </div>
           </article>
         </div>
 
@@ -1539,17 +1501,8 @@
             </div>
 
             <p class="text-muted mt-2 mb-2">
-              Pythonでレイトレーシングをフルスクラッチ実装。
-              レイトレーシングの仕組みを深く理解するため、レイと球の交差判定や再帰的な反射・屈折などを一から実装した。
+              レイと球の交差、材質、反射・屈折の再帰計算をPythonでフルスクラッチ実装しました。
             </p>
-
-            <div class="text-muted small">
-              <strong>技術</strong>
-              <ul class="tech-list">
-                <li>Pythonレイトレーシング / 球との交差判定</li>
-                <li>マテリアル / ライティング / 再帰深度</li>
-              </ul>
-            </div>
           </article>
         </div>
 
@@ -1571,17 +1524,8 @@
             </div>
 
             <p class="text-muted mt-2 mb-2">
-              デプスマップベースのシャドウマッピングを実装。
-              シャドウアクネやピーターパン現象といった典型的なアーティファクトへの対策を実装した。
+              デプスマップで影を生成し、バイアス調整でシャドウアクネとピーターパン現象を抑えました。
             </p>
-
-            <div class="text-muted small">
-              <strong>技術</strong>
-              <ul class="tech-list">
-                <li>デプスマップベースのシャドウマッピング</li>
-                <li>シャドウアクネ / ピーターパン現象のチューニング</li>
-              </ul>
-            </div>
           </article>
         </div>
 
@@ -1604,17 +1548,8 @@
             </div>
 
             <p class="text-muted mt-2 mb-2">
-              シャドウマッピング実装の副産物として、ワイヤーフレームのアニメーションを制作。
-              伝播する波と、放物面の形状変化を描画した。
+              既存の描画基盤を再利用し、伝播する波と放物面の変形をワイヤーフレームで可視化しました。
             </p>
-
-            <div class="text-muted small">
-              <strong>技術</strong>
-              <ul class="tech-list">
-                <li>パラメトリック曲面 / メッシュ更新</li>
-                <li>線描画 / アンチエイリアシング</li>
-              </ul>
-            </div>
           </article>
         </div>
 
@@ -1630,8 +1565,7 @@
             </div>
 
             <p class="text-muted mt-2 mb-2">
-              Canny法エッジ検出をライブラリに頼らずフルスクラッチで実装。
-              アルゴリズムの仕組みを理解することを目的に制作した。
+              ライブラリに頼らず、Canny法のエッジ抽出処理を一から実装しました。
             </p>
 
             <!-- Image-heavy comparison -->
@@ -1652,12 +1586,6 @@
               </div>
             </div>
 
-            <div class="text-muted small mt-2">
-              <strong>技術</strong>
-              <ul class="tech-list">
-                <li>Cannyエッジ検出アルゴリズム</li>
-              </ul>
-            </div>
           </article>
         </div>
       </div>

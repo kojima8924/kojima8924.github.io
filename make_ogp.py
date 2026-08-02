@@ -296,7 +296,7 @@ HTML = r"""
       <div class="panel-label">FOCUS</div>
       <div class="focus-row">
         <span class="no">01</span>
-        <div><strong>AI Applications</strong><small>複数AIの統合と、実案件の会話設計</small></div>
+        <div><strong>AI Applications</strong><small>複数AIの比較・統合とアプリ設計</small></div>
       </div>
       <div class="focus-row">
         <span class="no">02</span>

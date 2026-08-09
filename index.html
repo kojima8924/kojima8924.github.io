@@ -665,6 +665,45 @@
         break-before: page !important;
         page-break-before: always !important;
       }
+
+      /* ── AI要約: タブを廃し、4AI分をAI名見出しつきで縦に全掲載 ── */
+      #ai-summary{
+        break-before: page !important;
+        page-break-before: always !important;
+      }
+      #ai-summary .ai-summary-tabs{ display:none !important; }
+      #ai-summary .tab-content > .tab-pane{
+        display:block !important;
+        opacity:1 !important;
+      }
+      #ai-summary .card,
+      #ai-summary .tab-pane{
+        break-inside:auto !important;
+        page-break-inside:auto !important;
+      }
+      .aisum-print-name{
+        display:block !important;
+        font-size:12px !important;
+        font-weight:700;
+        margin:8px 0 2px !important;
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+      }
+      #ai-summary .ai-quote{
+        border-left:2px solid #999 !important;
+        padding:2px 8px !important;
+      }
+      #ai-summary ul{
+        font-size:10px !important;
+        margin-bottom:4px !important;
+        padding-left:16px !important;
+      }
+      .ai-prompt{
+        background:#f5f5f5 !important;
+        border:1px solid #ccc !important;
+        font-size:9px !important;
+        padding:4px 6px !important;
+      }
     }
 
     /* ============================================
@@ -721,6 +760,7 @@
       padding: .75rem;
       color: var(--muted);
     }
+    .aisum-print-name{ display: none; } /* 印刷時のみ表示するAI名見出し */
 
     /* 縦長(スマホ)スクショ: 16:9枠で切り取らず、端末風の枠で等倍表示 */
     .shot-row{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
@@ -1387,9 +1427,8 @@
 
     <hr class="border-subtle">
 
-    <!-- AI summary: 各AIの要約を「最新版に対する固定文字列」として掲載する枠。
-         要約を掲載したら section の no-print を外し、印刷にも含める -->
-    <section id="ai-summary" class="anchor py-2 no-print">
+    <!-- AI summary: 各AIの要約を「最新版に対する固定文字列」として掲載 -->
+    <section id="ai-summary" class="anchor py-2">
       <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
         <h2 class="h4 section-title mb-0">AIによる要約</h2>
       </div>
@@ -1417,6 +1456,7 @@
 
         <div class="tab-content mt-3">
           <div class="tab-pane fade show active" id="aisum-chatgpt" role="tabpanel" aria-labelledby="aisum-chatgpt-tab" tabindex="0">
+            <h3 class="aisum-print-name">ChatGPT</h3>
             <div class="ai-quote text-muted mb-2">
               <p>小嶋 明氏は、AIを既存プロダクトへ組み込み、課題設定・仕様設計・アーキテクチャ・実装管理・実機／自動テストまで一貫して担うAIアプリケーションエンジニアです。AIエージェントで開発を加速しながら、生成結果を鵜呑みにせず、比較・検証して実用的な製品へ仕上げる姿勢を軸としています。</p>
               <p class="mb-1"><strong>代表的な制作物</strong></p>
@@ -1433,6 +1473,7 @@
             <p class="small text-muted mb-0">モデル: ChatGPT Pro ／ 取得日: 2026年8月10日</p>
           </div>
           <div class="tab-pane fade" id="aisum-claude" role="tabpanel" aria-labelledby="aisum-claude-tab" tabindex="0">
+            <h3 class="aisum-print-name">Claude</h3>
             <div class="ai-quote text-muted mb-2">
               <p class="mb-1"><strong>プロフィール</strong></p>
               <ul>
@@ -1466,6 +1507,7 @@
             <p class="small text-muted mb-0">モデル: Claude Fable 5 ／ 取得日: 2026年8月10日</p>
           </div>
           <div class="tab-pane fade" id="aisum-gemini" role="tabpanel" aria-labelledby="aisum-gemini-tab" tabindex="0">
+            <h3 class="aisum-print-name">Gemini</h3>
             <div class="ai-quote text-muted mb-2">
               <p class="mb-1"><strong>概要</strong></p>
               <p>AIを既存プロダクトへ組み込み、課題設定から実機検証までを担うAIアプリケーションエンジニア。AIエージェントを活用して実装を加速させ、自らは課題設定・仕様策定・アーキテクチャ設計・テスト検証に注力する開発スタイルを持つ。</p>
@@ -1491,7 +1533,7 @@
                 <li><strong>美容クリニック向けLINE応答AI（開発中・匿名）</strong>: LINEでの問い合わせへの一次対応（FAQ回答、予約フォームへの案内など）を支援するAI。Dify応答フローやRAGナレッジを実装。</li>
               </ul>
               <p class="mb-1"><strong>研究実績</strong></p>
-              <p><strong>機械学習 × 触覚計測</strong>: EIT触覚センサの逆問題にCNNを適用し、空間分解能指標と位置誤差を従来比約22%低減。国際会議（SII2022、IROS2022）での発表や、筆頭著者としてジャーナル（Frontiers in Robotics and AI）への論文掲載実績あり。</p>
+              <p><strong>機械学習 × 触覚計測</strong>: EIT触覚センサの逆問題にCNNを適用し、空間分解能指標と位置誤差を従来比約22%低減。国際会議（SI2022、IROS2022）での発表や、筆頭著者としてジャーナル（Frontiers in Robotics and AI）への論文掲載実績あり。</p>
               <p class="mb-1"><strong>その他の開発・制作物</strong></p>
               <ul>
                 <li><strong>個人開発</strong>: ChatGPTのWindows常駐クライアント、ゴーストテキスト提案型のWebプロトタイプ、電卓×Pythonアプリ（Calcpy）。</li>
@@ -1500,9 +1542,10 @@
               </ul>
               <p class="mb-0"><strong>連絡先</strong>: Mail: a.kojima8924@gmail.com ／ GitHub: kojima8924</p>
             </div>
-            <p class="small text-muted mb-0">モデル: Gemini Pro ／ 取得日: 2026年8月10日 ※GeminiのみURLへアクセスできず、同一内容のページ一式（HTML・画像・PDF）を添付して取得</p>
+            <p class="small text-muted mb-0">モデル: Gemini Pro ／ 取得日: 2026年8月10日 ※GeminiのみURL・ファイル一式のいずれも読み込めず、ページのスクリーンショットを添付して取得</p>
           </div>
           <div class="tab-pane fade" id="aisum-grok" role="tabpanel" aria-labelledby="aisum-grok-tab" tabindex="0">
+            <h3 class="aisum-print-name">Grok</h3>
             <div class="ai-quote text-muted mb-2">
               <p>東京大学出身のAIアプリケーションエンジニア（フリーランス）。AIを既存プロダクトに組み込み、課題設定から実機検証まで一貫して担当する。複数LLMの統合、Android/Flutterアプリ、AIエージェント向けDSLを中心に、「使い続けられる形」まで設計・実装するスタイル。</p>
               <p class="mb-1"><strong>開発スタイル</strong></p>
@@ -1547,7 +1590,7 @@
       </article>
     </section>
 
-    <hr class="border-subtle no-print">
+    <hr class="border-subtle">
 
     <!-- Other work -->
     <section id="other" class="anchor py-2">

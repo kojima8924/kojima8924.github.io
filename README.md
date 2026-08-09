@@ -31,6 +31,15 @@
 
 AIによる要約欄（`#ai-summary`）は、ChatGPT・Claude・Gemini・Grokの4タブ構成で枠まで実装済みです。掲載する文章はリアルタイム生成ではなく、統一のURL・プロンプト（ページ内「実行条件」に記載）で本人が各サービスから取得した固定文字列を、モデル名・取得日とともに貼り付けます。要約掲載までは印刷・PDF対象外（`no-print`）とし、掲載時に `no-print` を外します。
 
+## ミラー（GitHub Pagesへアクセスできないクローラー向け）
+
+GeminiなどがGitHub Pagesを読めない場合向けに、公開内容と同一のミラーをロリポップへ手動配置しています。
+
+- ミラーURL: http://kojima8924.main.jp/portfolio/
+- 内容: `index.html`、`favicon.svg`、`index.html` が参照する `media/` のみ（ローカル専用のmp4等は含めない）
+- 更新はページ更新時に `lolipop put` で同じ構成を `portfolio/` へ上書きする（自動同期はしない）
+- canonical は GitHub Pages を指したままにする（検索エンジンの重複扱い防止）
+
 ## ローカル確認
 
 ```powershell

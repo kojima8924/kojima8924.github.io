@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>小嶋 明 | AIアプリ開発・機械学習 Portfolio</title>
-  <meta name="description" content="AIを業務や日常操作へ組み込むアプリ開発と、機械学習×計測の研究を紹介する小嶋明のポートフォリオ" />
+  <title>小嶋 明 | AIアプリケーションエンジニア Portfolio</title>
+  <meta name="description" content="複数LLMの統合、Android／Flutterアプリ、AIエージェント向けDSLを設計・検証する小嶋明のポートフォリオ" />
 
   <!-- OGP -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="小嶋 明 | AIアプリ開発・機械学習 Portfolio" />
-  <meta property="og:description" content="AIを業務や日常操作へ組み込むアプリ開発と、機械学習×計測の研究を紹介する小嶋明のポートフォリオ" />
+  <meta property="og:title" content="小嶋 明 | AIアプリケーションエンジニア Portfolio" />
+  <meta property="og:description" content="複数LLMの統合、Android／Flutterアプリ、AIエージェント向けDSLを設計・検証する小嶋明のポートフォリオ" />
   <meta property="og:image" content="https://kojima8924.github.io/media/ogp-portfolio.png" />
   <meta property="og:image:alt" content="小嶋明のAI個人開発・機械学習ポートフォリオ" />
   <meta property="og:url" content="https://kojima8924.github.io/" />
   <meta property="og:locale" content="ja_JP" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="小嶋 明 | AIアプリ開発・機械学習 Portfolio" />
-  <meta name="twitter:description" content="AIを業務や日常操作へ組み込むアプリ開発と、機械学習×計測の研究を紹介する小嶋明のポートフォリオ" />
+  <meta name="twitter:title" content="小嶋 明 | AIアプリケーションエンジニア Portfolio" />
+  <meta name="twitter:description" content="複数LLMの統合、Android／Flutterアプリ、AIエージェント向けDSLを設計・検証する小嶋明のポートフォリオ" />
   <meta name="twitter:image" content="https://kojima8924.github.io/media/ogp-portfolio.png" />
   <meta name="twitter:image:alt" content="小嶋明のAI個人開発・機械学習ポートフォリオ" />
   <link rel="canonical" href="https://kojima8924.github.io/" />
@@ -34,7 +34,7 @@
       "name": "小嶋 明",
       "alternateName": "Akira Kojima",
       "url": "https://kojima8924.github.io/",
-      "jobTitle": "フリーランスITエンジニア",
+      "jobTitle": "AIアプリケーションエンジニア",
       "sameAs": [
         "https://github.com/kojima8924"
       ],
@@ -168,6 +168,32 @@
         radial-gradient(1200px 600px at 10% 0%, var(--hero1), transparent 60%),
         radial-gradient(1200px 600px at 80% 20%, var(--hero2), transparent 60%);
       border-bottom: 1px solid var(--border);
+    }
+    .hero-summary{ max-width:48rem; line-height:1.65; }
+    .hero-method{ max-width:58rem; line-height:1.65; }
+    .evidence-line{
+      display:inline-flex;
+      flex-wrap:wrap;
+      gap:.15rem .55rem;
+      align-items:center;
+      color:var(--accent2);
+      font-size:.95rem;
+      font-weight:700;
+    }
+    .hero-actions .btn{
+      min-height:44px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding-inline:1rem;
+    }
+    .hero-actions .btn-info{
+      --bs-btn-bg:var(--accent);
+      --bs-btn-border-color:var(--accent);
+      --bs-btn-hover-bg:var(--accent2);
+      --bs-btn-hover-border-color:var(--accent2);
+      --bs-btn-color:#fff;
+      --bs-btn-hover-color:#fff;
     }
 
     /* Card */
@@ -586,23 +612,6 @@
       /* sectionレベルではavoidしない（巨大な空白の原因になる） */
       section{ break-inside: auto; page-break-inside: auto; }
 
-      /* ── 制御セクションの前で改ページ（見出し孤立防止） ── */
-      #github + hr.border-subtle{ display:none !important; }
-      #control{
-        break-before: page !important;
-        page-break-before: always !important;
-      }
-
-      /* 制御の後にCGを続け、制御ページの大きな空白を避ける */
-      #control + hr.border-subtle{ display:none !important; }
-
-      /* ── 研究セクションの前で改ページ ── */
-      #cg + hr.border-subtle{ display:none !important; }
-      #research{
-        break-before: page !important;
-        page-break-before: always !important;
-      }
-
       /* ── 印刷時 h-100 無効化（flex高さの計算ズレ防止） ── */
       .h-100{ height:auto !important; }
 
@@ -707,17 +716,9 @@
         break-inside:avoid !important;
         page-break-inside:avoid !important;
       }
-      #clagecook-original{
+      #chromiumfora-card{
         break-before:page !important;
         page-break-before:always !important;
-      }
-      #clagecook-original > .d-flex:first-child{
-        break-after:avoid !important;
-        page-break-after:avoid !important;
-      }
-      #clagecook-original > .row{
-        break-before:avoid !important;
-        page-break-before:avoid !important;
       }
       .timeline{
         gap:0 6px !important;
@@ -823,6 +824,7 @@
         <ul class="navbar-nav ms-auto gap-lg-2 align-items-lg-center">
           <li class="nav-item"><a class="nav-link" href="#ai">主要作品</a></li>
           <li class="nav-item"><a class="nav-link" href="#research">研究</a></li>
+          <li class="nav-item"><a class="nav-link" href="#career">経歴</a></li>
           <li class="nav-item"><a class="nav-link" href="#other">その他</a></li>
           <li class="nav-item"><a class="nav-link" href="#contact">連絡先</a></li>
 
@@ -856,51 +858,28 @@
         <div class="col-12 col-lg">
           <h1 class="display-6 fw-bold mb-2 name-title">小嶋 明 (Akira Kojima)</h1>
           <p class="lead text-muted mb-3 fw-semibold">
-            複数AIの統合、ブラウザへのAI機能組み込み、AIエージェント向けDSLを設計する
-            フリーランスITエンジニアです。
+            AIを既存プロダクトへ組み込み、課題設定から実機検証まで担う
+            AIアプリケーションエンジニアです。
           </p>
 
-          <p class="text-muted small mb-3">
-            <strong>開発スタイル:</strong> コーディングは原則AIへ任せ、課題設定・仕様・設計・受入基準を決め、
+          <p class="text-muted mb-3 hero-summary">
+            複数LLMの統合、Android／Flutterアプリ、AIエージェント向けDSLを中心に、
+            使い続けられる形まで設計・実装しています。
+          </p>
+
+          <p class="text-muted small mb-3 hero-method">
+            <strong>開発スタイル:</strong> AIエージェントで実装を加速し、私は課題設定・仕様・アーキテクチャ・受入基準を定め、
             生成コードを実機と自動テストで検証します。
           </p>
 
-          <!-- 3本柱 -->
-          <div class="row g-2 mb-3">
-            <div class="col-12 col-md-4">
-              <div class="chip-card">
-                <div class="t">💼 実案件（開発中）</div>
-                <div class="d">美容クリニック向けLINE応答AIを開発中。問い合わせ対応から予約案内、有人対応への切替までを支援。</div>
-              </div>
-            </div>
-            <div class="col-12 col-md-4">
-              <div class="chip-card">
-                <div class="t">🤖 AIアプリ</div>
-                <div class="d">4社AIの比較・統合、検索結果のAI再評価、AI向け動画編集DSLを開発（<a href="#ai">主要作品</a>）。</div>
-              </div>
-            </div>
-            <div class="col-12 col-md-4">
-              <div class="chip-card">
-                <div class="t">🔬 研究</div>
-                <div class="d">EIT触覚センサを研究。IROS 2022発表、Frontiers査読論文の筆頭著者（<a href="#research">詳細</a>）。</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 経歴タイムライン -->
-          <div class="timeline mb-3">
-            <span class="yr">2018–22</span><span class="ev">東京大学 工学部 精密工学科 卒業</span>
-            <span class="yr">2022–24</span><span class="ev">東京大学大学院 修士課程 修了</span>
-            <span class="yr">2024–26</span><span class="ev">同博士課程へ進学後、2026年3月に中途退学</span>
-            <span class="yr">2026–</span><span class="ev">フリーランスのITエンジニアとして活動</span>
-          </div>
-          <p class="career-compact text-muted small mb-3">
-            東京大学工学部卒・同大学院修士修了／博士課程中退（2026年3月）／2026年からフリーランス
+          <p class="evidence-line mb-3">
+            実案件 1件（開発中・匿名）<span aria-hidden="true">｜</span>主要OSS 2件<span aria-hidden="true">｜</span>査読論文 筆頭著者
           </p>
 
-          <div class="d-flex flex-wrap gap-2">
-            <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub: kojima8924</a>
-            <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com">Mail: a.kojima8924@gmail.com</a>
+          <div class="d-flex flex-wrap gap-2 hero-actions">
+            <a class="btn btn-info" href="#ai">代表作品を見る</a>
+            <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio.pdf" download>ポートフォリオPDF（完全版）</a>
+            <a class="btn btn-outline-info" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub</a>
           </div>
         </div>
       </div>
@@ -918,7 +897,7 @@
       </div>
 
       <p class="text-muted mb-3">
-        AIを単体で呼ぶだけでなく、既存の業務や日常操作へ組み込み、使い続けられる形まで設計しています。
+        非公開版の日常運用から得た知見を、公式APIによるOSS、Android ChromiumへのAI統合、AIエージェント向け動画編集DSLへ展開しています。
       </p>
 
       <!-- 全体像 -->
@@ -1002,17 +981,18 @@
       <div class="row g-3">
 
         <!-- Client work -->
-        <div class="col-12">
+        <div class="col-12 order-4">
           <article class="card p-3 border-info">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">美容クリニック向けLINE応答AI</h3>
               <span class="badge rounded-pill text-bg-secondary">開発中・匿名掲載</span>
             </div>
             <p class="text-muted mt-2 mb-1">
-              LINEの問い合わせに一次対応し、FAQ回答、予約フォームへの案内、必要時のスタッフへの引き継ぎまでを支援する仕組みを開発しています。
+              <strong>開発中:</strong> 美容クリニックのLINE問い合わせ一次対応を支援するAIです。FAQ回答、予約フォームへの案内、必要時のスタッフ引き継ぎを扱います。
             </p>
             <p class="text-muted small mb-1">
-              <strong>担当:</strong> Difyの応答フロー、LINE Webhook、RAGナレッジ、状態管理を設計・実装し、回答品質と安全性を検証中。（施設を特定しない範囲で掲載許可済み）
+              <strong>実装済み:</strong> Dify応答フロー、LINE Webhook、RAGナレッジ、状態管理。<strong>検証中:</strong> 回答品質と安全性。<br>
+              <strong>公開範囲:</strong> 施設を特定しない範囲で掲載許可済み。顧客名、画面、利用者・運用データ、KPIは非公開です。
             </p>
             <div class="mt-2">
               <img class="badge-img" loading="lazy" alt="Dify" src="https://img.shields.io/badge/Platform-Dify-6941C6">
@@ -1023,7 +1003,7 @@
         </div>
 
         <!-- Clage Cook OSS -->
-        <div class="col-12">
+        <div class="col-12 order-1">
           <article class="card p-3">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">Clage Cook — 4つのAIを、1つの会議へ（OSS）</h3>
@@ -1049,6 +1029,9 @@
             <p class="text-muted small mb-0">
               <strong>本人の設計:</strong> Flutterで6プラットフォームを対象に共通UIを設計し、Direct BYOKと開発用サーバーを切り替える構成。
             </p>
+            <p class="text-muted small mt-2 mb-0">
+              <strong>発展・証拠・状態:</strong> 非公開版の日常運用で得た会議フローを公式APIベースで再実装。公開リポジトリ、CI、Windows・Android実機画面で確認できます。公開ベータのためproduction support・後方互換性は未保証です。
+            </p>
 
             <!-- サブ画像 -->
             <div class="shot-row mt-2" aria-label="Clage Cook OSSのAndroid実機画面">
@@ -1073,8 +1056,8 @@
         </div>
 
         <!-- ChromiumforA -->
-        <div class="col-12">
-          <article class="card p-3">
+        <div class="col-12 order-2">
+          <article id="chromiumfora-card" class="card p-3">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">ChromiumforA — Google検索をAIで再評価</h3>
               <div class="d-flex gap-2 flex-wrap">
@@ -1105,10 +1088,10 @@
 
             <!-- 説明 -->
             <p class="text-muted mt-3 mb-2">
-              <strong>成果:</strong> 検索結果のAI再評価と閲覧支援を、一つのAndroidブラウザへ統合しました。
+              <strong>成果:</strong> Google検索結果へAI評価コメントを挿入し、評価後の順位を提示するAndroid Chromium改造版を開発。ページ要約・選択文AIも統合しました。
             </p>
             <p class="text-muted small mb-1">
-              <strong>本人の設計:</strong> Chromiumへの組み込み方、操作、安全性。トークン取得の問題は構造変更と攻撃再現テストで修正しました。
+              <strong>本人の責任範囲:</strong> Chromiumへの組み込み、操作設計、認証情報の扱い、安全性検証。認証情報の扱いに関する問題を再現テストで検出し、構造変更後に再検証しました。
             </p>
 
             <ul class="cfa-feature-list mt-2" aria-label="ChromiumforAの主な閲覧支援機能">
@@ -1136,12 +1119,12 @@
                 <div class="small text-muted mt-2 text-center">ページ要約</div>
               </div>
             </div>
-            <p class="text-muted small mt-2 mb-0">※個人環境前提のためコードは非公開。画面と設計で紹介しています。</p>
+            <p class="text-muted small mt-2 mb-0"><strong>証拠・状態:</strong> 同一検索語の通常表示／AI評価後、Android実機画面、操作動画を掲載。個人検証用・非公開のため、画面・動画・設計のみ公開しています。</p>
           </article>
         </div>
 
         <!-- scriptvedit(GitHubセクションから昇格) -->
-        <div class="col-12">
+        <div class="col-12 order-3">
           <article id="scriptvedit-card" class="card p-3">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">scriptvedit — AIエージェント向けPython動画編集DSL</h3>
@@ -1169,6 +1152,9 @@
             <p class="text-muted small mb-0">
               <strong>本人の設計:</strong> DSL記法、素材キャッシュ、要素配置のアンカー解決。FFmpegへの変換実装はAIへ任せ、出力と性能を検証しました。
             </p>
+            <p class="text-muted small mt-2 mb-0">
+              <strong>計測条件:</strong> 2分56秒・87オブジェクトの実プロジェクトを20コアPCで比較（逐次1012秒／並列8で106秒）。公開リポジトリ、テスト、コードと出力動画で確認できます。
+            </p>
 
             <!-- サブ画像 -->
             <div class="media-grid mt-2">
@@ -1193,13 +1179,12 @@
           </article>
         </div>
 
-        <!-- Original -->
-        <div class="col-12">
-          <article id="clagecook-original" class="card p-3 h-100">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">Clage Cook Original — 4AI会議の母艦（非公開・毎日運用）</h3>
-              <span class="btn btn-outline-info btn-sm disabled">Private</span>
-            </div>
+        <!-- Original: OSS版の開発背景として補足表示 -->
+        <div class="col-12 order-5">
+          <details id="clagecook-original" class="card p-3 h-100">
+            <summary class="fw-semibold">Clage Cook Original（非公開版）— 公開OSS版に至る開発背景</summary>
+            <div class="mt-3">
+              <span class="badge rounded-pill text-bg-secondary">非公開・毎日運用</span>
 
             <div class="mt-2">
               <img class="badge-img" loading="lazy" alt="Android" src="https://img.shields.io/badge/Android-Kotlin%20%2F%20Jetpack%20Compose-green">
@@ -1235,11 +1220,12 @@
               </div>
             </div>
 
-          </article>
+            </div>
+          </details>
         </div>
 
         <!-- Calcpy -->
-        <div class="col-12">
+        <div class="col-12 order-last">
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">Calcpy — 電卓×Python（プロトタイプ）</h3>
@@ -1305,6 +1291,27 @@
 
     <hr class="border-subtle">
 
+    <!-- Career -->
+    <section id="career" class="anchor py-2">
+      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 section-title mb-0">経歴</h2>
+      </div>
+
+      <article class="card p-3">
+        <p class="text-muted mb-3">
+          東京大学工学部卒、同大学院修士課程修了。博士課程でEIT触覚センサを研究後、2026年3月に中途退学。現在はAIアプリ開発を中心にフリーランスとして活動しています。
+        </p>
+        <div class="timeline">
+          <span class="yr">2018–22</span><span class="ev">東京大学 工学部 精密工学科</span>
+          <span class="yr">2022–24</span><span class="ev">東京大学大学院 修士課程</span>
+          <span class="yr">2024–26</span><span class="ev">同博士課程でEIT触覚センサを研究</span>
+          <span class="yr">2026–</span><span class="ev">フリーランスのAIアプリケーションエンジニア</span>
+        </div>
+      </article>
+    </section>
+
+    <hr class="border-subtle">
+
     <!-- Other work -->
     <section id="other" class="anchor py-2">
       <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
@@ -1315,7 +1322,7 @@
         <p class="text-muted mb-0">過去のAIアプリ、制御、CG・画像処理も、実画面と動画で紹介します。</p>
       </article>
 
-      <details class="card p-3 mt-3" open>
+      <details class="card p-3 mt-3">
         <summary class="fw-semibold">過去作品の画像・動画</summary>
         <div class="mt-3">
 

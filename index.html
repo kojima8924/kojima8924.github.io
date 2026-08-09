@@ -608,6 +608,7 @@
 
       /* ── Hero ── */
       .hero{
+        background:none !important; /* グラデーションはPDFでPattern資源になり圧縮時に壊れるため印刷しない */
         border-bottom:none !important;
         padding-top:0 !important;
         padding-bottom:0.15rem !important;
@@ -636,6 +637,34 @@
       /* ── section-title::before ドットを印刷で非表示 ── */
       .section-title::before{ display:none !important; }
       .media-hero::after, .media-thumb::after{ display:none !important; }
+
+      /* ── アコーディオン: 印刷では開いた状態で全内容を掲載 ── */
+      details.card > summary{
+        font-size:12px !important;
+        font-weight:700;
+        list-style:none;
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+      }
+      details.card > summary::-webkit-details-marker,
+      details.card > summary::marker{ display:none; content:""; }
+      /* 過去作品ブロックは新しいページから開始し、途中の分割は許可 */
+      #other details.card{
+        break-before: page !important;
+        page-break-before: always !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+      /* Clage Cook Original は1ブロックとして維持 */
+      #clagecook-original{
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      /* CG見出しのページ末孤立を防ぐ（break-after:avoidはChromium印刷で効かないため改ページで対処） */
+      #cg{
+        break-before: page !important;
+        page-break-before: always !important;
+      }
     }
 
     /* ============================================
@@ -1959,12 +1988,23 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script>
-    // 印刷時に Scrollspy を一時無効化（Chromium フリーズ対策）
+    // 印刷時に Scrollspy を一時無効化（Chromium フリーズ対策）し、
+    // アコーディオンをすべて開いて過去作品も印刷に含める（終了後に元へ戻す）
+    let detailsOpenStateBeforePrint = null;
     window.addEventListener("beforeprint", () => {
       const spy = bootstrap.ScrollSpy.getInstance(document.body);
       if(spy) spy.dispose();
+      const all = [...document.querySelectorAll("details")];
+      detailsOpenStateBeforePrint = all.map(d => d.open);
+      all.forEach(d => { d.open = true; });
     });
     window.addEventListener("afterprint", () => {
+      if(detailsOpenStateBeforePrint){
+        [...document.querySelectorAll("details")].forEach((d, i) => {
+          d.open = detailsOpenStateBeforePrint[i];
+        });
+        detailsOpenStateBeforePrint = null;
+      }
       new bootstrap.ScrollSpy(document.body, { target: "#nav" });
     });
 

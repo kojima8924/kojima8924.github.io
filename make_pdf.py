@@ -70,6 +70,12 @@ def _server_location(source: Path) -> tuple[Path, str]:
 def _wait_until_ready(page: object, timeout_ms: int) -> list[str]:
     """印刷に必要なスタイル、フォント、画像の読込完了を待つ。"""
 
+    # アコーディオンを開いて過去作品も印刷対象に含める。
+    # 閉じたままだと中の遅延読込画像が「非表示」扱いになり待機対象から漏れるため、
+    # 画像のeager化より先に開く必要がある。
+    page.evaluate(
+        "document.querySelectorAll('details').forEach(detail => { detail.open = true; })"
+    )
     page.eval_on_selector_all(
         'img[loading="lazy"]',
         "images => images.forEach(image => { image.loading = 'eager'; })",
@@ -129,6 +135,48 @@ def _wait_until_ready(page: object, timeout_ms: int) -> list[str]:
           .map(image => image.currentSrc || image.src || '(srcなし)')
         """,
     )
+
+
+def _compress_pdf_images(output: Path) -> int:
+    """埋め込み画像を印刷十分な解像度へ再圧縮し、配布しやすいサイズに抑える。"""
+
+    try:
+        import pymupdf
+    except ImportError as exc:
+        raise RuntimeError(
+            "PyMuPDF がありません。`python -m pip install -r requirements-pdf.txt` "
+            "を実行してください。"
+        ) from exc
+
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{output.stem}-compress-",
+        suffix=".tmp.pdf",
+        dir=output.parent,
+    )
+    os.close(descriptor)
+    temporary_path = Path(temporary_name)
+
+    try:
+        with pymupdf.open(output) as document:
+            document.rewrite_images(
+                dpi_threshold=180,
+                dpi_target=150,
+                quality=80,
+                lossy=True,
+                lossless=True,
+            )
+            document.ez_save(str(temporary_path))
+
+        size = temporary_path.stat().st_size
+        with temporary_path.open("rb") as stream:
+            signature = stream.read(5)
+        if signature != b"%PDF-" or size < 1024:
+            raise RuntimeError("画像再圧縮後の PDF が不正です。")
+
+        os.replace(temporary_path, output)
+        return size
+    finally:
+        temporary_path.unlink(missing_ok=True)
 
 
 def _write_pdf_atomically(page: object, output: Path) -> int:
@@ -216,7 +264,8 @@ def make_pdf(source: Path, output: Path, timeout_seconds: float) -> int:
                             f"印刷対象の画像を読み込めませんでした:\n  - {details}"
                         )
 
-                    size = _write_pdf_atomically(page, output)
+                    _write_pdf_atomically(page, output)
+                    size = _compress_pdf_images(output)
                     context.close()
                 finally:
                     browser.close()

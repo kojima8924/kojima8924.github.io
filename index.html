@@ -24,6 +24,19 @@
   <!-- Favicon -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 
+  <!-- 初回描画前にテーマを確定し、ライト設定ユーザーのダークフラッシュを防ぐ -->
+  <script>
+    (function(){
+      try{
+        var t = localStorage.getItem("portfolio-theme");
+        if(t !== "light" && t !== "dark"){
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      }catch(e){}
+    })();
+  </script>
+
   <!-- JSON-LD 構造化データ -->
   <script type="application/ld+json">
   {
@@ -68,6 +81,7 @@
 
       --accent: #7cc4ff;
       --accent2: #9fe1ff;
+      --accent-contrast: #0b1220;
     }
 
     html[data-theme="light"]{
@@ -87,6 +101,7 @@
 
       --accent:#0b66c3;
       --accent2:#0b66c3;
+      --accent-contrast:#ffffff;
     }
 
     /* help browsers */
@@ -192,13 +207,16 @@
       --bs-btn-border-color:var(--accent);
       --bs-btn-hover-bg:var(--accent2);
       --bs-btn-hover-border-color:var(--accent2);
-      --bs-btn-color:#fff;
-      --bs-btn-hover-color:#fff;
+      /* ダークの明るいアクセント上では白文字がWCAG未達のため、テーマごとに文字色を切り替える */
+      --bs-btn-color:var(--accent-contrast);
+      --bs-btn-hover-color:var(--accent-contrast);
     }
 
     /* Card */
     .card{
       background: var(--card);
+      /* Bootstrapの.cardは--bs-body-color(黒)を継承させるため、テーマ文字色を明示（summary等の素のテキスト対策） */
+      color: var(--fg);
       border-color: var(--border) !important;
       box-shadow: 0 10px 30px var(--shadow);
       border-radius: 14px;
@@ -805,7 +823,7 @@
   </style>
 </head>
 
-<body data-bs-spy="scroll" data-bs-target="#nav" data-bs-offset="100">
+<body data-bs-spy="scroll" data-bs-target="#nav">
   <a class="skip-link" href="#main-content">本文へ移動</a>
 <!-- Top bar -->
   <nav class="navbar navbar-expand-lg sticky-top" data-bs-theme="dark" aria-label="メインナビゲーション">
@@ -830,7 +848,7 @@
 
           <!-- Theme toggle -->
           <li class="nav-item ms-lg-2 no-print">
-            <button id="themeToggle" class="btn btn-soft btn-sm text-muted" type="button" aria-label="ライトテーマに切り替え">
+            <button id="themeToggle" class="btn btn-soft btn-sm text-muted" type="button" aria-label="現在ダークテーマ。ライトテーマに切り替え">
               🌙 Dark
             </button>
           </li>
@@ -1229,7 +1247,7 @@
           <article class="card p-3 h-100">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">Calcpy — 電卓×Python（プロトタイプ）</h3>
-              <span class="btn btn-outline-info btn-sm disabled">Private</span>
+              <span class="badge rounded-pill text-bg-secondary">Private</span>
             </div>
 
             <div class="mt-2">
@@ -1440,7 +1458,7 @@
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/handdrive.png" alt="Hand drive capture" loading="lazy">
+                <img src="media/handdrive.png" alt="ハンドドライブで手の動きから車を運転する3Dデモの画面" loading="lazy">
               </div>
             </div>
 
@@ -1465,7 +1483,7 @@
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/invpend.png" alt="Inverted pendulum capture" loading="lazy">
+                <img src="media/invpend.png" alt="倒立振子が障害物を避けて移動するシミュレーション画面" loading="lazy">
               </div>
             </div>
 
@@ -1501,7 +1519,7 @@
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/raytrace-csg.png" alt="Raytracing CSG capture" loading="lazy">
+                <img src="media/raytrace-csg.png" alt="CSGで組み合わせた形状をリアルタイムにレイトレーシング描画した画面" loading="lazy">
               </div>
             </div>
 
@@ -1525,7 +1543,7 @@
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/raytrace-python.png" alt="Raytracing Python capture" loading="lazy">
+                <img src="media/raytrace-python.png" alt="Pythonでフルスクラッチ実装したレイトレーシングの出力画像" loading="lazy">
               </div>
             </div>
 
@@ -1548,7 +1566,7 @@
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/shadowmap.jpg" alt="Shadow mapping capture" loading="lazy">
+                <img src="media/shadowmap.jpg" alt="シャドウマッピングで影を描画したCGの画面" loading="lazy">
               </div>
             </div>
 
@@ -1572,7 +1590,7 @@
 
             <div class="media-box mt-2">
               <div class="media-hero">
-                <img src="media/wave-paraboloid.png" alt="Wave and paraboloid capture" loading="lazy">
+                <img src="media/wave-paraboloid.png" alt="伝播する波と放物面の変形をワイヤーフレームで描画したアニメーション画面" loading="lazy">
               </div>
             </div>
 
@@ -1602,13 +1620,13 @@
               <div class="media-grid">
                 <div>
                   <div class="media-thumb">
-                    <img src="media/canny-original.png" alt="Canny original" loading="lazy">
+                    <img src="media/canny-original.png" alt="Canny法の入力画像" loading="lazy">
                   </div>
                   <div class="small text-muted mt-2">入力画像</div>
                 </div>
                 <div>
                   <div class="media-thumb">
-                    <img src="media/canny-edge.png" alt="Canny edge" loading="lazy">
+                    <img src="media/canny-edge.png" alt="Canny法で抽出したエッジ画像" loading="lazy">
                   </div>
                   <div class="small text-muted mt-2">出力（エッジ）</div>
                 </div>
@@ -1906,7 +1924,8 @@
         document.querySelector(".navbar").setAttribute("data-bs-theme", isLight ? "light" : "dark");
 
         btn.textContent = isLight ? "☀️ Light" : "🌙 Dark";
-        btn.setAttribute("aria-label", isLight ? "ダークテーマに切り替え" : "ライトテーマに切り替え");
+        // 表示は現在の状態、aria-labelは状態と操作結果の両方を伝える
+        btn.setAttribute("aria-label", isLight ? "現在ライトテーマ。ダークテーマに切り替え" : "現在ダークテーマ。ライトテーマに切り替え");
         btn.classList.toggle("text-muted", true);
       }
 
@@ -1946,7 +1965,7 @@
       if(spy) spy.dispose();
     });
     window.addEventListener("afterprint", () => {
-      new bootstrap.ScrollSpy(document.body, { target: "#nav", offset: 100 });
+      new bootstrap.ScrollSpy(document.body, { target: "#nav" });
     });
 
   </script>

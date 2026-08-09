@@ -696,6 +696,32 @@
       .timeline{ display:none; }
       .career-compact{ display:block; }
     }
+    /* AI要約タブ */
+    .ai-summary-tabs .nav-link{
+      color: var(--muted);
+      border: 1px solid var(--border);
+      margin-right: .4rem;
+      margin-bottom: .25rem;
+    }
+    .ai-summary-tabs .nav-link.active{
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      color: var(--fg);
+      border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+    }
+    .ai-quote{
+      border-left: 3px solid var(--accent);
+      padding: .35rem .9rem;
+      margin: 0;
+    }
+    .ai-prompt{
+      white-space: pre-wrap;
+      background: var(--imgbg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .75rem;
+      color: var(--muted);
+    }
+
     /* 縦長(スマホ)スクショ: 16:9枠で切り取らず、端末風の枠で等倍表示 */
     .shot-row{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
     .media-phone{
@@ -872,6 +898,7 @@
           <li class="nav-item"><a class="nav-link" href="#ai">主要作品</a></li>
           <li class="nav-item"><a class="nav-link" href="#research">研究</a></li>
           <li class="nav-item"><a class="nav-link" href="#career">経歴</a></li>
+          <li class="nav-item"><a class="nav-link" href="#ai-summary">AI要約</a></li>
           <li class="nav-item"><a class="nav-link" href="#other">その他</a></li>
           <li class="nav-item"><a class="nav-link" href="#contact">連絡先</a></li>
 
@@ -1359,6 +1386,71 @@
     </section>
 
     <hr class="border-subtle">
+
+    <!-- AI summary: 各AIの要約を「最新版に対する固定文字列」として掲載する枠。
+         要約を掲載したら section の no-print を外し、印刷にも含める -->
+    <section id="ai-summary" class="anchor py-2 no-print">
+      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 section-title mb-0">AIによる要約</h2>
+      </div>
+
+      <article class="card p-3">
+        <p class="text-muted mb-3">
+          ChatGPT・Claude・Gemini・Grokへ同一のURLとプロンプトを与え、得られた要約をそのまま掲載します。
+          リアルタイム生成ではなく、本ページ最新版に対する評価として取得日・モデルとともに固定した文字列です。
+        </p>
+
+        <ul class="nav nav-pills ai-summary-tabs" role="tablist" aria-label="要約したAIサービスの切り替え">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="aisum-chatgpt-tab" data-bs-toggle="pill" data-bs-target="#aisum-chatgpt" type="button" role="tab" aria-controls="aisum-chatgpt" aria-selected="true">ChatGPT</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="aisum-claude-tab" data-bs-toggle="pill" data-bs-target="#aisum-claude" type="button" role="tab" aria-controls="aisum-claude" aria-selected="false">Claude</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="aisum-gemini-tab" data-bs-toggle="pill" data-bs-target="#aisum-gemini" type="button" role="tab" aria-controls="aisum-gemini" aria-selected="false">Gemini</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="aisum-grok-tab" data-bs-toggle="pill" data-bs-target="#aisum-grok" type="button" role="tab" aria-controls="aisum-grok" aria-selected="false">Grok</button>
+          </li>
+        </ul>
+
+        <div class="tab-content mt-3">
+          <div class="tab-pane fade show active" id="aisum-chatgpt" role="tabpanel" aria-labelledby="aisum-chatgpt-tab" tabindex="0">
+            <blockquote class="ai-quote text-muted mb-2">準備中 — ChatGPTの要約を取得後、ここへ固定掲載します。</blockquote>
+            <p class="small text-muted mb-0">モデル: — ／ 取得日: —</p>
+          </div>
+          <div class="tab-pane fade" id="aisum-claude" role="tabpanel" aria-labelledby="aisum-claude-tab" tabindex="0">
+            <blockquote class="ai-quote text-muted mb-2">準備中 — Claudeの要約を取得後、ここへ固定掲載します。</blockquote>
+            <p class="small text-muted mb-0">モデル: — ／ 取得日: —</p>
+          </div>
+          <div class="tab-pane fade" id="aisum-gemini" role="tabpanel" aria-labelledby="aisum-gemini-tab" tabindex="0">
+            <blockquote class="ai-quote text-muted mb-2">準備中 — Geminiの要約を取得後、ここへ固定掲載します。</blockquote>
+            <p class="small text-muted mb-0">モデル: — ／ 取得日: —</p>
+          </div>
+          <div class="tab-pane fade" id="aisum-grok" role="tabpanel" aria-labelledby="aisum-grok-tab" tabindex="0">
+            <blockquote class="ai-quote text-muted mb-2">準備中 — Grokの要約を取得後、ここへ固定掲載します。</blockquote>
+            <p class="small text-muted mb-0">モデル: — ／ 取得日: —</p>
+          </div>
+        </div>
+
+        <details class="mt-3">
+          <summary class="small fw-semibold">実行条件（全AI共通のURLとプロンプト）</summary>
+          <pre class="ai-prompt small mt-2 mb-0">以下のページは、AIアプリケーションエンジニア 小嶋明のポートフォリオです。
+https://kojima8924.github.io/
+
+このページ全体を読み、第三者（採用担当者）向けに、このエンジニアの特徴を日本語で簡潔に要約してください。
+
+条件:
+- 300字以内・1段落（箇条書き不可）
+- ページに書かれている事実のみに基づき、誇張や推測をしない
+- 「技術領域」「代表作品1〜2件」「開発スタイルの特徴」を必ず含める
+- 回答の末尾に、あなたのサービス名とモデル名を括弧書きで付記する</pre>
+        </details>
+      </article>
+    </section>
+
+    <hr class="border-subtle no-print">
 
     <!-- Other work -->
     <section id="other" class="anchor py-2">

@@ -1417,35 +1417,99 @@
 
         <div class="tab-content mt-3">
           <div class="tab-pane fade show active" id="aisum-chatgpt" role="tabpanel" aria-labelledby="aisum-chatgpt-tab" tabindex="0">
-            <blockquote class="ai-quote text-muted mb-2">準備中 — ChatGPTの要約を取得後、ここへ固定掲載します。</blockquote>
-            <p class="small text-muted mb-0">モデル: — ／ 取得日: —</p>
+            <div class="ai-quote text-muted mb-2">
+              <p>小嶋 明氏は、AIを既存プロダクトへ組み込み、課題設定・仕様設計・アーキテクチャ・実装管理・実機／自動テストまで一貫して担うAIアプリケーションエンジニアです。AIエージェントで開発を加速しながら、生成結果を鵜呑みにせず、比較・検証して実用的な製品へ仕上げる姿勢を軸としています。</p>
+              <p class="mb-1"><strong>代表的な制作物</strong></p>
+              <ul>
+                <li><strong>Clage Cook</strong> — Claude、Gemini、ChatGPT、Grokの回答を並列取得し、比較・相互批評・統合するBYOK型OSSアプリ。FlutterによるマルチプラットフォームUI、公式APIへの直接接続、端末内保存、安全確認まで設計しています。</li>
+                <li><strong>ChromiumforA</strong> — Android版ChromiumへAIを統合し、Google検索結果に評価コメントを付加して順位を再構成するブラウザ。ページ要約、選択文AI、認証情報に関する安全性検証も実装しています。</li>
+                <li><strong>scriptvedit</strong> — PythonコードからFFmpeg動画を生成する、AI／コーディングエージェント向け動画編集DSL。タイムライン記法、素材キャッシュ、アンカー配置、テスト機構などを備え、実プロジェクトのレンダリングを1012秒から106秒へ短縮しています。</li>
+                <li><strong>美容クリニック向けLINE応答AI</strong> — Dify、LINE Webhook、RAG、状態管理を使い、FAQ回答、予約案内、スタッフへの引き継ぎを支援する実案件です。</li>
+              </ul>
+              <p>研究面では、東京大学でEIT触覚センサを研究し、CNNによって空間分解能指標と位置誤差を従来法の約22％まで低減しました。さらに、電極配置最適化によって最悪領域の空間分解能指標を最大19.2％改善し、筆頭著者として査読論文を発表しています。</p>
+              <p>東京大学工学部・同大学院修士課程を修了後、博士課程で研究を継続し、2026年からフリーランスのAIアプリケーションエンジニアとして活動しています。</p>
+              <p class="mb-0">総評すると、数理・機械学習に基づく研究力と、Android／Flutter／Pythonを用いた製品実装力を併せ持ち、AIを単なるデモではなく「継続的に使える道具」へ落とし込めることが、このポートフォリオの中核的な強みです。</p>
+            </div>
+            <p class="small text-muted mb-0">モデル: ChatGPT Pro ／ 取得日: 2026年8月10日</p>
           </div>
           <div class="tab-pane fade" id="aisum-claude" role="tabpanel" aria-labelledby="aisum-claude-tab" tabindex="0">
-            <blockquote class="ai-quote text-muted mb-2">準備中 — Claudeの要約を取得後、ここへ固定掲載します。</blockquote>
-            <p class="small text-muted mb-0">モデル: — ／ 取得日: —</p>
+            <div class="ai-quote text-muted mb-2">
+              <p class="mb-1"><strong>プロフィール</strong></p>
+              <ul>
+                <li>AIアプリケーションエンジニア（フリーランス、2026年〜）</li>
+                <li>東京大学工学部 精密工学科卒 → 同大学院修士修了 → 博士課程（EIT触覚センサ研究）を2026年3月に中途退学</li>
+                <li>開発スタイル: AIエージェントで実装を加速し、本人は課題設定・仕様・アーキテクチャ・受入基準と検証を担当</li>
+                <li>実績: 実案件1件（開発中）、主要OSS 2件、査読論文 筆頭著者</li>
+              </ul>
+              <p class="mb-1"><strong>主要作品</strong></p>
+              <ul>
+                <li><strong>美容クリニック向けLINE応答AI</strong>（実案件・開発中）— Dify + LINE Webhook + RAGでFAQ回答・予約案内・スタッフ引き継ぎを自動化</li>
+                <li><strong>Clage Cook</strong>（OSS）— 4社のAIを1つの会議に統合し、回答比較・相互批評・統合を行うBYOKアプリ。Flutterで6プラットフォーム対応。非公開版（Android+FastAPI常駐サーバ）を毎日運用し、その知見を公式APIで再実装</li>
+                <li><strong>ChromiumforA</strong>（非公開）— Google検索結果にAI評価コメントを挿入し順位を再評価するAndroid Chromium改造版。ページ要約・選択文AIも統合</li>
+                <li><strong>scriptvedit</strong>（OSS）— AIエージェント向けのPython動画編集DSL（FFmpegで映像化）。並列化でレンダリングを1012秒→106秒に短縮</li>
+                <li><strong>Calcpy</strong>（プロトタイプ）— 電卓UX × Python/SymPyのAndroidアプリ。オンデバイス実行・プロセス隔離を設計</li>
+              </ul>
+              <p class="mb-1"><strong>研究</strong></p>
+              <ul>
+                <li>EIT触覚センサの逆問題にCNNを適用し、位置誤差を従来法の約22%に低減（SI2022・IROS 2022発表）</li>
+                <li>電極配置最適化で最悪領域の空間分解能指標を最大19.2%低減</li>
+                <li>筆頭著者論文が Frontiers in Robotics and AI に掲載</li>
+              </ul>
+              <p class="mb-1"><strong>その他の制作</strong></p>
+              <ul>
+                <li>ChatGPT-Windows（常駐クライアント）／ ChatGPT-Web（ゴーストテキスト補完）</li>
+                <li>制御: ハンドドライブ（手の動きで3D運転）、倒立振子（PID制御）</li>
+                <li>CG・画像処理: レイトレーシング（GLSL+CSG / Pythonフルスクラッチ）、シャドウマッピング、Canny法エッジ抽出</li>
+              </ul>
+              <p class="mb-0"><strong>スキル・資格</strong>: AI統合アプリ開発 / Python / C++ / Flutter / FastAPI ／ 基本情報技術者試験 合格（2026年8月）</p>
+            </div>
+            <p class="small text-muted mb-0">モデル: Claude Fable 5 ／ 取得日: 2026年8月10日</p>
           </div>
           <div class="tab-pane fade" id="aisum-gemini" role="tabpanel" aria-labelledby="aisum-gemini-tab" tabindex="0">
-            <blockquote class="ai-quote text-muted mb-2">準備中 — Geminiの要約を取得後、ここへ固定掲載します。</blockquote>
+            <blockquote class="ai-quote text-muted mb-2">再取得待ち — Geminiは本ページへアクセスできず、ページ内容と無関係な要約が生成されたため掲載を見送りました。取得でき次第、同一条件の要約をここへ固定掲載します。</blockquote>
             <p class="small text-muted mb-0">モデル: — ／ 取得日: —</p>
           </div>
           <div class="tab-pane fade" id="aisum-grok" role="tabpanel" aria-labelledby="aisum-grok-tab" tabindex="0">
-            <blockquote class="ai-quote text-muted mb-2">準備中 — Grokの要約を取得後、ここへ固定掲載します。</blockquote>
-            <p class="small text-muted mb-0">モデル: — ／ 取得日: —</p>
+            <div class="ai-quote text-muted mb-2">
+              <p>東京大学出身のAIアプリケーションエンジニア（フリーランス）。AIを既存プロダクトに組み込み、課題設定から実機検証まで一貫して担当する。複数LLMの統合、Android/Flutterアプリ、AIエージェント向けDSLを中心に、「使い続けられる形」まで設計・実装するスタイル。</p>
+              <p class="mb-1"><strong>開発スタイル</strong></p>
+              <p>AIエージェントで実装を加速しつつ、自身は課題設定・仕様・アーキテクチャ・受入基準を定め、生成コードを実機と自動テストで検証する。</p>
+              <p class="mb-1"><strong>主な実績</strong></p>
+              <ul>
+                <li>実案件 1件（開発中・匿名）</li>
+                <li>主要OSS 2件</li>
+                <li>査読論文（筆頭著者）</li>
+              </ul>
+              <p class="mb-1"><strong>代表的なプロジェクト</strong></p>
+              <ul>
+                <li><strong>美容クリニック向けLINE応答AI</strong>(開発中) — FAQ回答・予約案内・スタッフ引き継ぎを支援。Dify応答フロー、LINE Webhook、RAGナレッジ、状態管理を実装済み。回答品質と安全性を検証中。</li>
+                <li><strong>Clage Cook</strong>（OSS）— 4社のAI回答を比較・相互批評・統合するBYOKアプリ。Flutterで6プラットフォーム対応の共通UIを設計。非公開の日常運用版から発展し、公開ベータ中。</li>
+                <li><strong>ChromiumforA</strong> — Android向けChromium改造版。Google検索結果にAI評価コメントを挿入し、再順位付け。ページ要約・選択文AIなども統合。個人検証用で非公開。</li>
+                <li><strong>scriptvedit</strong> — AIエージェント向けPython動画編集DSL。FFmpegで映像化。並列化によりレンダリング時間を大幅短縮（例: 1012秒 → 106秒）。</li>
+                <li>その他: 電卓×Pythonプロトタイプ（Calcpy）、ChatGPT Windows/Webクライアントなど。</li>
+              </ul>
+              <p class="mb-1"><strong>研究</strong></p>
+              <p>機械学習×触覚計測。EIT触覚センサの逆問題にCNNを適用し、空間分解能指標と位置誤差を従来法の約22%に低減。電極配置最適化で最悪領域の指標を最大19.2%改善。筆頭著者としてFrontiers in Robotics and AIに掲載（SI2022、IROS 2022で発表）。</p>
+              <p class="mb-1"><strong>学歴・経歴</strong></p>
+              <ul>
+                <li>2018–22: 東京大学 工学部 精密工学科</li>
+                <li>2022–24: 同大学院 修士課程</li>
+                <li>2024–26: 同博士課程（EIT触覚センサ研究、中途退学）</li>
+                <li>現在: フリーランスのAIアプリケーションエンジニア／資格: 基本情報技術者試験合格（2026年8月）</li>
+              </ul>
+              <p class="mb-1"><strong>その他の制作</strong></p>
+              <p>制御・シミュレーション（ハンドドライブ、倒立振子）、CG・画像処理（GLSL/Pythonレイトレーシング、シャドウマッピング、Canny法など）も手がける。</p>
+              <p class="mb-0">全体として、AIを実用アプリに落とし込み、実機で検証する実践力と、研究バックグラウンドを併せ持つポートフォリオ。技術的な深さがありつつ、公開可能な範囲で具体的な成果（リポジトリ・動画・論文）を示している。</p>
+            </div>
+            <p class="small text-muted mb-0">モデル: Grok 4.5（エキスパート） ／ 取得日: 2026年8月10日</p>
           </div>
         </div>
 
         <details class="mt-3">
           <summary class="small fw-semibold">実行条件（全AI共通のURLとプロンプト）</summary>
-          <pre class="ai-prompt small mt-2 mb-0">以下のページは、AIアプリケーションエンジニア 小嶋明のポートフォリオです。
-https://kojima8924.github.io/
-
-このページ全体を読み、第三者（採用担当者）向けに、このエンジニアの特徴を日本語で簡潔に要約してください。
-
-条件:
-- 300字以内・1段落（箇条書き不可）
-- ページに書かれている事実のみに基づき、誇張や推測をしない
-- 「技術領域」「代表作品1〜2件」「開発スタイルの特徴」を必ず含める
-- 回答の末尾に、あなたのサービス名とモデル名を括弧書きで付記する</pre>
+          <pre class="ai-prompt small mt-2 mb-0">https://kojima8924.github.io/
+上記のポートフォリオを精読し、わかりやすく簡潔に要約して、コードブロックにまとめて。</pre>
+          <p class="small text-muted mt-2 mb-0">各AIの返答（コードブロック内のMarkdown）を、内容を変えずに整形して掲載しています。</p>
         </details>
       </article>
     </section>

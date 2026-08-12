@@ -52,7 +52,7 @@
         "https://github.com/kojima8924"
       ],
       "email": "a.kojima8924@gmail.com",
-      "knowsAbout": ["Python", "C++", "生成AI", "AIエージェント", "Flutter", "FastAPI", "Kotlin", "機械学習", "画像処理", "制御工学", "CG"]
+      "knowsAbout": ["Python", "C++", "生成AI", "AIエージェント", "FastAPI", "Kotlin", "機械学習", "画像処理", "制御工学", "CG"]
     }
   }
   </script>
@@ -322,7 +322,12 @@
       width:100%; height:100%; object-fit:contain; display:block;
       border-radius:11px; cursor: zoom-in;
     }
-    @media (max-width: 575.98px){ .media-phone{ height:360px; } }
+    /* スマホ: スクショ2枚を縦積みにせず横並びで収める（幅基準でスケール） */
+    @media (max-width: 575.98px){
+      .shot-row{ flex-wrap:nowrap; justify-content:center; }
+      .shot-row > div{ flex:1 1 0; min-width:0; max-width:230px; }
+      .media-phone{ height:auto; width:100%; }
+    }
 
     /* Buttons */
     .btn-outline-info{
@@ -787,8 +792,8 @@
             </p>
             <p class="text-muted small mb-1">
               <strong>実装・検証:</strong>
-              Flutterで6プラットフォームの共通UIを実装し、WindowsとAndroid実機で動作を確認。
-              公開リポジトリとCIで確認できます。
+              Flutter/DartのUI実装はAIエージェントへ任せ、生成されたアプリへのダメ出しと修正指示、
+              WindowsとAndroid実機での動作確認を担当。公開リポジトリとCIで確認できます。
             </p>
             <p class="text-muted small mb-0">
               <strong>公開状況:</strong> 公開ベータ。本番運用向けサポート・後方互換性は未保証です。
@@ -1067,7 +1072,6 @@
         </div>
         <div class="col-12 col-lg-7">
           <ul class="stack-map">
-            <li><strong>Flutter / Dart</strong> — <span>Clage CookのAndroid・Windowsほか共通UI</span></li>
             <li><strong>Python / FastAPI</strong> — <span>Clage Cookのreference server、ScriptVEdit本体</span></li>
             <li><strong>Android / Chromium改造</strong> — <span>ChromiumforA</span></li>
             <li><strong>FFmpeg</strong> — <span>ScriptVEditの映像生成</span></li>
@@ -1075,6 +1079,9 @@
             <li><strong>CNN (Keras)</strong> — <span>EIT触覚センサ研究の再構成モデル</span></li>
             <li><strong>C++ / GLSL</strong> — <span>過去作品の制御・CG（倒立振子、レイトレーシング）</span></li>
           </ul>
+          <p class="text-muted small mt-2 mb-0">
+            Flutter/Dart（Clage CookのUI）は実装をAIエージェントへ委任し、設計・修正指示・実機検証を担当しています。
+          </p>
         </div>
       </div>
     </section>
@@ -1250,7 +1257,7 @@
         <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub: kojima8924</a>
       </div>
       <div class="text-muted small mb-3">
-        主な領域：AIを活用・統合したアプリ開発 / Python / C++ / Flutter / FastAPI
+        主な領域：AIを活用・統合したアプリ開発 / Python / C++ / FastAPI
       </div>
 
       <div class="d-flex flex-wrap gap-2 no-print">

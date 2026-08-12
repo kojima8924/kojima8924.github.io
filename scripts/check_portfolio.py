@@ -36,11 +36,16 @@ FORBIDDEN_PATTERNS = [
 TEXT_FORBIDDEN_PATTERNS = [
     (r"Atcoder|ATCODER|AtCoder Cyan|AtCoder ?シアン", "AtCoder表記の揺れ（「AtCoder 水色」に統一）"),
     (r"Paiza|PAIZA", "paiza表記の揺れ（小文字「paiza」に統一）"),
-    (r"paiza S(?!ランク)(?!ランク)|paiza S ?Rank", "paizaランク表記の揺れ（「Sランク」に統一）"),
+    # 「paizaスキルチェック Sランク」以外の書き方（paiza S / paiza S Rank / paiza Sランク）を検出
+    (r"paiza\s+S(?:\s*Rank|ランク)?", "paizaランク表記の揺れ（「paizaスキルチェック Sランク」に統一）"),
+    (r"(?:AtCoder[^。]{0,12}|paiza[^。]{0,20})を?取得", "AtCoder/paizaを資格のように「取得」と表現している"),
 ]
 TEXT_REQUIRED_STRINGS = [
-    ("AtCoder 水色", "プログラミング実績（表記統一）"),
-    ("Sランク", "paizaのランク表記"),
+    ("AtCoder 水色（最高レーティング1440）", "AtCoder実績"),
+    ("paizaスキルチェック Sランク", "paiza実績"),
+    ("従来法の約22%まで低減", "研究の22%表現"),
+    ("最大19.2%低減", "HWHMの表現"),
+    ("ScriptVEdit", "公式プロジェクト名"),
 ]
 
 # README等の関連文書にも適用する検査（index.htmlとの文書間矛盾の検出）

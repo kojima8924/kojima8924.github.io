@@ -241,6 +241,7 @@
     .c-gray{ background:#555; }
 
     /* Media */
+    .nowrap{ white-space: nowrap; }
     .media-box{
       background: var(--imgbg);
       border: 1px solid var(--border);
@@ -589,6 +590,8 @@
         background:#fff !important;
       }
       .media-hero img, .media-hero video{ object-fit:contain; }
+      /* 図枠内で画像を中央寄せ（枠右側に空白が残るのを防ぐ） */
+      .media-box .media-hero{ display:flex; align-items:center; justify-content:center; }
       .media-thumb, .media-thumb img{
         border:1px solid #ccc !important;
         background:#fff !important;
@@ -1143,7 +1146,7 @@
         <h2 class="h4 section-title mb-0">研究 — 機械学習×触覚計測</h2>
       </div>
 
-      <article class="card p-3">
+      <div class="card p-3">
         <div class="row g-3 align-items-center">
           <div class="col-12 col-md-5">
             <div class="media-grid">
@@ -1185,7 +1188,7 @@
             <a class="btn btn-outline-info btn-sm" href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">査読論文</a>
           </div>
         </div>
-      </article>
+      </div>
     </section>
 
     <hr class="border-subtle pdf-full-only">
@@ -1234,7 +1237,7 @@
             <span class="yr">2026–</span><span class="ev">フリーランスのAIアプリケーションエンジニア</span>
           </div>
           <p class="text-muted small mb-1"><strong>資格:</strong> 基本情報技術者試験 合格（2026年8月）</p>
-          <p class="text-muted small mb-0"><strong>プログラミング実績:</strong> AtCoder 水色（レーティング1440）/ paizaスキルチェック Sランク</p>
+          <p class="text-muted small mb-0"><strong>プログラミング実績:</strong> AtCoder 水色（最高レーティング1440）/ <span class="nowrap">paizaスキルチェック Sランク</span></p>
         </div>
         <div class="col-12 col-lg-7">
           <ul class="stack-map">

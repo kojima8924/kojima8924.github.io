@@ -138,8 +138,25 @@ def _wait_until_ready(page: object, timeout_ms: int) -> list[str]:
     )
 
 
-def _compress_pdf_images(output: Path) -> int:
-    """埋め込み画像を印刷十分な解像度へ再圧縮し、配布しやすいサイズに抑える。"""
+PDF_METADATA = {
+    "summary": {
+        "title": "Akira Kojima Portfolio Summary",
+        "author": "Akira Kojima",
+        "subject": "AI Application Engineering Portfolio Summary",
+    },
+    "full": {
+        "title": "Akira Kojima Portfolio",
+        "author": "Akira Kojima",
+        "subject": "AI Application Engineering and Research Portfolio",
+    },
+}
+
+
+def _compress_pdf_images(output: Path, mode: str = "full") -> int:
+    """埋め込み画像を印刷十分な解像度へ再圧縮し、配布しやすいサイズに抑える。
+
+    あわせて PDF viewer 上で識別できるようメタデータ（title/author/subject）を設定する。
+    """
 
     try:
         import pymupdf
@@ -159,6 +176,9 @@ def _compress_pdf_images(output: Path) -> int:
 
     try:
         with pymupdf.open(output) as document:
+            metadata = dict(document.metadata or {})
+            metadata.update(PDF_METADATA.get(mode, PDF_METADATA["full"]))
+            document.set_metadata(metadata)
             document.rewrite_images(
                 dpi_threshold=180,
                 dpi_target=150,
@@ -280,7 +300,7 @@ def make_pdf(source: Path, output: Path, timeout_seconds: float, mode: str = "fu
                         )
 
                     _write_pdf_atomically(page, output)
-                    size = _compress_pdf_images(output)
+                    size = _compress_pdf_images(output, mode)
                     context.close()
                 finally:
                     browser.close()

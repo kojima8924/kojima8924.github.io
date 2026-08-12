@@ -13,7 +13,7 @@
 - `make_pdf.py`: 公開HTMLからA4 PDFを生成するスクリプト（採用向け/完全版の2モード）
 - `make_ogp.py`: HTML/CSSだけで1200×630のOGP画像を生成するスクリプト
 - `scripts/check_portfolio.py`: リンク・alt・表記揺れ等の自動検査
-- `docs/`: 監査レポート、外部ページの確認事項
+- `docs/`: 検証ログ（`verification/`）と、外部ページで対応する項目のメモ
 - `requirements-pdf.txt`: PDF生成用のPython依存
 - `proposal/`: 次の更新を試すローカル作業版。誤公開防止のためGit管理対象外
 
@@ -75,6 +75,8 @@ python scripts/check_portfolio.py --external  # 外部リンクの到達確認�
 
 重複ID、内部anchor切れ、ローカル参照切れ、alt欠落、`rel`不足、shields.io残存、
 プロジェクト名の表記揺れ、研究数値の誤解表現などを検査します。
+AtCoder / paizaの表記は表示テキストにのみ適用し、`atcoder.jp` / `paiza.jp` のURLを誤検出しません。
+実行結果は `docs/verification/`（check_portfolio・W3C Nu・axe-core）に保存しています。
 
 ## 更新時の確認
 

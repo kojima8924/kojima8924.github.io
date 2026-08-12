@@ -29,6 +29,8 @@ FORBIDDEN_PATTERNS = [
     (r">\s*Repo\s*<|>\s*Video\s*<|>\s*Private\s*<|>\s*Print\s*<", "英語ラベル（GitHub/デモ動画/非公開へ統一）"),
     (r"課題設定から実機検証まで|使い続けられる形|鵜呑みにせず|単なるデモではなく", "抽象的な包括表現が残存"),
     (r"ダメ出し", "口語的表現（レビュー・修正方針の指示 等へ）"),
+    (r"AtCoder(?! 水色)|Atcoder|atcoder(?!\.jp)|AtCoder Cyan", "AtCoder表記の揺れ（「AtCoder 水色」に統一）"),
+    (r"Paiza|PAIZA|paiza(?! Sランク)", "paiza表記の揺れ（「paiza Sランク」に統一）"),
 ]
 
 # README等の関連文書にも適用する検査（index.htmlとの文書間矛盾の検出）
@@ -50,6 +52,8 @@ REQUIRED_STRINGS = [
     ("a.kojima8924@gmail.com", "メール導線"),
     ("github.com/kojima8924", "GitHub導線"),
     ("frobt.2023.1157911", "論文リンク"),
+    ("AtCoder 水色", "プログラミング実績（表記統一）"),
+    ("paiza Sランク", "プログラミング実績（表記統一）"),
 ]
 
 

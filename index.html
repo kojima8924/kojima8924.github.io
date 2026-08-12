@@ -510,9 +510,12 @@
       .col-lg-7{ flex:0 0 auto !important; width:58.3333% !important; }
       .col-lg-6{ flex:0 0 auto !important; width:50% !important; }
       .col-md-4{ flex:0 0 auto !important; width:33.3333% !important; }
+      .col-md-5{ flex:0 0 auto !important; width:41.6667% !important; }
       .col-md-6{ flex:0 0 auto !important; width:50% !important; }
+      .col-md-7{ flex:0 0 auto !important; width:58.3333% !important; }
       .col-md-8{ flex:0 0 auto !important; width:66.6667% !important; }
       .g-3{ --bs-gutter-x:0.5rem !important; --bs-gutter-y:0.5rem !important; }
+      .g-4{ --bs-gutter-x:0.75rem !important; --bs-gutter-y:0.5rem !important; }
 
       .card{
         box-shadow:none !important;
@@ -667,6 +670,7 @@
       .archive-item .media-thumb{ max-height:90px; }
 
       #contact{ margin-bottom:0 !important; padding-top:0 !important; padding-bottom:0 !important; }
+      #contact .mt-3{ margin-top:3px !important; } /* ©行がページ末尾で溢れて空ページを作るのを防ぐ */
 
       /* ── 採用向けサマリーPDF: 完全版のみの要素を隠す ── */
       body.pdf-summary .pdf-full-only{ display:none !important; }
@@ -675,6 +679,9 @@
       body.pdf-summary .media-phone{ height:120px !important; }
       body.pdf-summary .cfa-shot{ height:150px !important; }
       body.pdf-summary .card p, body.pdf-summary .card li{ font-size:9.5px !important; }
+      body.pdf-summary .media-thumb{ max-height:95px; }
+      body.pdf-summary hr.border-subtle{ margin:3px 0 !important; }
+      body.pdf-summary .shot-row .media-phone{ height:135px !important; }
     }
   </style>
 </head>
@@ -730,25 +737,23 @@
         複数のLLMを一つの画面で扱うFlutterアプリ「<a href="#works">Clage Cook</a>」、
         Android ChromiumへのAI機能統合「<a href="#works">ChromiumforA</a>」、
         PythonとFFmpegによる動画編集DSL「<a href="#works">ScriptVEdit</a>」を開発しています。
-        実装にはAIエージェントを使い、仕様・アーキテクチャ・受入テスト・実機検証と最終判断を自分で行っています。
+        実装にはAIエージェントを利用し、私は要件・仕様・設計上の判断、生成物のレビュー、実機確認、採否の判断を担っています。
+        具体的な分担は各作品に記載しています。
       </p>
       <p class="hero-degree mb-3">
-        東京大学 工学部 精密工学科卒・同大学院 修士課程修了。博士課程でEIT触覚センサを研究し（2026年3月退学）、
-        筆頭著者として査読論文を発表。基本情報技術者。
+        東京大学 工学部 精密工学科卒・同大学院 修士課程修了（博士課程でEIT触覚センサを研究、2026年3月退学）。基本情報技術者。
       </p>
 
       <ul class="hero-evidence text-muted mb-3">
-        <li>公開OSS: <a href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">Clage Cook</a>・<a href="https://github.com/kojima8924/ScriptVEdit" target="_blank" rel="noopener noreferrer">ScriptVEdit</a>（リポジトリ・CI・実機画面）</li>
-        <li>Android実機開発: ChromiumforA（比較画像・操作動画、非公開）</li>
+        <li>公開OSS: <a href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">Clage Cook</a>（CI・Windows/Android実機）・<a href="https://github.com/kojima8924/ScriptVEdit" target="_blank" rel="noopener noreferrer">ScriptVEdit</a>（コード・テスト・出力動画・性能計測）</li>
+        <li>Android実機開発: ChromiumforA（比較画像・操作動画、非公開）／受託開発: LINE応答AI（開発中・匿名掲載）</li>
         <li>査読論文: <a href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">Frontiers in Robotics and AI</a>（筆頭著者）</li>
-        <li>受託開発: 美容クリニック向けLINE応答AI（開発中・匿名掲載）</li>
       </ul>
 
       <div class="d-flex flex-wrap gap-2 hero-actions no-print">
         <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（2ページ）</a>
         <a class="btn btn-outline-info" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub</a>
         <a class="btn btn-outline-info" href="mailto:a.kojima8924@gmail.com">メール</a>
-        <a class="btn btn-soft btn-sm align-self-center" href="media/Akira_Kojima_Portfolio.pdf" download>完全版PDF</a>
       </div>
     </div>
   </header>
@@ -798,8 +803,9 @@
             </p>
             <p class="text-muted small mb-1">
               <strong>実装・検証:</strong>
-              Flutter/DartのUI実装はAIエージェントへ任せ、生成されたアプリへのダメ出しと修正指示、
-              WindowsとAndroid実機での動作確認を担当。公開リポジトリとCIで確認できます。
+              Flutter/DartのUI実装はAIエージェントへ任せ、生成されたアプリをレビューして
+              画面仕様・挙動・エラー処理の修正方針を指示し、WindowsとAndroid実機で動作を確認しました。
+              公開リポジトリとCIで確認できます。
             </p>
             <p class="text-muted small mb-0">
               <strong>公開状況:</strong> 公開ベータ。本番運用向けサポート・後方互換性は未保証です。
@@ -1012,12 +1018,24 @@
 
       <article class="card p-3">
         <div class="row g-3 align-items-center">
-          <div class="col-12 col-md-4">
-            <div class="media-thumb">
-              <img src="media/SI2022_poster-web.webp" alt="EIT触覚センサのCNN再構成をまとめたSI2022ポスター" loading="lazy">
+          <div class="col-12 col-md-5">
+            <div class="media-grid">
+              <div>
+                <div class="media-thumb">
+                  <img src="media/research-eval.webp" alt="空間分解能と位置誤差の棒グラフ。CNNが線形手法に対して両指標を約22%まで低減" loading="lazy">
+                </div>
+                <div class="small text-muted mt-1">空間分解能・位置誤差（線形手法 vs CNN）</div>
+              </div>
+              <div>
+                <div class="media-thumb">
+                  <img src="media/research-recon.webp" alt="2点接触の再構成比較。線形手法ではにじむ接触点がCNNでは明瞭に分離される" loading="lazy">
+                </div>
+                <div class="small text-muted mt-1">2点接触の再構成（線形手法 vs CNN）</div>
+              </div>
             </div>
+            <a class="small" href="media/SI2022_poster-web.webp" target="_blank" rel="noopener noreferrer">ポスター全体（SI2022）を見る</a>
           </div>
-          <div class="col-12 col-md-8">
+          <div class="col-12 col-md-7">
             <p class="text-muted mb-2">
               EIT（電気インピーダンストモグラフィ）触覚センサの逆問題にCNNを適用し、
               1点接触のシミュレーションで空間分解能指標と位置誤差を従来法の約22%まで低減しました
@@ -1078,7 +1096,8 @@
         </div>
         <div class="col-12 col-lg-7">
           <ul class="stack-map">
-            <li><strong>Python</strong> — <span>EIT触覚センサ研究、過去作品の画像処理・CG、ScriptVEditの仕様設計</span></li>
+            <li><strong>Python</strong> — <span>EIT触覚センサ研究、過去作品の画像処理・CGの実装</span></li>
+            <li><strong>DSL・ツール設計</strong> — <span>ScriptVEditの記法、素材キャッシュ、アンカー解決、並列化</span></li>
             <li><strong>Android / Chromium改造</strong> — <span>ChromiumforA</span></li>
             <li><strong>FFmpeg</strong> — <span>ScriptVEditの映像生成</span></li>
             <li><strong>Dify / RAG</strong> — <span>受託のLINE応答AI</span></li>

@@ -28,6 +28,18 @@ FORBIDDEN_PATTERNS = [
     (r"ScriptVedit|Scriptvedit|ChromiumForA|chromiumfora(?![-_])", "プロジェクト名の表記揺れ"),
     (r">\s*Repo\s*<|>\s*Video\s*<|>\s*Private\s*<|>\s*Print\s*<", "英語ラベル（GitHub/デモ動画/非公開へ統一）"),
     (r"課題設定から実機検証まで|使い続けられる形|鵜呑みにせず|単なるデモではなく", "抽象的な包括表現が残存"),
+    (r"ダメ出し", "口語的表現（レビュー・修正方針の指示 等へ）"),
+]
+
+# README等の関連文書にも適用する検査（index.htmlとの文書間矛盾の検出）
+DOC_FORBIDDEN_PATTERNS = [
+    (r"ScriptVedit|Scriptvedit|ChromiumForA", "プロジェクト名の表記揺れ"),
+    (r"仕様・テスト・検証は本人|受入テストを自分で", "ScriptVEditの担当範囲の旧記述（実態と不一致）"),
+    (r"ダメ出し", "口語的表現"),
+]
+DOC_REQUIRED_STRINGS = [
+    ("約22%まで低減", "研究の22%表現"),
+    ("ScriptVEdit", "公式プロジェクト名"),
 ]
 
 # 表示テキストとして必要な語（存在チェック）
@@ -140,6 +152,25 @@ def main() -> int:
     for needle, reason in REQUIRED_STRINGS:
         if needle not in html:
             errors.append(f"必須文字列が見つからない（{reason}）: {needle!r}")
+
+    # 8b) 関連文書（README等）の文書間矛盾
+    for doc_name in ["README.md"]:
+        doc_path = PROJECT_ROOT / doc_name
+        if not doc_path.is_file():
+            errors.append(f"関連文書が存在しない: {doc_name}")
+            continue
+        doc = doc_path.read_text(encoding="utf-8")
+        for pattern, reason in DOC_FORBIDDEN_PATTERNS:
+            hits = re.findall(pattern, doc)
+            if hits:
+                errors.append(f"[{doc_name}] {reason}: {len(hits)}件（例: {hits[0]!r}）")
+        for needle, reason in DOC_REQUIRED_STRINGS:
+            if needle not in doc:
+                errors.append(f"[{doc_name}] 必須文字列が見つからない（{reason}）: {needle!r}")
+        for m in re.finditer(r"22[%％](低減|削減|改善)", doc):
+            context = doc[max(0, m.start() - 8): m.end()]
+            if "まで" not in context and "に低減" not in context:
+                errors.append(f"[{doc_name}] 『22%低減』型の誤解表現: …{context}…")
 
     # 9) 外部リンク（任意）
     if args.external:

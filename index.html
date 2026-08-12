@@ -781,8 +781,8 @@
 
             <p class="text-muted small mt-3 mb-1">
               <strong>設計判断:</strong>
-              プロバイダごとに異なるAPI契約とストリーミング形式を共通のインターフェースに吸収し、
-              一部のAIが失敗しても完了済みの回答を保持する流れにしました。
+              プロバイダごとに異なるAPI契約（認証ヘッダ・エンドポイント・応答形式）を共通のインターフェースに吸収し、
+              一部のAIが失敗しても完了済みの回答を保持して統合まで進める流れにしました。進行状況はSSEでUIへ統一配信します。
               APIキーはOSのsecure storageへ保存し、会話履歴を端末内だけに置くDirect接続と、開発用のreference serverを分離しています。
             </p>
             <p class="text-muted small mb-1">

@@ -4,21 +4,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>小嶋 明 | AIアプリケーションエンジニア Portfolio</title>
-  <meta name="description" content="複数LLMの統合、Android／Flutterアプリ、AIエージェント向けDSLを設計・検証する小嶋明のポートフォリオ" />
+  <meta name="description" content="複数LLMを扱うFlutterアプリ Clage Cook、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
 
   <!-- OGP -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="小嶋 明 | AIアプリケーションエンジニア Portfolio" />
-  <meta property="og:description" content="複数LLMの統合、Android／Flutterアプリ、AIエージェント向けDSLを設計・検証する小嶋明のポートフォリオ" />
+  <meta property="og:description" content="複数LLMを扱うFlutterアプリ Clage Cook、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
   <meta property="og:image" content="https://kojima8924.github.io/media/ogp-portfolio.png" />
-  <meta property="og:image:alt" content="小嶋明のAI個人開発・機械学習ポートフォリオ" />
+  <meta property="og:image:alt" content="小嶋明のAIアプリ開発・機械学習ポートフォリオ" />
   <meta property="og:url" content="https://kojima8924.github.io/" />
   <meta property="og:locale" content="ja_JP" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="小嶋 明 | AIアプリケーションエンジニア Portfolio" />
-  <meta name="twitter:description" content="複数LLMの統合、Android／Flutterアプリ、AIエージェント向けDSLを設計・検証する小嶋明のポートフォリオ" />
+  <meta name="twitter:description" content="複数LLMを扱うFlutterアプリ Clage Cook、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
   <meta name="twitter:image" content="https://kojima8924.github.io/media/ogp-portfolio.png" />
-  <meta name="twitter:image:alt" content="小嶋明のAI個人開発・機械学習ポートフォリオ" />
+  <meta name="twitter:image:alt" content="小嶋明のAIアプリ開発・機械学習ポートフォリオ" />
   <link rel="canonical" href="https://kojima8924.github.io/" />
 
   <!-- Favicon -->
@@ -73,14 +73,11 @@
       --border:#2a3b52;
 
       --nav:#0b0f14;
-      --hero1: rgba(124,196,255,.18);
-      --hero2: rgba(255,124,196,.10);
 
-      --shadow: rgba(0,0,0,.25);
+      --shadow: rgba(0,0,0,.18);
       --imgbg: rgba(0,0,0,.22);
 
       --accent: #7cc4ff;
-      --accent2: #9fe1ff;
     }
 
     html[data-theme="light"]{
@@ -92,17 +89,13 @@
       --border:#d7deea;
 
       --nav:#ffffff;
-      --hero1: rgba(43,124,255,.10);
-      --hero2: rgba(255,124,196,.08);
 
-      --shadow: rgba(18,28,45,.08);
+      --shadow: rgba(18,28,45,.06);
       --imgbg: rgba(18,28,45,.04);
 
       --accent:#0b66c3;
-      --accent2:#0b66c3;
     }
 
-    /* help browsers */
     html[data-theme="dark"]{ color-scheme: dark; }
     html[data-theme="light"]{ color-scheme: light; }
 
@@ -117,23 +110,15 @@
     /* Typography */
     .text-muted{ color: var(--muted) !important; }
     .section-title{
-      letter-spacing: .2px;
       color: var(--fg);
-      font-weight: 800;
+      font-weight: 700;
+      letter-spacing: .2px;
+      padding-bottom: .35rem;
+      border-bottom: 1px solid var(--border);
     }
-    .section-title::before{
-      content:"";
-      display:inline-block;
-      width:10px;height:10px;
-      border-radius:999px;
-      background: color-mix(in srgb, var(--accent) 80%, transparent);
-      margin-right:10px;
-      transform: translateY(-1px);
-    }
-    .card-title, .name-title{ color: var(--fg); }
+    .card-title{ color: var(--fg); }
 
     /* Layout */
-    .border-subtle{ border-color: var(--border) !important; }
     .anchor{ scroll-margin-top: 84px; }
     @media (max-width: 991.98px){
       .anchor{ scroll-margin-top: 76px; }
@@ -153,8 +138,6 @@
     .navbar{
       background: var(--nav) !important;
       border-bottom: 1px solid var(--border) !important;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       transition: background-color .3s;
     }
     .navbar .nav-link.active{
@@ -175,23 +158,23 @@
       }
     }
 
-    /* Hero */
+    /* Hero: 単色の控えめな下地のみ */
     .hero{
-      background:
-        radial-gradient(1200px 600px at 10% 0%, var(--hero1), transparent 60%),
-        radial-gradient(1200px 600px at 80% 20%, var(--hero2), transparent 60%);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 75%);
       border-bottom: 1px solid var(--border);
     }
-    .hero-summary{ max-width:48rem; line-height:1.65; }
-    .hero-method{ max-width:58rem; line-height:1.65; }
-    .evidence-line{
-      display:inline-flex;
-      flex-wrap:wrap;
-      gap:.15rem .55rem;
-      align-items:center;
-      color:var(--accent2);
+    .hero-lead{ max-width:52rem; line-height:1.7; }
+    .hero-degree{ color:var(--muted); font-size:.95rem; }
+    .hero-evidence{
+      list-style:none;
+      margin:0; padding:0;
+      display:grid; gap:.25rem;
       font-size:.95rem;
-      font-weight:700;
+    }
+    .hero-evidence li::before{
+      content:"—";
+      color:var(--accent);
+      margin-right:.5em;
     }
     .hero-actions .btn{
       min-height:44px;
@@ -201,41 +184,40 @@
       padding-inline:1rem;
     }
 
-    /* Card */
+    /* Card: 代表作品・研究など主要ブロックのみ */
     .card{
       background: var(--card);
-      /* Bootstrapの.cardは--bs-body-color(黒)を継承させるため、テーマ文字色を明示（summary等の素のテキスト対策） */
-      color: var(--fg);
+      color: var(--fg); /* Bootstrapの--bs-body-color(黒)継承対策 */
       border-color: var(--border) !important;
-      box-shadow: 0 10px 30px var(--shadow);
-      border-radius: 14px;
+      box-shadow: 0 4px 16px var(--shadow);
+      border-radius: 12px;
       transition: background-color .3s, border-color .3s;
     }
 
-    /* Separator (works well on dark + light) */
+    /* Separator */
     hr.border-subtle{
       border: 0 !important;
       height: 1px;
       opacity: 1 !important;
-      background: linear-gradient(
-        90deg,
-        rgba(0,0,0,0) 0%,
-        var(--border) 20%,
-        var(--border) 80%,
-        rgba(0,0,0,0) 100%
-      );
+      background: var(--border);
       margin: 28px 0;
     }
 
-    /* Media: image-heavy, consistent aspect */
+    /* テキストの技術スタック表記（バッジ代替） */
+    .tech-line{
+      color: var(--muted);
+      font-size: .88rem;
+      letter-spacing: .2px;
+    }
+
+    /* Media */
     .media-box{
-      background: color-mix(in srgb, var(--imgbg) 100%, transparent);
+      background: var(--imgbg);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 10px;
     }
     .media-hero{
-      /* large showcase */
       aspect-ratio: 16 / 9;
       overflow: hidden;
       border-radius: 10px;
@@ -245,7 +227,7 @@
     .media-hero img, .media-hero video{
       width: 100%;
       height: 100%;
-      object-fit: contain; /* keep UI readable */
+      object-fit: contain;
       display:block;
     }
     .media-grid{
@@ -266,7 +248,7 @@
     .media-thumb img, .media-thumb video{
       width: 100%;
       height: 100%;
-      object-fit: cover;   /* more visual impact */
+      object-fit: cover;
       display:block;
     }
     .cfa-compare{
@@ -319,34 +301,32 @@
       padding:0;
     }
     .cfa-feature-list li{
-      padding:9px 11px;
+      padding:8px 11px;
       border:1px solid var(--border);
       border-radius:9px;
-      background:color-mix(in srgb, var(--card) 88%, var(--accent) 12%);
       color:var(--muted);
       font-size:.9rem;
     }
     @media (min-width: 768px){
       .cfa-feature-list{ grid-template-columns:1fr 1fr; }
     }
-    /* Badges */
-    .badge-img{
-      height: 20px;
-      margin-right: 6px;
-      margin-bottom: 6px;
-      vertical-align: middle;
+
+    /* 縦長(スマホ)スクショ */
+    .shot-row{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+    .media-phone{
+      height:440px; aspect-ratio: 9 / 19; overflow:hidden;
+      border-radius:16px; border:1px solid var(--border);
+      background: var(--imgbg); padding:6px;
     }
-    .tech-list{
-      margin: 8px 0 0;
-      padding-left: 18px;
-      color: var(--muted);
-      font-size: 14px;
+    .media-phone img{
+      width:100%; height:100%; object-fit:contain; display:block;
+      border-radius:11px; cursor: zoom-in;
     }
-    .tech-list li{ margin: 2px 0; }
+    @media (max-width: 575.98px){ .media-phone{ height:360px; } }
 
     /* Buttons */
     .btn-outline-info{
-      --bs-btn-color: var(--accent2);
+      --bs-btn-color: var(--accent);
       --bs-btn-border-color: color-mix(in srgb, var(--accent) 65%, transparent);
       --bs-btn-hover-bg: color-mix(in srgb, var(--accent) 12%, transparent);
       --bs-btn-hover-border-color: color-mix(in srgb, var(--accent) 70%, transparent);
@@ -358,6 +338,38 @@
       border: 1px solid var(--border);
       background: color-mix(in srgb, var(--card) 70%, transparent);
     }
+
+    /* 経歴タイムライン（カード枠なし） */
+    .timeline{
+      display:grid; grid-template-columns:auto 1fr;
+      gap:.25rem 1rem; font-size:.95rem;
+    }
+    .timeline .yr{ color:var(--accent); font-weight:700; white-space:nowrap; }
+    .timeline .ev{ color:var(--muted); }
+
+    /* 技術と作品の対応リスト */
+    .stack-map{
+      list-style:none; margin:0; padding:0;
+      display:grid; gap:.3rem;
+      font-size:.95rem;
+    }
+    .stack-map strong{ color:var(--fg); font-weight:600; }
+    .stack-map span{ color:var(--muted); }
+
+    /* 過去作品アーカイブ */
+    .archive-item{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      padding:14px 0;
+      border-bottom:1px solid var(--border);
+    }
+    .archive-item:last-child{ border-bottom:none; }
+    @media (min-width: 768px){
+      .archive-item{ grid-template-columns: 220px 1fr; align-items:start; }
+    }
+    .archive-item .media-thumb{ max-width:320px; }
+    .archive-item h4{ font-size:1rem; margin-bottom:.2rem; }
 
     /* Lightbox */
     .lightbox-overlay{
@@ -444,19 +456,21 @@
       }
     }
 
-    /* Print (PDF) */
+    /* ============================================
+       Print (PDF)
+       - 通常印刷/完全版PDF: 全セクション（アコーディオンはJSで展開）
+       - 採用向けサマリー: body.pdf-summary で .pdf-full-only を非表示
+    ============================================ */
     @page{
       margin: 10mm 12mm;
       size: A4;
     }
     @media print{
-      /* ── Chromium 印刷フリーズ対策 ── */
+      /* Chromium 印刷フリーズ対策 */
       html{ scroll-behavior: auto !important; }
       *, *::before, *::after{
         transition: none !important;
         animation: none !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
       }
       nav, .no-print{ display:none !important; }
       body{
@@ -466,16 +480,29 @@
         line-height: 1.5 !important;
       }
       .text-muted{ color:#444 !important; }
+      .hero{
+        background:none !important;
+        border-bottom:none !important;
+        padding-top:0 !important;
+        padding-bottom:.15rem !important;
+      }
+      .hero.py-5{ padding-top:0 !important; padding-bottom:.15rem !important; }
+      .hero .display-6{ font-size:18px !important; margin-bottom:2px !important; }
+      .hero .lead{ font-size:11px !important; line-height:1.4 !important; margin-bottom:4px !important; }
+      .hero-lead, .hero-degree{ font-size:10px !important; }
+      .hero-evidence{ font-size:9.5px !important; gap:1px !important; }
+      .hero .btn{ font-size:9px !important; padding:1px 5px !important; min-height:auto !important; }
 
-      /* ── Bootstrapの2カラムを印刷でも維持 ── */
+      /* Bootstrapの2カラム維持 */
       .row{ display:flex !important; flex-wrap:wrap !important; }
       .col-lg-5{ flex:0 0 auto !important; width:41.6667% !important; }
       .col-lg-7{ flex:0 0 auto !important; width:58.3333% !important; }
       .col-lg-6{ flex:0 0 auto !important; width:50% !important; }
-      .col-12.col-lg-6{ flex:0 0 auto !important; width:50% !important; }
+      .col-md-4{ flex:0 0 auto !important; width:33.3333% !important; }
+      .col-md-6{ flex:0 0 auto !important; width:50% !important; }
+      .col-md-8{ flex:0 0 auto !important; width:66.6667% !important; }
       .g-3{ --bs-gutter-x:0.5rem !important; --bs-gutter-y:0.5rem !important; }
 
-      /* ── カード ── */
       .card{
         box-shadow:none !important;
         border:1px solid #ccc !important;
@@ -484,17 +511,16 @@
         break-inside: avoid;
         page-break-inside: avoid;
       }
-      /* 研究カードは高さが大きいため分割を許可 */
-      #research .card{
+      /* 長いケーススタディカードは内部分割を許可 */
+      #works .card{
         break-inside: auto !important;
         page-break-inside: auto !important;
       }
       .card .h5, .card .card-title{ font-size:12px !important; }
-      .card p{ font-size:10px !important; margin-bottom:2px !important; }
-      .tech-list{ font-size:9px !important; margin-top:2px !important; padding-left:14px !important; }
-      .tech-list li{ margin:0 !important; }
+      .card p, .card li{ font-size:10px !important; }
+      .card p{ margin-bottom:2px !important; }
+      .tech-line{ font-size:9px !important; }
 
-      /* ── メディア（画像を縮小） ── */
       .media-box{
         border:1px solid #ccc !important;
         background:#fff !important;
@@ -502,7 +528,7 @@
       }
       .media-hero{
         aspect-ratio:16/9;
-        max-height:160px;
+        max-height:150px;
         border:1px solid #ccc !important;
         background:#fff !important;
       }
@@ -516,351 +542,7 @@
         grid-template-columns:1fr 1fr !important;
         gap:4px !important;
       }
-      .media-thumb{
-        max-height:110px;
-      }
-
-      /* ── バッジ: SVG印刷で二重レンダリングされるため非表示 ── */
-      .badge-img{ display:none !important; }
-
-      /* ── セクション見出し ── */
-      .section-title{
-        font-size:13px !important;
-        margin-bottom:2px !important;
-      }
-      .d-flex.mb-3{ margin-bottom:0.25rem !important; }
-
-      /* ── セクション見出しの孤立・重なり防止 ── */
-      section > .d-flex:first-child{
-        break-after: avoid !important;
-        page-break-after: avoid !important;
-      }
-      section > .row{
-        break-before: avoid !important;
-        page-break-before: avoid !important;
-      }
-      /* ── ボタン類（D案: 背景色 + ↗記号） ── */
-      a.btn-outline-info, a.btn-video{
-        display:inline-block !important;
-        font-size:10px !important;
-        padding:1px 6px !important;
-        border:1px solid #aaa !important;
-        color:#0b66c3 !important;
-        background:#eef4fb !important;
-        text-decoration:none !important;
-      }
-      /* ↗ をリンク末尾に（URL無しリンク用） */
-      a.btn-outline-info::after, a.btn-video::after{
-        content:" \2197" !important;
-      }
-      /* URL + ↗ 表示（URL付きリンク用） */
-      a.btn-outline-info[href^="https://github.com/kojima8924/"]::after{
-        content:" (" attr(href) ") \2197" !important;
-        font-size:7px !important;
-        color:#0b66c3 !important;
-        text-decoration:underline !important;
-        word-break:break-all;
-      }
-      a.btn-video[data-nico]::after{
-        content:" (nicovideo.jp/watch/" attr(data-nico) ") \2197" !important;
-        font-size:7px !important;
-        color:#0b66c3 !important;
-        text-decoration:underline !important;
-      }
-      a.btn-outline-info[href^="https://www.frontiersin.org/"]::after{
-        content:" (" attr(href) ") \2197" !important;
-        font-size:7px !important;
-        color:#0b66c3 !important;
-        text-decoration:underline !important;
-        word-break:break-all;
-      }
-
-      /* ── リンク ── */
-      a{ color:#000 !important; text-decoration:none !important; }
-
-      /* ── ヒーローのボタン・Core表示 ── */
-      .hero .btn{ font-size:9px !important; padding:1px 5px !important; }
-      .hero .small, .hero .mt-3.small{ font-size:9px !important; margin-top:2px !important; }
-      .hero .d-flex.gap-2{ gap:0.25rem !important; }
-      .hero .mt-3{ margin-top:0.25rem !important; }
-
-      /* ── 区切り線 ── */
-      hr.border-subtle{
-        background:#ddd !important;
-        border:none !important;
-        height:1px !important;
-        margin:8px 0 !important;
-        overflow:visible !important;
-        break-after: avoid !important;
-        page-break-after: avoid !important;
-      }
-
-      /* ── Hero ── */
-      .hero{
-        background:none !important; /* グラデーションはPDFでPattern資源になり圧縮時に壊れるため印刷しない */
-        border-bottom:none !important;
-        padding-top:0 !important;
-        padding-bottom:0.15rem !important;
-      }
-      .hero.py-5{
-        padding-top:0 !important;
-        padding-bottom:0.15rem !important;
-      }
-      .hero .display-6{ font-size:18px !important; margin-bottom:2px !important; }
-      .hero .lead{ font-size:10px !important; line-height:1.35 !important; margin-bottom:4px !important; }
-
-      /* ── 全体余白の縮小 ── */
-      main.container{ padding-top:0.15rem !important; padding-bottom:0 !important; }
-      .py-2{ padding-top:0.05rem !important; padding-bottom:0.05rem !important; }
-      #contact{ margin-bottom:0 !important; padding-top:0 !important; padding-bottom:0 !important; }
-      #contact .card{ padding:4px 6px !important; }
-      #contact .mt-3{ margin-top:0.25rem !important; }
-
-      /* ── ページ分割の制御 ── */
-      /* sectionレベルではavoidしない（巨大な空白の原因になる） */
-      section{ break-inside: auto; page-break-inside: auto; }
-
-      /* ── 印刷時 h-100 無効化（flex高さの計算ズレ防止） ── */
-      .h-100{ height:auto !important; }
-
-      /* ── section-title::before ドットを印刷で非表示 ── */
-      .section-title::before{ display:none !important; }
-      .media-hero::after, .media-thumb::after{ display:none !important; }
-
-      /* ── アコーディオン: 印刷では開いた状態で全内容を掲載 ── */
-      details.card > summary{
-        font-size:12px !important;
-        font-weight:700;
-        list-style:none;
-        break-after: avoid !important;
-        page-break-after: avoid !important;
-      }
-      details.card > summary::-webkit-details-marker,
-      details.card > summary::marker{ display:none; content:""; }
-      /* 過去作品ブロックは新しいページから開始し、途中の分割は許可 */
-      #other details.card{
-        break-before: page !important;
-        page-break-before: always !important;
-        break-inside: auto !important;
-        page-break-inside: auto !important;
-      }
-      /* Clage Cook Original は1ブロックとして維持 */
-      #clagecook-original{
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-      }
-      /* CG見出しのページ末孤立を防ぐ（break-after:avoidはChromium印刷で効かないため改ページで対処） */
-      #cg{
-        break-before: page !important;
-        page-break-before: always !important;
-      }
-
-      /* ── AI要約: タブを廃し、4AI分をAI名見出しつきで縦に全掲載 ── */
-      #ai-summary .ai-summary-tabs{ display:none !important; }
-      #ai-summary .tab-content > .tab-pane{
-        display:block !important;
-        opacity:1 !important;
-      }
-      #ai-summary .card,
-      #ai-summary .tab-pane{
-        break-inside:auto !important;
-        page-break-inside:auto !important;
-      }
-      .aisum-print-name{
-        display:block !important;
-        font-size:12px !important;
-        font-weight:700;
-        margin:8px 0 2px !important;
-        break-after: avoid !important;
-        page-break-after: avoid !important;
-      }
-      #ai-summary .ai-quote{
-        border-left:2px solid #999 !important;
-        padding:2px 8px !important;
-      }
-      #ai-summary ul{
-        font-size:10px !important;
-        margin-bottom:4px !important;
-        padding-left:16px !important;
-      }
-      .ai-prompt{
-        background:#f5f5f5 !important;
-        border:1px solid #ccc !important;
-        font-size:9px !important;
-        padding:4px 6px !important;
-      }
-    }
-
-    /* ============================================
-       追加コンテンツ用スタイル
-    ============================================ */
-    /* ヒーロー: 経歴タイムライン */
-    .timeline{
-      display:grid; grid-template-columns:auto 1fr;
-      gap:.25rem 1rem; font-size:.95rem;
-    }
-    .timeline .yr{ color:var(--accent); font-weight:700; white-space:nowrap; }
-    .timeline .ev{ color:var(--muted); }
-    .career-compact{ display:none; }
-    /* ヒーロー: 3本柱チップカード */
-    .chip-card{
-      border:1px solid var(--border); background:var(--card);
-      border-radius:12px; padding:.75rem .95rem; height:100%;
-      box-shadow: 0 4px 14px var(--shadow);
-    }
-    .chip-card .t{ font-weight:700; margin-bottom:.15rem; }
-    .chip-card .d{ color:var(--muted); font-size:.9rem; line-height:1.55; }
-    @media (max-width: 575.98px){
-      .hero{
-        padding-top:2rem !important;
-        padding-bottom:2rem !important;
-      }
-      .chip-card{ padding:.55rem .7rem; }
-      .chip-card .d{ font-size:.82rem; line-height:1.4; }
-      .timeline{ display:none; }
-      .career-compact{ display:block; }
-    }
-    /* AI要約タブ */
-    .ai-summary-tabs .nav-link{
-      color: var(--muted);
-      border: 1px solid var(--border);
-      margin-right: .4rem;
-      margin-bottom: .25rem;
-    }
-    .ai-summary-tabs .nav-link.active{
-      background: color-mix(in srgb, var(--accent) 18%, transparent);
-      color: var(--fg);
-      border-color: color-mix(in srgb, var(--accent) 60%, transparent);
-    }
-    .ai-quote{
-      border-left: 3px solid var(--accent);
-      padding: .35rem .9rem;
-      margin: 0;
-    }
-    .ai-prompt{
-      white-space: pre-wrap;
-      background: var(--imgbg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: .75rem;
-      color: var(--muted);
-    }
-    .aisum-print-name{ display: none; } /* 印刷時のみ表示するAI名見出し */
-
-    /* 縦長(スマホ)スクショ: 16:9枠で切り取らず、端末風の枠で等倍表示 */
-    .shot-row{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
-    .media-phone{
-      height:440px; aspect-ratio: 9 / 19; overflow:hidden;
-      border-radius:16px; border:1px solid var(--border);
-      background: var(--imgbg); padding:6px;
-    }
-    .media-phone img{
-      width:100%; height:100%; object-fit:contain; display:block;
-      border-radius:11px; cursor: zoom-in;
-    }
-    @media (max-width: 575.98px){ .media-phone{ height:360px; } }
-    /* アーキ図(インラインSVG)の配色をテーマ変数に追従させる */
-    .arch-svg text{ fill: var(--fg); }
-    .arch-svg .muted{ fill: var(--muted); }
-    .arch-svg .box{ fill: var(--card); stroke: var(--border); }
-    .arch-svg .accent{ stroke: var(--accent); }
-    .arch-svg .arrow{ stroke: var(--muted); fill:none; }
-    .arch-svg .arrowhead{ fill: var(--muted); }
-    .arch-mobile{ display:none; }
-    @media (max-width: 767.98px){
-      .arch-desktop{ display:none; }
-      .arch-mobile{
-        display:grid;
-        gap:.6rem;
-      }
-      .arch-mobile-hub,
-      .arch-mobile-node{
-        border:1px solid var(--border);
-        border-radius:10px;
-        background:var(--card);
-        padding:.65rem .75rem;
-      }
-      .arch-mobile-hub{
-        border:2px solid var(--accent);
-        text-align:center;
-      }
-      .arch-mobile-grid{
-        display:grid;
-        gap:.55rem;
-      }
-      .arch-mobile-node strong{ display:block; }
-      .arch-mobile-node span{
-        display:block;
-        color:var(--muted);
-        font-size:.82rem;
-        line-height:1.45;
-      }
-      .arch-mobile-flow{
-        color:var(--muted);
-        text-align:center;
-        font-size:.82rem;
-        line-height:1.35;
-      }
-    }
-
-    /* 新設セクション向け印刷調整。通常スタイルより後に置いて上書きする */
-    @media print{
-      .skip-link{ display:none !important; }
-      #research{
-        break-before:auto !important;
-        page-break-before:auto !important;
-      }
-      #ai #scriptvedit-card{
-        break-inside:avoid !important;
-        page-break-inside:avoid !important;
-      }
-      #chromiumfora-card{
-        break-before:page !important;
-        page-break-before:always !important;
-      }
-      .timeline{
-        gap:0 6px !important;
-        color:#000 !important;
-        font-size:9px !important;
-      }
-      .timeline .yr{ color:#111 !important; }
-      .timeline .ev{ color:#444 !important; }
-      .chip-card{
-        color:#000 !important;
-        background:#fff !important;
-        box-shadow:none !important;
-        border:1px solid #ccc !important;
-        padding:4px 6px !important;
-      }
-      .chip-card .t{ font-size:10px !important; }
-      .chip-card .d{
-        color:#444 !important;
-        font-size:8px !important;
-        line-height:1.35 !important;
-      }
-      .arch-desktop{ display:block !important; }
-      .arch-mobile{ display:none !important; }
-      .arch-svg{ max-height:115px !important; }
-      .arch-svg text{ fill:#000 !important; }
-      .arch-svg .muted{ fill:#444 !important; }
-      .arch-svg .box{ fill:#fff !important; stroke:#777 !important; }
-      .arch-svg .accent{ stroke:#111 !important; }
-      .arch-svg .arrow{ stroke:#555 !important; }
-      .arch-svg .arrowhead{ fill:#555 !important; }
-      #ai article.card{
-        break-inside:auto !important;
-        page-break-inside:auto !important;
-      }
-      #ai article.card p,
-      #github article.card p{
-        font-size:9px !important;
-        line-height:1.35 !important;
-      }
-      #ai > .card{
-        break-inside:avoid !important;
-        page-break-inside:avoid !important;
-      }
-      #ai .media-hero{ max-height:140px !important; }
+      .media-thumb{ max-height:110px; }
       .cfa-compare{
         grid-template-columns:1fr 1fr !important;
         grid-auto-flow:row !important;
@@ -871,7 +553,7 @@
       }
       .cfa-swipe-hint{ display:none !important; }
       .cfa-shot{
-        height:220px !important;
+        height:200px !important;
         aspect-ratio:auto !important;
         background:#fff !important;
         border:1px solid #ccc !important;
@@ -880,14 +562,11 @@
       .cfa-shot::after{ display:none !important; }
       .cfa-feature-list{ grid-template-columns:1fr 1fr !important; gap:3px !important; }
       .cfa-feature-list li{ padding:3px 5px !important; font-size:8px !important; }
-      .cfa-compare figcaption{
-        font-size:8px !important;
-        line-height:1.3 !important;
-      }
+      .cfa-compare figcaption{ font-size:8px !important; line-height:1.3 !important; }
       .shot-row{ gap:4px !important; }
       .media-phone{
         width:auto !important;
-        height:155px !important;
+        height:150px !important;
         padding:2px !important;
         border:1px solid #ccc !important;
         border-radius:8px !important;
@@ -895,17 +574,104 @@
       }
       .media-phone img{ border-radius:5px !important; }
       .media-phone::after{ display:none !important; }
-      .col-md-5{ flex:0 0 auto !important; width:41.6667% !important; }
-      .col-md-6{ flex:0 0 auto !important; width:50% !important; }
-      .col-md-7{ flex:0 0 auto !important; width:58.3333% !important; }
-    }
+      .media-hero::after, .media-thumb::after{ display:none !important; }
 
+      /* 見出し */
+      .section-title{
+        font-size:13px !important;
+        margin-bottom:2px !important;
+        border-bottom:1px solid #999 !important;
+      }
+      .d-flex.mb-3{ margin-bottom:0.25rem !important; }
+      section > .d-flex:first-child{
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+      }
+      section > .row, section > .card, section > p{
+        break-before: avoid !important;
+        page-break-before: avoid !important;
+      }
+
+      /* リンク: クリック可能なまま、外部リンクは↗のみ付す（生URLは展開しない） */
+      a{ color:#000 !important; text-decoration:none !important; }
+      a.btn-outline-info{
+        display:inline-block !important;
+        font-size:10px !important;
+        padding:1px 6px !important;
+        border:1px solid #aaa !important;
+        color:#0b66c3 !important;
+        background:#eef4fb !important;
+        text-decoration:none !important;
+      }
+      a.btn-outline-info[target="_blank"]::after{ content:" \2197"; }
+
+      hr.border-subtle{
+        background:#ddd !important;
+        border:none !important;
+        height:1px !important;
+        margin:8px 0 !important;
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+      }
+
+      main.container{ padding-top:0.15rem !important; padding-bottom:0 !important; }
+      .py-2{ padding-top:0.05rem !important; padding-bottom:0.05rem !important; }
+      section{ break-inside: auto; page-break-inside: auto; }
+      .h-100{ height:auto !important; }
+      .skip-link{ display:none !important; }
+
+      /* タイムライン・技術リスト */
+      .timeline{ gap:0 6px !important; font-size:9px !important; }
+      .timeline .yr{ color:#111 !important; }
+      .timeline .ev{ color:#444 !important; }
+      .stack-map{ font-size:9px !important; gap:1px !important; }
+
+      /* アコーディオン（過去作品・開発背景）: 印刷では開いて掲載 */
+      details.card > summary, details.archive > summary{
+        font-size:12px !important;
+        font-weight:700;
+        list-style:none;
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+      }
+      details.card > summary::-webkit-details-marker,
+      details.card > summary::marker,
+      details.archive > summary::-webkit-details-marker,
+      details.archive > summary::marker{ display:none; content:""; }
+      #archive details.archive{
+        break-before: page !important;
+        page-break-before: always !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+      .archive-item{
+        border-bottom:1px solid #ddd !important;
+        padding:6px 0 !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        grid-template-columns: 160px 1fr !important;
+      }
+      .archive-item h4{ font-size:11px !important; }
+      .archive-item p{ font-size:9px !important; margin:0 !important; }
+      .archive-item .media-thumb{ max-height:90px; }
+
+      #contact{ margin-bottom:0 !important; padding-top:0 !important; padding-bottom:0 !important; }
+
+      /* ── 採用向けサマリーPDF: 完全版のみの要素を隠す ── */
+      body.pdf-summary .pdf-full-only{ display:none !important; }
+      body.pdf-summary{ font-size:10.5px !important; }
+      body.pdf-summary .media-hero{ max-height:120px; }
+      body.pdf-summary .media-phone{ height:120px !important; }
+      body.pdf-summary .cfa-shot{ height:150px !important; }
+      body.pdf-summary .card p, body.pdf-summary .card li{ font-size:9.5px !important; }
+    }
   </style>
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#nav">
   <a class="skip-link" href="#main-content">本文へ移動</a>
-<!-- Top bar -->
+
+  <!-- Top bar -->
   <nav class="navbar navbar-expand-lg sticky-top" data-bs-theme="dark" aria-label="メインナビゲーション">
     <div class="container">
       <a class="navbar-brand fw-semibold" href="#">
@@ -920,11 +686,10 @@
 
       <div id="nav" class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto gap-lg-2 align-items-lg-center">
-          <li class="nav-item"><a class="nav-link" href="#career">経歴</a></li>
-          <li class="nav-item"><a class="nav-link" href="#ai-summary">AI要約</a></li>
-          <li class="nav-item"><a class="nav-link" href="#ai">主要作品</a></li>
+          <li class="nav-item"><a class="nav-link" href="#works">代表作品</a></li>
           <li class="nav-item"><a class="nav-link" href="#research">研究</a></li>
-          <li class="nav-item"><a class="nav-link" href="#other">その他</a></li>
+          <li class="nav-item"><a class="nav-link" href="#career">経歴</a></li>
+          <li class="nav-item"><a class="nav-link" href="#archive">過去作品</a></li>
           <li class="nav-item"><a class="nav-link" href="#contact">連絡先</a></li>
 
           <!-- Theme toggle -->
@@ -934,16 +699,10 @@
             </button>
           </li>
 
-          <!-- PDF: download + print -->
           <li class="nav-item ms-lg-2 no-print">
-            <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio.pdf" download>
-              PDF Download
+            <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>
+              採用向けPDF
             </a>
-          </li>
-          <li class="nav-item ms-lg-2 no-print">
-            <button class="btn btn-outline-info btn-sm" type="button" onclick="window.print()">
-              Print
-            </button>
           </li>
         </ul>
       </div>
@@ -953,407 +712,160 @@
   <!-- Hero -->
   <header class="hero py-5">
     <div class="container">
-      <div class="row gy-4 align-items-center">
-        <div class="col-12 col-lg">
-          <h1 class="display-6 fw-bold mb-2 name-title">小嶋 明 (Akira Kojima)</h1>
-          <p class="lead text-muted mb-3 fw-semibold">
-            AIを既存プロダクトへ組み込み、課題設定から実機検証まで担う
-            AIアプリケーションエンジニアです。
-          </p>
+      <h1 class="display-6 fw-bold mb-2">小嶋 明 (Akira Kojima)</h1>
+      <p class="lead fw-semibold mb-3">AIアプリケーションエンジニア</p>
 
-          <p class="text-muted mb-3 hero-summary">
-            複数LLMの統合、Android／Flutterアプリ、AIエージェント向けDSLを中心に、
-            使い続けられる形まで設計・実装しています。
-          </p>
+      <p class="text-muted hero-lead mb-2">
+        複数のLLMを一つの画面で扱うFlutterアプリ「<a href="#works">Clage Cook</a>」、
+        Android ChromiumへのAI機能統合「<a href="#works">ChromiumforA</a>」、
+        PythonとFFmpegによる動画編集DSL「<a href="#works">ScriptVEdit</a>」を開発しています。
+        実装にはAIエージェントを使い、仕様・アーキテクチャ・受入テスト・実機検証と最終判断を自分で行っています。
+      </p>
+      <p class="hero-degree mb-3">
+        東京大学 工学部 精密工学科卒・同大学院 修士課程修了。博士課程でEIT触覚センサを研究し（2026年3月退学）、
+        筆頭著者として査読論文を発表。基本情報技術者。
+      </p>
 
-          <p class="text-muted small mb-3 hero-method">
-            <strong>開発スタイル:</strong> AIエージェントで実装を加速し、私は課題設定・仕様・アーキテクチャ・受入基準を定め、
-            生成コードを実機と自動テストで検証します。
-          </p>
+      <ul class="hero-evidence text-muted mb-3">
+        <li>公開OSS: <a href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">Clage Cook</a>・<a href="https://github.com/kojima8924/scriptvedit" target="_blank" rel="noopener noreferrer">ScriptVEdit</a>（リポジトリ・CI・実機画面）</li>
+        <li>Android実機開発: ChromiumforA（比較画像・操作動画、非公開）</li>
+        <li>査読論文: <a href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">Frontiers in Robotics and AI</a>（筆頭著者）</li>
+        <li>受託開発: 美容クリニック向けLINE応答AI（開発中・匿名掲載）</li>
+      </ul>
 
-          <p class="evidence-line mb-3">
-            実案件 1件（開発中・匿名）<span aria-hidden="true">｜</span>主要OSS 2件<span aria-hidden="true">｜</span>査読論文 筆頭著者
-          </p>
-
-          <div class="d-flex flex-wrap gap-2 hero-actions">
-            <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio.pdf" download>ポートフォリオPDF（完全版）</a>
-            <a class="btn btn-outline-info" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub</a>
-          </div>
-        </div>
+      <div class="d-flex flex-wrap gap-2 hero-actions no-print">
+        <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（2ページ）</a>
+        <a class="btn btn-outline-info" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="btn btn-outline-info" href="mailto:a.kojima8924@gmail.com">メール</a>
+        <a class="btn btn-soft btn-sm align-self-center" href="media/Akira_Kojima_Portfolio.pdf" download>完全版PDF</a>
       </div>
     </div>
   </header>
 
   <main id="main-content" class="container py-4" tabindex="-1">
 
-    <!-- Career -->
-    <section id="career" class="anchor py-2">
-      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">経歴</h2>
-      </div>
-
-      <article class="card p-3">
-        <p class="text-muted mb-3">
-          東京大学工学部卒、同大学院修士課程修了。博士課程でEIT触覚センサを研究後、2026年3月に中途退学。現在はAIアプリ開発を中心にフリーランスとして活動しています。
-        </p>
-        <div class="timeline">
-          <span class="yr">2018–22</span><span class="ev">東京大学 工学部 精密工学科</span>
-          <span class="yr">2022–24</span><span class="ev">東京大学大学院 修士課程</span>
-          <span class="yr">2024–26</span><span class="ev">同博士課程でEIT触覚センサを研究</span>
-          <span class="yr">2026–</span><span class="ev">フリーランスのAIアプリケーションエンジニア</span>
-        </div>
-        <p class="text-muted small mb-0 mt-3"><strong>資格:</strong> 基本情報技術者試験 合格（2026年8月）</p>
-      </article>
-    </section>
-
-    <hr class="border-subtle">
-
-    <!-- AI summary: 各AIの要約を「最新版に対する固定文字列」として掲載 -->
-    <section id="ai-summary" class="anchor py-2">
-      <details class="card p-3">
-        <summary class="fw-semibold">AIによる要約 — ChatGPT・Claude・Gemini・Grok が本ページを読んだ評価</summary>
-        <div class="mt-3">
-        <p class="text-muted mb-3">
-          ChatGPT・Claude・Gemini・Grokへ同一のURLとプロンプトを与え、得られた要約をそのまま掲載します。
-          リアルタイム生成ではなく、本ページ最新版に対する評価として取得日・モデルとともに固定した文字列です。
-        </p>
-
-        <ul class="nav nav-pills ai-summary-tabs" role="tablist" aria-label="要約したAIサービスの切り替え">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="aisum-chatgpt-tab" data-bs-toggle="pill" data-bs-target="#aisum-chatgpt" type="button" role="tab" aria-controls="aisum-chatgpt" aria-selected="true">ChatGPT</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="aisum-claude-tab" data-bs-toggle="pill" data-bs-target="#aisum-claude" type="button" role="tab" aria-controls="aisum-claude" aria-selected="false">Claude</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="aisum-gemini-tab" data-bs-toggle="pill" data-bs-target="#aisum-gemini" type="button" role="tab" aria-controls="aisum-gemini" aria-selected="false">Gemini</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="aisum-grok-tab" data-bs-toggle="pill" data-bs-target="#aisum-grok" type="button" role="tab" aria-controls="aisum-grok" aria-selected="false">Grok</button>
-          </li>
-        </ul>
-
-        <div class="tab-content mt-3">
-          <div class="tab-pane fade show active" id="aisum-chatgpt" role="tabpanel" aria-labelledby="aisum-chatgpt-tab" tabindex="0">
-            <h3 class="aisum-print-name">ChatGPT</h3>
-            <div class="ai-quote text-muted mb-2">
-              <p>小嶋 明氏は、AIを既存プロダクトへ組み込み、課題設定・仕様設計・アーキテクチャ・実装管理・実機／自動テストまで一貫して担うAIアプリケーションエンジニアです。AIエージェントで開発を加速しながら、生成結果を鵜呑みにせず、比較・検証して実用的な製品へ仕上げる姿勢を軸としています。</p>
-              <p class="mb-1"><strong>代表的な制作物</strong></p>
-              <ul>
-                <li><strong>Clage Cook</strong> — Claude、Gemini、ChatGPT、Grokの回答を並列取得し、比較・相互批評・統合するBYOK型OSSアプリ。FlutterによるマルチプラットフォームUI、公式APIへの直接接続、端末内保存、安全確認まで設計しています。</li>
-                <li><strong>ChromiumforA</strong> — Android版ChromiumへAIを統合し、Google検索結果に評価コメントを付加して順位を再構成するブラウザ。ページ要約、選択文AI、認証情報に関する安全性検証も実装しています。</li>
-                <li><strong>scriptvedit</strong> — PythonコードからFFmpeg動画を生成する、AI／コーディングエージェント向け動画編集DSL。タイムライン記法、素材キャッシュ、アンカー配置、テスト機構などを備え、実プロジェクトのレンダリングを1012秒から106秒へ短縮しています。</li>
-                <li><strong>美容クリニック向けLINE応答AI</strong> — Dify、LINE Webhook、RAG、状態管理を使い、FAQ回答、予約案内、スタッフへの引き継ぎを支援する実案件です。</li>
-              </ul>
-              <p>研究面では、東京大学でEIT触覚センサを研究し、CNNによって空間分解能指標と位置誤差を従来法の約22％まで低減しました。さらに、電極配置最適化によって最悪領域の空間分解能指標を最大19.2％改善し、筆頭著者として査読論文を発表しています。</p>
-              <p>東京大学工学部・同大学院修士課程を修了後、博士課程で研究を継続し、2026年からフリーランスのAIアプリケーションエンジニアとして活動しています。</p>
-              <p class="mb-0">総評すると、数理・機械学習に基づく研究力と、Android／Flutter／Pythonを用いた製品実装力を併せ持ち、AIを単なるデモではなく「継続的に使える道具」へ落とし込めることが、このポートフォリオの中核的な強みです。</p>
-            </div>
-            <p class="small text-muted mb-0">モデル: ChatGPT Pro ／ 取得日: 2026年8月10日</p>
-          </div>
-          <div class="tab-pane fade" id="aisum-claude" role="tabpanel" aria-labelledby="aisum-claude-tab" tabindex="0">
-            <h3 class="aisum-print-name">Claude</h3>
-            <div class="ai-quote text-muted mb-2">
-              <p class="mb-1"><strong>プロフィール</strong></p>
-              <ul>
-                <li>AIアプリケーションエンジニア（フリーランス、2026年〜）</li>
-                <li>東京大学工学部 精密工学科卒 → 同大学院修士修了 → 博士課程（EIT触覚センサ研究）を2026年3月に中途退学</li>
-                <li>開発スタイル: AIエージェントで実装を加速し、本人は課題設定・仕様・アーキテクチャ・受入基準と検証を担当</li>
-                <li>実績: 実案件1件（開発中）、主要OSS 2件、査読論文 筆頭著者</li>
-              </ul>
-              <p class="mb-1"><strong>主要作品</strong></p>
-              <ul>
-                <li><strong>美容クリニック向けLINE応答AI</strong>（実案件・開発中）— Dify + LINE Webhook + RAGでFAQ回答・予約案内・スタッフ引き継ぎを自動化</li>
-                <li><strong>Clage Cook</strong>（OSS）— 4社のAIを1つの会議に統合し、回答比較・相互批評・統合を行うBYOKアプリ。Flutterで6プラットフォーム対応。非公開版（Android+FastAPI常駐サーバ）を毎日運用し、その知見を公式APIで再実装</li>
-                <li><strong>ChromiumforA</strong>（非公開）— Google検索結果にAI評価コメントを挿入し順位を再評価するAndroid Chromium改造版。ページ要約・選択文AIも統合</li>
-                <li><strong>scriptvedit</strong>（OSS）— AIエージェント向けのPython動画編集DSL（FFmpegで映像化）。並列化でレンダリングを1012秒→106秒に短縮</li>
-                <li><strong>Calcpy</strong>（プロトタイプ）— 電卓UX × Python/SymPyのAndroidアプリ。オンデバイス実行・プロセス隔離を設計</li>
-              </ul>
-              <p class="mb-1"><strong>研究</strong></p>
-              <ul>
-                <li>EIT触覚センサの逆問題にCNNを適用し、位置誤差を従来法の約22%に低減（SI2022・IROS 2022発表）</li>
-                <li>電極配置最適化で最悪領域の空間分解能指標を最大19.2%低減</li>
-                <li>筆頭著者論文が Frontiers in Robotics and AI に掲載</li>
-              </ul>
-              <p class="mb-1"><strong>その他の制作</strong></p>
-              <ul>
-                <li>ChatGPT-Windows（常駐クライアント）／ ChatGPT-Web（ゴーストテキスト補完）</li>
-                <li>制御: ハンドドライブ（手の動きで3D運転）、倒立振子（PID制御）</li>
-                <li>CG・画像処理: レイトレーシング（GLSL+CSG / Pythonフルスクラッチ）、シャドウマッピング、Canny法エッジ抽出</li>
-              </ul>
-              <p class="mb-0"><strong>スキル・資格</strong>: AI統合アプリ開発 / Python / C++ / Flutter / FastAPI ／ 基本情報技術者試験 合格（2026年8月）</p>
-            </div>
-            <p class="small text-muted mb-0">モデル: Claude Fable 5 ／ 取得日: 2026年8月10日</p>
-          </div>
-          <div class="tab-pane fade" id="aisum-gemini" role="tabpanel" aria-labelledby="aisum-gemini-tab" tabindex="0">
-            <h3 class="aisum-print-name">Gemini</h3>
-            <div class="ai-quote text-muted mb-2">
-              <p class="mb-1"><strong>概要</strong></p>
-              <p>AIを既存プロダクトへ組み込み、課題設定から実機検証までを担うAIアプリケーションエンジニア。AIエージェントを活用して実装を加速させ、自らは課題設定・仕様策定・アーキテクチャ設計・テスト検証に注力する開発スタイルを持つ。</p>
-              <p class="mb-1"><strong>経歴・資格</strong></p>
-              <ul>
-                <li><strong>2018-2022</strong>: 東京大学 工学部 精密工学科 卒業</li>
-                <li><strong>2022-2024</strong>: 東京大学大学院 修士課程 修了</li>
-                <li><strong>2024-2026</strong>: 同大学院 博士課程にてEIT触覚センサを研究（2026年3月中退）</li>
-                <li><strong>2026-現在</strong>: フリーランスのAIアプリケーションエンジニアとして活動</li>
-                <li><strong>資格</strong>: 基本情報技術者試験 合格（2026年8月）</li>
-              </ul>
-              <p class="mb-1"><strong>主なスキル領域</strong></p>
-              <ul>
-                <li>AIを活用・統合したアプリ開発</li>
-                <li>使用技術: Python / C++ / Flutter / FastAPI</li>
-                <li>複数LLMの統合、Android / Flutterアプリ開発、AIエージェント向けDSL</li>
-              </ul>
-              <p class="mb-1"><strong>主要プロジェクト実績</strong></p>
-              <ul>
-                <li><strong>Clage Cook（OSS）</strong>: 4社のAIの回答を比較・相互批評・統合するBYOKアプリ。Flutterを用いて6プラットフォーム向けの共通UIを設計・実装。</li>
-                <li><strong>ChromiumForA（Private）</strong>: Google検索結果にAI評価コメントを挿入し、評価後の順位を再提示するAndroid Chromiumの改造版。ページ要約・選択文AIも統合。</li>
-                <li><strong>scriptvedit（OSS）</strong>: AIエージェント向けのPython動画編集DSL。AIが動画構成をコードで書き、FFmpegで映像化する仕組みを構築。レンダリングの並列化による高速化も実現。</li>
-                <li><strong>美容クリニック向けLINE応答AI（開発中・匿名）</strong>: LINEでの問い合わせへの一次対応（FAQ回答、予約フォームへの案内など）を支援するAI。Dify応答フローやRAGナレッジを実装。</li>
-              </ul>
-              <p class="mb-1"><strong>研究実績</strong></p>
-              <p><strong>機械学習 × 触覚計測</strong>: EIT触覚センサの逆問題にCNNを適用し、空間分解能指標と位置誤差を従来比約22%低減。国際会議（SI2022、IROS2022）での発表や、筆頭著者としてジャーナル（Frontiers in Robotics and AI）への論文掲載実績あり。</p>
-              <p class="mb-1"><strong>その他の開発・制作物</strong></p>
-              <ul>
-                <li><strong>個人開発</strong>: ChatGPTのWindows常駐クライアント、ゴーストテキスト提案型のWebプロトタイプ、電卓×Pythonアプリ（Calcpy）。</li>
-                <li><strong>制御 / シミュレーション</strong>: Webカメラを用いたハンドドライブ（3D運転デモ）、障害物回避を行う倒立振子のPID制御。</li>
-                <li><strong>CG / 画像処理</strong>: レイトレーシング（GLSL/Python）、シャドウマッピング、波と放物面のアニメーション、Canny法によるエッジ抽出のフルスクラッチ実装。</li>
-              </ul>
-              <p class="mb-0"><strong>連絡先</strong>: Mail: a.kojima8924@gmail.com ／ GitHub: kojima8924</p>
-            </div>
-            <p class="small text-muted mb-0">モデル: Gemini Pro ／ 取得日: 2026年8月10日 ※GeminiのみURL・ファイル一式のいずれも読み込めず、ページのスクリーンショットを添付して取得</p>
-          </div>
-          <div class="tab-pane fade" id="aisum-grok" role="tabpanel" aria-labelledby="aisum-grok-tab" tabindex="0">
-            <h3 class="aisum-print-name">Grok</h3>
-            <div class="ai-quote text-muted mb-2">
-              <p>東京大学出身のAIアプリケーションエンジニア（フリーランス）。AIを既存プロダクトに組み込み、課題設定から実機検証まで一貫して担当する。複数LLMの統合、Android/Flutterアプリ、AIエージェント向けDSLを中心に、「使い続けられる形」まで設計・実装するスタイル。</p>
-              <p class="mb-1"><strong>開発スタイル</strong></p>
-              <p>AIエージェントで実装を加速しつつ、自身は課題設定・仕様・アーキテクチャ・受入基準を定め、生成コードを実機と自動テストで検証する。</p>
-              <p class="mb-1"><strong>主な実績</strong></p>
-              <ul>
-                <li>実案件 1件（開発中・匿名）</li>
-                <li>主要OSS 2件</li>
-                <li>査読論文（筆頭著者）</li>
-              </ul>
-              <p class="mb-1"><strong>代表的なプロジェクト</strong></p>
-              <ul>
-                <li><strong>美容クリニック向けLINE応答AI</strong>(開発中) — FAQ回答・予約案内・スタッフ引き継ぎを支援。Dify応答フロー、LINE Webhook、RAGナレッジ、状態管理を実装済み。回答品質と安全性を検証中。</li>
-                <li><strong>Clage Cook</strong>（OSS）— 4社のAI回答を比較・相互批評・統合するBYOKアプリ。Flutterで6プラットフォーム対応の共通UIを設計。非公開の日常運用版から発展し、公開ベータ中。</li>
-                <li><strong>ChromiumforA</strong> — Android向けChromium改造版。Google検索結果にAI評価コメントを挿入し、再順位付け。ページ要約・選択文AIなども統合。個人検証用で非公開。</li>
-                <li><strong>scriptvedit</strong> — AIエージェント向けPython動画編集DSL。FFmpegで映像化。並列化によりレンダリング時間を大幅短縮（例: 1012秒 → 106秒）。</li>
-                <li>その他: 電卓×Pythonプロトタイプ（Calcpy）、ChatGPT Windows/Webクライアントなど。</li>
-              </ul>
-              <p class="mb-1"><strong>研究</strong></p>
-              <p>機械学習×触覚計測。EIT触覚センサの逆問題にCNNを適用し、空間分解能指標と位置誤差を従来法の約22%に低減。電極配置最適化で最悪領域の指標を最大19.2%改善。筆頭著者としてFrontiers in Robotics and AIに掲載（SI2022、IROS 2022で発表）。</p>
-              <p class="mb-1"><strong>学歴・経歴</strong></p>
-              <ul>
-                <li>2018–22: 東京大学 工学部 精密工学科</li>
-                <li>2022–24: 同大学院 修士課程</li>
-                <li>2024–26: 同博士課程（EIT触覚センサ研究、中途退学）</li>
-                <li>現在: フリーランスのAIアプリケーションエンジニア／資格: 基本情報技術者試験合格（2026年8月）</li>
-              </ul>
-              <p class="mb-1"><strong>その他の制作</strong></p>
-              <p>制御・シミュレーション（ハンドドライブ、倒立振子）、CG・画像処理（GLSL/Pythonレイトレーシング、シャドウマッピング、Canny法など）も手がける。</p>
-              <p class="mb-0">全体として、AIを実用アプリに落とし込み、実機で検証する実践力と、研究バックグラウンドを併せ持つポートフォリオ。技術的な深さがありつつ、公開可能な範囲で具体的な成果（リポジトリ・動画・論文）を示している。</p>
-            </div>
-            <p class="small text-muted mb-0">モデル: Grok 4.5（エキスパート） ／ 取得日: 2026年8月10日</p>
-          </div>
-        </div>
-
-        <details class="mt-3">
-          <summary class="small fw-semibold">実行条件（全AI共通のURLとプロンプト）</summary>
-          <pre class="ai-prompt small mt-2 mb-0">https://kojima8924.github.io/
-上記のポートフォリオを精読し、わかりやすく簡潔に要約して、コードブロックにまとめて。</pre>
-          <p class="small text-muted mt-2 mb-0">各AIの返答（コードブロック内のMarkdown）を、内容を変えずに整形して掲載しています。</p>
-        </details>
-        </div>
-      </details>
-    </section>
-
-    <hr class="border-subtle">
-
     <!-- ============================================================
-         AI×個人開発
+         代表作品
     ============================================================ -->
-    <section id="ai" class="anchor py-2">
+    <section id="works" class="anchor py-2">
       <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">AIを活用・統合したアプリ開発</h2>
-      </div>
-
-      <p class="text-muted mb-3">
-        非公開版の日常運用から得た知見を、公式APIによるOSS、Android ChromiumへのAI統合、AIエージェント向け動画編集DSLへ展開しています。
-      </p>
-
-      <!-- 全体像 -->
-      <div class="card p-3 mb-3" hidden>
-        <p class="text-muted mb-2">
-          AIの出力をそのまま信じるのではなく、複数モデルを比較・検証し、日常の操作へ組み込める道具として実装しています。
-          Clage Cook Originalで4社のAIを扱う会議フローを毎日運用し、その知見を公式APIで動くOSS版、
-          Android Chromiumの検索再評価、AIエージェント向け動画編集DSLへ展開しました。
-          <span class="small">（各画像はクリック/タップで拡大できます）</span>
-        </p>
-
-        <div class="media-box arch-desktop">
-          <svg class="arch-svg" viewBox="0 0 940 310" role="img" aria-label="個人開発したAIツール群と知見の展開を示す構成図" style="width:100%;height:auto;display:block;">
-            <defs>
-              <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-                <path class="arrowhead" d="M0,0 L8,4 L0,8 z"/>
-              </marker>
-            </defs>
-            <!-- 母艦 -->
-            <rect class="box accent" x="250" y="20" width="250" height="86" rx="10" stroke-width="2"/>
-            <text x="375" y="48" text-anchor="middle" font-size="15" font-weight="700">Clage Cook Original</text>
-            <text class="muted" x="375" y="70" text-anchor="middle" font-size="12">4AI会議の母艦(PC常駐サーバ+Android)</text>
-            <text class="muted" x="375" y="88" text-anchor="middle" font-size="12">非公開・毎日運用</text>
-            <!-- OSS -->
-            <rect class="box accent" x="15" y="190" width="220" height="92" rx="10" stroke-width="2"/>
-            <text x="125" y="218" text-anchor="middle" font-size="14" font-weight="700">Clage Cook (OSS)</text>
-            <text class="muted" x="125" y="240" text-anchor="middle" font-size="11.5">公式APIで再実装した公開版</text>
-            <text class="muted" x="125" y="258" text-anchor="middle" font-size="11.5">Flutter 6プラットフォーム</text>
-            <!-- CFA -->
-            <rect class="box accent" x="250" y="190" width="220" height="92" rx="10" stroke-width="2"/>
-            <text x="360" y="218" text-anchor="middle" font-size="14" font-weight="700">ChromiumforA</text>
-            <text class="muted" x="360" y="240" text-anchor="middle" font-size="11.5">改造Chromium+PCブリッジ</text>
-            <text class="muted" x="360" y="258" text-anchor="middle" font-size="11.5">検索・閲覧へAIを組み込み</text>
-            <!-- scriptvedit -->
-            <rect class="box accent" x="485" y="190" width="220" height="92" rx="10" stroke-width="2"/>
-            <text x="595" y="218" text-anchor="middle" font-size="14" font-weight="700">scriptvedit</text>
-            <text class="muted" x="595" y="240" text-anchor="middle" font-size="11.5">AIエージェント向け編集DSL</text>
-            <text class="muted" x="595" y="258" text-anchor="middle" font-size="11.5">動画編集DSL(公開)</text>
-            <!-- Calcpy -->
-            <rect class="box" x="720" y="190" width="205" height="92" rx="10"/>
-            <text x="822" y="218" text-anchor="middle" font-size="14" font-weight="700">Calcpy</text>
-            <text class="muted" x="822" y="240" text-anchor="middle" font-size="11.5">電卓UX×Python/SymPy</text>
-            <text class="muted" x="822" y="258" text-anchor="middle" font-size="11.5">オンデバイス実行</text>
-            <!-- 矢印 -->
-            <path class="arrow" d="M250 80 C 160 95, 130 130, 126 186" stroke-width="1.6" marker-end="url(#ah)"/>
-            <text class="muted" x="135" y="136" text-anchor="middle" font-size="12">設計を公式APIで再実装</text>
-            <path class="arrow" d="M372 106 L361 186" stroke-width="1.6" marker-end="url(#ah)"/>
-            <text class="muted" x="447" y="150" text-anchor="middle" font-size="12">ブラウザから4AI検証</text>
-            <path class="arrow" d="M500 82 C 590 96, 600 130, 597 186" stroke-width="1.6" marker-end="url(#ah)"/>
-            <text class="muted" x="672" y="128" text-anchor="middle" font-size="12">AI支援開発の知見を展開</text>
-          </svg>
-        </div>
-
-        <div class="arch-mobile">
-          <div class="arch-mobile-hub">
-            <strong>Clage Cook Original</strong><br>
-            <span class="text-muted small">4AI会議の母艦（PC常駐サーバ＋Android）／非公開・毎日運用</span>
-          </div>
-          <div class="arch-mobile-flow">設計・操作・AI活用の知見を展開 ↓</div>
-          <div class="arch-mobile-grid">
-            <div class="arch-mobile-node">
-              <strong>Clage Cook（OSS）</strong>
-              <span>設計を公式APIで再実装した公開版／Flutter 6プラットフォーム</span>
-            </div>
-            <div class="arch-mobile-node">
-              <strong>ChromiumforA</strong>
-              <span>ブラウザから4AIを検証／検索・閲覧へAIを組み込み</span>
-            </div>
-            <div class="arch-mobile-node">
-              <strong>scriptvedit</strong>
-              <span>AIエージェント向け動画編集DSL／公開</span>
-            </div>
-            <div class="arch-mobile-node">
-              <strong>Calcpy</strong>
-              <span>電卓UX×Python・SymPy／オンデバイス実行のプロトタイプ</span>
-            </div>
-          </div>
-        </div>
+        <h2 class="h4 section-title mb-0">代表作品</h2>
       </div>
 
       <div class="row g-3">
 
-        <!-- Client work -->
-        <div class="col-12 order-4">
-          <article class="card p-3 border-info">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">美容クリニック向けLINE応答AI</h3>
-              <span class="badge rounded-pill text-bg-secondary">開発中・匿名掲載</span>
-            </div>
-            <p class="text-muted mt-2 mb-1">
-              <strong>開発中:</strong> 美容クリニックのLINE問い合わせ一次対応を支援するAIです。FAQ回答、予約フォームへの案内、必要時のスタッフ引き継ぎを扱います。
-            </p>
-            <p class="text-muted small mb-1">
-              <strong>実装済み:</strong> Dify応答フロー、LINE Webhook、RAGナレッジ、状態管理。<strong>検証中:</strong> 回答品質と安全性。<br>
-              <strong>公開範囲:</strong> 施設を特定しない範囲で掲載許可済み。顧客名、画面、利用者・運用データ、KPIは非公開です。
-            </p>
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="Dify" src="https://img.shields.io/badge/Platform-Dify-6941C6">
-              <img class="badge-img" loading="lazy" alt="LINE Webhook" src="https://img.shields.io/badge/LINE-Webhook-00C300">
-              <img class="badge-img" loading="lazy" alt="RAG" src="https://img.shields.io/badge/RAG-Knowledge-blue">
-            </div>
-          </article>
-        </div>
-
-        <!-- Clage Cook OSS -->
-        <div class="col-12 order-1">
+        <!-- Clage Cook -->
+        <div class="col-12">
           <article class="card p-3">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">Clage Cook — 4つのAIを、1つの会議へ（OSS）</h3>
               <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">Repo</a>
+                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">GitHub</a>
               </div>
             </div>
+            <p class="tech-line mt-1 mb-0">Flutter · Dart · Direct BYOK · Secure Storage · Python/FastAPI (reference server)</p>
 
-            <!-- メイン画像 -->
-            <div class="media-box mt-2">
+            <p class="text-muted mt-2 mb-2">
+              Claude・Gemini・ChatGPT・Grokへ同じ質問を並列に送り、回答の比較・相互批評・統合までを1画面で行うアプリです。
+              APIキーは利用者自身のもの（BYOK）を使います。
+            </p>
+
+            <div class="media-box">
               <div class="media-hero">
-                <img src="media/clagecook-oss-windows.png" alt="Clage Cook OSS デスクトップ版で4AI会議を実行した画面" loading="lazy">
+                <img src="media/clagecook-oss-windows.png" alt="Clage Cook デスクトップ版で4つのAIの回答と統合回答を表示した画面" loading="lazy">
               </div>
               <div class="small text-muted mt-2">
-                Windows版の実画面。「DIRECT · LOCAL」は自作中継サーバーを使わず、端末から各社APIへ直接接続して履歴を端末保存するモード
+                Windows版の実画面。「DIRECT · LOCAL」は中継サーバーを使わず、端末から各社APIへ直接接続して履歴を端末内に保存するモード
               </div>
             </div>
 
-            <!-- 説明 -->
-            <p class="text-muted mt-3 mb-2">
-              <strong>成果:</strong> 4社AIの回答比較・相互批評・統合を行うBYOKアプリをOSS公開しました。
+            <p class="text-muted small mt-3 mb-1">
+              <strong>設計判断:</strong>
+              プロバイダごとに異なるAPI契約とストリーミング形式を共通のインターフェースに吸収し、
+              一部のAIが失敗しても完了済みの回答を保持する流れにしました。
+              APIキーはOSのsecure storageへ保存し、会話履歴を端末内だけに置くDirect接続と、開発用のreference serverを分離しています。
+            </p>
+            <p class="text-muted small mb-1">
+              <strong>実装・検証:</strong>
+              Flutterで6プラットフォームの共通UIを実装し、WindowsとAndroid実機で動作を確認。
+              公開リポジトリとCIで確認できます。
             </p>
             <p class="text-muted small mb-0">
-              <strong>本人の設計:</strong> Flutterで6プラットフォームを対象に共通UIを設計し、Direct BYOKと開発用サーバーを切り替える構成。
-            </p>
-            <p class="text-muted small mt-2 mb-0">
-              <strong>発展・証拠・状態:</strong> 非公開版の日常運用で得た会議フローを公式APIベースで再実装。公開リポジトリ、CI、Windows・Android実機画面で確認できます。公開ベータのためproduction support・後方互換性は未保証です。
+              <strong>公開状況:</strong> 公開ベータ。本番運用向けサポート・後方互換性は未保証です。
             </p>
 
-            <!-- サブ画像 -->
-            <div class="shot-row mt-2" aria-label="Clage Cook OSSのAndroid実機画面">
+            <div class="shot-row mt-3" aria-label="Clage CookのAndroid実機画面">
               <div>
                 <div class="media-phone">
-                  <img src="media/clagecook-oss-android-overview.jpg" alt="Clage Cook OSSのAndroid版で4社AIの回答状況と統合回答を表示した画面" loading="lazy">
+                  <img src="media/clagecook-oss-android-overview.jpg" alt="Android版で4つのAIの回答状況と統合回答を一覧表示した画面" loading="lazy">
                 </div>
-                <div class="small text-muted mt-2 text-center">
-                  一覧：4社AIの回答と統合回答
-                </div>
+                <div class="small text-muted mt-2 text-center">一覧：各AIの回答と統合回答</div>
               </div>
               <div>
                 <div class="media-phone">
-                  <img src="media/clagecook-oss-android.png" alt="Clage Cook OSSのAndroid版でClaudeの批評前の回答を展開した画面" loading="lazy">
+                  <img src="media/clagecook-oss-android.png" alt="Android版で相互批評（DEBATE）後もClaudeの初回回答を保持して表示した画面" loading="lazy">
                 </div>
-                <div class="small text-muted mt-2 text-center">
-                  詳細：DEBATE後も初回回答を保持
-                </div>
+                <div class="small text-muted mt-2 text-center">詳細：相互批評後も初回回答を保持</div>
               </div>
             </div>
+
+            <details class="mt-3 pdf-full-only">
+              <summary class="small fw-semibold">開発背景 — 非公開版を毎日運用し、公式APIで再実装</summary>
+              <div class="mt-2">
+                <p class="tech-line mb-2">Kotlin/Jetpack Compose · Python/FastAPI · Glance widget</p>
+                <div class="row g-3 align-items-start">
+                  <div class="col-12 col-md-6">
+                    <p class="text-muted small mb-2">
+                      各社AIの回答比較・統合をAndroidから毎日使える常駐システムとして非公開で運用してきました。
+                      生成の継続、再接続後の復帰、使用量ウィジェットを設計し、この会議フローを公式APIベースで再実装したものが公開版です。
+                    </p>
+                    <p class="text-muted small mb-0">
+                      <code>!</code>コマンドによる会議操作、失敗時も完了済み回答を残す流れ、JSON / ZIPで他のAIへ渡せる連携を実装しています。
+                    </p>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <div class="shot-row">
+                      <div>
+                        <div class="media-phone">
+                          <img src="media/clagecook-chat.png" alt="非公開版のチャット画面。各AIの回答カードを表示" loading="lazy">
+                        </div>
+                        <div class="small text-muted mt-2 text-center">回答カード（実機）</div>
+                      </div>
+                      <div>
+                        <div class="media-phone">
+                          <img src="media/clagecook-widget-home.png" alt="ホーム画面の使用量ウィジェット" loading="lazy">
+                        </div>
+                        <div class="small text-muted mt-2 text-center">使用量ウィジェット</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </details>
           </article>
         </div>
 
         <!-- ChromiumforA -->
-        <div class="col-12 order-2">
+        <div class="col-12">
           <article id="chromiumfora-card" class="card p-3">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">ChromiumforA — Google検索をAIで再評価</h3>
               <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46619744" href="https://www.nicovideo.jp/watch/sm46619744" target="_blank" rel="noopener noreferrer">&#9654; 実機操作（2倍速）</a>
-                <span class="badge rounded-pill text-bg-secondary">Private</span>
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46619744" href="https://www.nicovideo.jp/watch/sm46619744" target="_blank" rel="noopener noreferrer">&#9654; デモ動画（2倍速）</a>
+                <span class="badge rounded-pill text-bg-secondary">非公開</span>
               </div>
             </div>
+            <p class="tech-line mt-1 mb-0">Android · Chromium改造 · 検索結果の再評価 · ページ要約</p>
+
+            <p class="text-muted mt-2 mb-2">
+              Android版Chromiumを改造し、Google検索の結果ページへAIの評価コメントを挿入して、評価後の並び順を提示します。
+              ページ要約と選択文へのAI処理も統合しました。
+            </p>
 
             <div class="cfa-compare mt-2" aria-label="同じ『人工知能』のGoogle検索に対する通常表示とAI評価後の比較">
               <figure>
                 <div class="cfa-shot">
-                  <img src="media/cfa-serp-before.png" alt="ChromiumforAでAI評価前の「人工知能」Google検索結果。人工知能学会、FPTソフトウェア、IBMの順に表示" loading="lazy">
+                  <img src="media/cfa-serp-before.png" alt="AI評価前の「人工知能」Google検索結果。人工知能学会、FPTソフトウェア、IBMの順に表示" loading="lazy">
                 </div>
                 <figcaption class="small text-muted mt-2">
                   <strong>通常表示</strong> — 「人工知能」の検索結果
@@ -1361,7 +873,7 @@
               </figure>
               <figure>
                 <div class="cfa-shot">
-                  <img src="media/cfa-serp-after.png" alt="ChromiumforAでAI評価後の「人工知能」Google検索結果。IBM、Wikipedia、人工知能学会に緑色の評価コメントを挿入" loading="lazy">
+                  <img src="media/cfa-serp-after.png" alt="AI評価後の「人工知能」Google検索結果。IBM、Wikipedia、人工知能学会の順になり、緑色の評価コメントが挿入されている" loading="lazy">
                 </div>
                 <figcaption class="small text-muted mt-2">
                   <strong>AI評価後</strong> — 根拠コメントの挿入と順位変更
@@ -1370,12 +882,12 @@
             </div>
             <p class="cfa-swipe-hint text-muted small text-center mt-1 mb-0" aria-hidden="true">横にスワイプして比較 →</p>
 
-            <!-- 説明 -->
-            <p class="text-muted mt-3 mb-2">
-              <strong>成果:</strong> Google検索結果へAI評価コメントを挿入し、評価後の順位を提示するAndroid Chromium改造版を開発。ページ要約・選択文AIも統合しました。
+            <p class="text-muted small mt-3 mb-1">
+              <strong>担当:</strong> Chromium本体への組み込み、操作設計、認証情報の扱い、安全性検証。
             </p>
             <p class="text-muted small mb-1">
-              <strong>本人の責任範囲:</strong> Chromiumへの組み込み、操作設計、認証情報の扱い、安全性検証。認証情報の扱いに関する問題を再現テストで検出し、構造変更後に再検証しました。
+              <strong>技術的な難所:</strong>
+              認証情報の扱いに関する問題を再現テストで検出し、構造を変更したうえで同条件で再検証しました。
             </p>
 
             <ul class="cfa-feature-list mt-2" aria-label="ChromiumforAの主な閲覧支援機能">
@@ -1383,157 +895,93 @@
               <li>ページ要約・選択文AI</li>
               <li>サイト別UI・動画再生補助</li>
             </ul>
+
             <div class="shot-row mt-3" aria-label="ChromiumforAのAndroid実機画面">
               <div>
                 <div class="media-phone">
-                  <img src="media/cfa-ai-search-japanese.png" alt="「人工知能」のGoogle検索で、AIコメント取得後に再評価を完了したChromiumforAの実機画面" loading="lazy">
-                </div>
-                <div class="small text-muted mt-2 text-center">AI評価・並び替え完了</div>
-              </div>
-              <div>
-                <div class="media-phone">
-                  <img src="media/cfa-fab-menu.png" alt="Wikipedia表示中にChromiumforAのFABメニューを開いた実機画面" loading="lazy">
+                  <img src="media/cfa-fab-menu.png" alt="Wikipedia表示中にFABメニューを開いた実機画面。ページ要約・翻訳・サイトパッチなどの項目" loading="lazy">
                 </div>
                 <div class="small text-muted mt-2 text-center">FABメニュー</div>
               </div>
               <div>
                 <div class="media-phone">
-                  <img src="media/cfa-page-summary.png" alt="Wikipediaの人工知能ページをAIで要約したChromiumforAの実機画面" loading="lazy">
+                  <img src="media/cfa-page-summary.png" alt="Wikipediaの人工知能ページをAIで要約した実機画面" loading="lazy">
                 </div>
                 <div class="small text-muted mt-2 text-center">ページ要約</div>
               </div>
             </div>
-            <p class="text-muted small mt-2 mb-0"><strong>証拠・状態:</strong> 同一検索語の通常表示／AI評価後、Android実機画面、操作動画を掲載。個人検証用・非公開のため、画面・動画・設計のみ公開しています。</p>
+
+            <details class="mt-2 pdf-full-only">
+              <summary class="small fw-semibold">実機画面をもう1枚（AI評価・並び替え完了）</summary>
+              <div class="shot-row mt-2">
+                <div>
+                  <div class="media-phone">
+                    <img src="media/cfa-ai-search-japanese.png" alt="「人工知能」のGoogle検索でAIコメント取得後に再評価を完了した実機画面" loading="lazy">
+                  </div>
+                  <div class="small text-muted mt-2 text-center">AI評価・並び替え完了</div>
+                </div>
+              </div>
+            </details>
+
+            <p class="text-muted small mt-2 mb-0">
+              <strong>確認できるもの:</strong> 同一検索語の通常表示／AI評価後の比較、Android実機画面、操作動画。
+              個人検証用のため非公開で、画面・動画・設計のみ公開しています。
+            </p>
           </article>
         </div>
 
-        <!-- scriptvedit(GitHubセクションから昇格) -->
-        <div class="col-12 order-3">
+        <!-- ScriptVEdit -->
+        <div class="col-12">
           <article id="scriptvedit-card" class="card p-3">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">scriptvedit — AIエージェント向けPython動画編集DSL</h3>
+              <h3 class="h5 mb-0 card-title">ScriptVEdit — Pythonで動画を記述する編集DSL（OSS）</h3>
               <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/scriptvedit" target="_blank" rel="noopener noreferrer">Repo</a>
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46610886" href="https://www.nicovideo.jp/watch/sm46610886" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
+                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/scriptvedit" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46610886" href="https://www.nicovideo.jp/watch/sm46610886" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
               </div>
             </div>
+            <p class="tech-line mt-1 mb-0">Python · FFmpeg · MIT License · pytest</p>
 
-            <!-- メイン画像 -->
-            <div class="media-box mt-2">
+            <p class="text-muted mt-2 mb-2">
+              動画のタイムラインをPythonコードで記述し、FFmpegコマンドへ変換して映像を生成するDSLです。
+              コードだけで動画を組み立てられるため、AIエージェントによる動画制作にも使えます。
+              解説動画自体もScriptVEditで制作しました。
+            </p>
+
+            <div class="media-box">
               <div class="media-hero">
-                <img src="media/scriptvedit-code-video.jpg" alt="左のコードが右の映像を生成している場面" loading="lazy">
+                <img src="media/scriptvedit-code-video.jpg" alt="左のPythonコードから右の映像が生成されている解説動画の一場面" loading="lazy">
               </div>
               <div class="small text-muted mt-2">
                 左に使用したPythonコード、右にその実行結果を示す解説動画の一場面
               </div>
             </div>
 
-            <!-- 説明 -->
-            <p class="text-muted mt-3 mb-2">
-              <strong>成果:</strong> AIがPythonで動画構成を書き、FFmpegで映像化できるDSLを公開。
-              解説動画も本DSLで制作し、並列化でレンダリングを1012秒から106秒へ短縮しました。
+            <p class="text-muted small mt-3 mb-1">
+              <strong>設計判断:</strong> DSLの記法、素材キャッシュ、要素配置のアンカー解決、区間ごとの並列レンダリング。
+            </p>
+            <p class="text-muted small mb-1">
+              <strong>AI利用の範囲:</strong>
+              FFmpegコマンドへの変換部分の実装にAIエージェントを利用しました。
+              DSL仕様・受入条件・テストケース・出力検証・性能評価は自分で定義し、実施しています。
             </p>
             <p class="text-muted small mb-0">
-              <strong>本人の設計:</strong> DSL記法、素材キャッシュ、要素配置のアンカー解決。FFmpegへの変換実装はAIへ任せ、出力と性能を検証しました。
-            </p>
-            <p class="text-muted small mt-2 mb-0">
-              <strong>計測条件:</strong> 2分56秒・87オブジェクトの実プロジェクトを20コアPCで比較（逐次1012秒／並列8で106秒）。公開リポジトリ、テスト、コードと出力動画で確認できます。
+              <strong>計測条件:</strong> 2分56秒・87オブジェクトの実プロジェクトを20コアPCで計測 — 逐次1012秒、並列8で106秒。
+              公開リポジトリ、テスト、コードと出力動画で確認できます。
             </p>
 
-            <!-- サブ画像 -->
-            <div class="media-grid mt-2">
+            <div class="media-grid mt-2 pdf-full-only">
               <div>
                 <div class="media-thumb">
-                  <img src="media/scriptvedit-perf.jpg" alt="レンダ高速化の実測値を紹介する場面" loading="lazy">
+                  <img src="media/scriptvedit-perf.jpg" alt="解説動画内でレンダリング時間の実測値（1012秒から106秒）を示す場面" loading="lazy">
                 </div>
-                <div class="small text-muted mt-2">
-                  この動画自身のレンダ時間を計測
-                </div>
+                <div class="small text-muted mt-2">この動画自身のレンダリング時間を計測</div>
               </div>
               <div>
                 <div class="media-thumb">
-                  <img src="media/scriptvedit.png" alt="旧版の解説動画のスクリーンショット" loading="lazy">
+                  <img src="media/scriptvedit.png" alt="演算子でタイムラインを記述するDSL構文の解説場面" loading="lazy">
                 </div>
-                <div class="small text-muted mt-2">
-                  演算子で記述するDSL構文
-                </div>
-              </div>
-            </div>
-
-          </article>
-        </div>
-
-        <!-- Original: OSS版の開発背景として補足表示 -->
-        <div class="col-12 order-5">
-          <details id="clagecook-original" class="card p-3 h-100">
-            <summary class="fw-semibold">Clage Cook Original（非公開版）— 公開OSS版に至る開発背景</summary>
-            <div class="mt-3">
-              <span class="badge rounded-pill text-bg-secondary">非公開・毎日運用</span>
-
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="Android" src="https://img.shields.io/badge/Android-Kotlin%20%2F%20Jetpack%20Compose-green">
-              <img class="badge-img" loading="lazy" alt="Server" src="https://img.shields.io/badge/Server-Python%20FastAPI-green">
-              <img class="badge-img" loading="lazy" alt="Widget" src="https://img.shields.io/badge/Home%20Widget-Glance-blue">
-            </div>
-
-            <div class="row g-3 mt-1 align-items-start">
-              <div class="col-12 col-md-6">
-                <p class="text-muted mb-2">
-                  4社AIの回答比較・統合をAndroidから毎日使える常駐システムとして運用。
-                  生成の継続・再接続後の復帰・使用量ウィジェットを設計し、公開OSS版へ発展させました。
-                </p>
-                <p class="text-muted small mb-0">
-                  <strong>本人の設計:</strong> <code>!</code>コマンドによる会議操作、失敗時も完了済み回答を残す流れ、JSON / ZIPで他AIへ渡せる連携性。
-                </p>
-              </div>
-              <div class="col-12 col-md-6">
-                <div class="shot-row">
-                  <div>
-                    <div class="media-phone">
-                      <img src="media/clagecook-chat.png" alt="Clage Cook Original チャット画面" loading="lazy">
-                    </div>
-                    <div class="small text-muted mt-2 text-center">4AIの回答カード（実機）</div>
-                  </div>
-                  <div>
-                    <div class="media-phone">
-                      <img src="media/clagecook-widget-home.png" alt="使用量ウィジェット" loading="lazy">
-                    </div>
-                    <div class="small text-muted mt-2 text-center">使用量ウィジェット</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            </div>
-          </details>
-        </div>
-
-        <!-- Calcpy -->
-        <div class="col-12 order-last">
-          <article class="card p-3 h-100">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">Calcpy — 電卓×Python（プロトタイプ）</h3>
-              <span class="badge rounded-pill text-bg-secondary">Private</span>
-            </div>
-
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="Android" src="https://img.shields.io/badge/Android-Kotlin%20%2F%20Compose-green">
-              <img class="badge-img" loading="lazy" alt="Python" src="https://img.shields.io/badge/On--device-CPython%203.13%20%2F%20SymPy-blue">
-            </div>
-
-            <div class="row g-3 mt-1 align-items-start">
-              <div class="col-12 col-md-7">
-                <p class="text-muted mb-2">
-                  電卓の操作感にSymPyの厳密計算とPython REPLを統合したAndroidプロトタイプ。
-                  4方向フリック入力と、Python実行の別プロセス隔離を設計しました。
-                </p>
-              </div>
-              <div class="col-12 col-md-5">
-                <div class="shot-row">
-                  <div class="media-phone">
-                    <img src="media/calcpy-repl.png" alt="Calcpy REPL画面" loading="lazy">
-                  </div>
-                </div>
+                <div class="small text-muted mt-2">演算子で記述するDSL構文</div>
               </div>
             </div>
           </article>
@@ -1544,345 +992,245 @@
 
     <hr class="border-subtle">
 
-    <!-- Research summary -->
+    <!-- 研究 -->
     <section id="research" class="anchor py-2">
       <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">研究</h2>
+        <h2 class="h4 section-title mb-0">研究 — 機械学習×触覚計測</h2>
       </div>
 
       <article class="card p-3">
         <div class="row g-3 align-items-center">
           <div class="col-12 col-md-4">
             <div class="media-thumb">
-              <img src="media/SI2022_poster-web.webp" alt="EIT触覚センサのCNN研究をまとめたSI2022ポスター" loading="lazy">
+              <img src="media/SI2022_poster-web.webp" alt="EIT触覚センサのCNN再構成をまとめたSI2022ポスター" loading="lazy">
             </div>
           </div>
           <div class="col-12 col-md-8">
-            <h3 class="h5 card-title">機械学習×触覚計測</h3>
             <p class="text-muted mb-2">
-              EIT触覚センサの逆問題へCNNを適用し、空間分解能指標と位置誤差を従来法の約22%へ低減。
-              SI2022、IROS 2022で発表しました。
+              EIT（電気インピーダンストモグラフィ）触覚センサの逆問題にCNNを適用し、
+              1点接触のシミュレーションで空間分解能指標と位置誤差を従来法の約22%まで低減しました
+              （SI2022・IROS 2022でポスター発表）。
             </p>
             <p class="text-muted mb-2">
-              電極配置最適化では、最悪領域の空間分解能指標（HWHM）を最大19.2%低減。
-              筆頭著者論文としてFrontiers in Robotics and AIに掲載されました。
+              電極配置の最適化では、最悪領域の空間分解能指標（HWHM、小さいほど良い）を等間隔配置に対して最大19.2%低減し、
+              筆頭著者としてFrontiers in Robotics and AIに掲載されました。
             </p>
+            <p class="tech-line mb-2">CNN (Keras) · シミュレーションによる訓練データ生成 · 電極配置最適化</p>
             <a class="btn btn-outline-info btn-sm" href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">査読論文</a>
           </div>
         </div>
       </article>
     </section>
 
+    <hr class="border-subtle pdf-full-only">
 
-    <hr class="border-subtle">
-
-    <!-- Other work -->
-    <section id="other" class="anchor py-2">
+    <!-- 受託案件 -->
+    <section id="client" class="anchor py-2 pdf-full-only">
       <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">その他の制作</h2>
+        <h2 class="h4 section-title mb-0">受託案件</h2>
       </div>
 
       <article class="card p-3">
-        <p class="text-muted mb-0">過去のAIアプリ、制御、CG・画像処理も、実画面と動画で紹介します。</p>
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <h3 class="h5 mb-0 card-title">美容クリニック向けLINE応答AI</h3>
+          <span class="badge rounded-pill text-bg-secondary">受託開発・開発中・匿名掲載</span>
+        </div>
+        <p class="tech-line mt-1 mb-0">Dify · LINE Webhook · RAG · 状態管理</p>
+        <p class="text-muted mt-2 mb-1">
+          LINEでの問い合わせ一次対応を支援するAIです。FAQ回答、予約フォームへの案内、必要なときのスタッフへの引き継ぎを扱います。
+        </p>
+        <p class="text-muted small mb-0">
+          Dify応答フロー、LINE Webhook、RAGナレッジ、状態管理を実装済みで、回答品質と安全性を検証中です。
+          施設を特定しない範囲で掲載許可を得ています。顧客名・画面・利用者/運用データ・KPIは非公開です。
+        </p>
       </article>
+    </section>
 
-      <details class="card p-3 mt-3">
-        <summary class="fw-semibold">過去作品の画像・動画</summary>
-        <div class="mt-3">
+    <hr class="border-subtle">
 
-    <!-- GitHub -->
-    <section id="github" class="anchor py-2">
+    <!-- 経歴・資格・主要技術 -->
+    <section id="career" class="anchor py-2">
       <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">その他の個人開発（GitHub公開）</h2>
+        <h2 class="h4 section-title mb-0">経歴・資格・主要技術</h2>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-12 col-lg-5">
+          <div class="timeline mb-3">
+            <span class="yr">2018–22</span><span class="ev">東京大学 工学部 精密工学科</span>
+            <span class="yr">2022–24</span><span class="ev">東京大学大学院 修士課程 修了</span>
+            <span class="yr">2024–26</span><span class="ev">同博士課程でEIT触覚センサを研究（2026年3月退学）</span>
+            <span class="yr">2026–</span><span class="ev">フリーランスのAIアプリケーションエンジニア</span>
+          </div>
+          <p class="text-muted small mb-0"><strong>資格:</strong> 基本情報技術者試験 合格（2026年8月）</p>
+        </div>
+        <div class="col-12 col-lg-7">
+          <ul class="stack-map">
+            <li><strong>Flutter / Dart</strong> — <span>Clage CookのAndroid・Windowsほか共通UI</span></li>
+            <li><strong>Python / FastAPI</strong> — <span>Clage Cookのreference server、ScriptVEdit本体</span></li>
+            <li><strong>Android / Chromium改造</strong> — <span>ChromiumforA</span></li>
+            <li><strong>FFmpeg</strong> — <span>ScriptVEditの映像生成</span></li>
+            <li><strong>Dify / RAG</strong> — <span>受託のLINE応答AI</span></li>
+            <li><strong>CNN (Keras)</strong> — <span>EIT触覚センサ研究の再構成モデル</span></li>
+            <li><strong>C++ / GLSL</strong> — <span>過去作品の制御・CG（倒立振子、レイトレーシング）</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-subtle pdf-full-only">
+
+    <!-- 過去作品 -->
+    <section id="archive" class="anchor py-2 pdf-full-only">
+      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+        <h2 class="h4 section-title mb-0">過去作品</h2>
       </div>
 
       <p class="text-muted mb-3">
-        常駐UI、ストリーミング、文章補完を検証し、現在のAIアプリへつなげました。
+        現在の代表作品より前に作ったものです。AIクライアント、制御、CG・画像処理の実装を実画面と動画で確認できます。
       </p>
 
-      <div class="row g-3">
-        <!-- ChatGPT-Windows -->
-        <div class="col-12">
-          <article class="card p-3">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">ChatGPT-Windows</h3>
+      <details class="archive">
+        <summary class="fw-semibold">過去作品一覧（10件）</summary>
+        <div class="mt-3">
+
+          <div class="archive-item">
+            <div class="media-thumb">
+              <img src="media/chatgpt-windows.png" alt="ChatGPT-Windowsで会話とストリーミング回答を表示した画面" loading="lazy">
+            </div>
+            <div>
+              <h4>ChatGPT-Windows</h4>
+              <p class="tech-line mb-1">Python · PySide6 (Qt6) · MIT</p>
+              <p class="text-muted small mb-2">翻訳・補完・要約をホットキーとクリップボードから呼び出せるWindows常駐クライアント。ストリーミング表示と、Windows資格情報マネージャーへのAPIキー保存を実装。</p>
               <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Windows" target="_blank" rel="noopener noreferrer">Repo</a>
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922374" href="https://www.nicovideo.jp/watch/sm45922374" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
+                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Windows" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922374" href="https://www.nicovideo.jp/watch/sm45922374" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
               </div>
             </div>
+          </div>
 
-            <!-- Align “shown elements” badges with the explanation-badges -->
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="Python"   src="https://img.shields.io/badge/Python-3.10%2B-blue">
-              <img class="badge-img" loading="lazy" alt="GUI"      src="https://img.shields.io/badge/GUI-PySide6%20(Qt6)-green">
-              <img class="badge-img" loading="lazy" alt="Platform" src="https://img.shields.io/badge/Platform-Windows-lightgrey">
-              <img class="badge-img" loading="lazy" alt="License"  src="https://img.shields.io/badge/License-MIT-yellow">
-              <img class="badge-img" loading="lazy" alt="Claude"  src="https://img.shields.io/badge/Claude_Code-555?logo=claude">
+          <div class="archive-item">
+            <div class="media-thumb">
+              <img src="media/chatgpt-web.png" alt="ChatGPT-Webで入力文の続きをゴーストテキスト表示した画面" loading="lazy">
             </div>
-
-            <div class="row g-3 mt-1 align-items-start">
-              <div class="col-12 col-lg-5">
-                <p class="text-muted mb-2">
-                  翻訳・補完・要約をホットキーとクリップボードから呼び出せるWindows常駐クライアント。
-                  ストリーミング表示と、Windows資格情報マネージャーへのAPIキー保存を実装しました。
-                </p>
-              </div>
-
-              <div class="col-12 col-lg-7">
-                <div class="media-box">
-                  <div class="media-hero">
-                    <img src="media/chatgpt-windows.png" alt="ChatGPT-Windowsで会話とストリーミング回答を表示した画面" loading="lazy">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <!-- ChatGPT-Web -->
-        <div class="col-12">
-          <article class="card p-3">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">ChatGPT-Web</h3>
+            <div>
+              <h4>ChatGPT-Web</h4>
+              <p class="tech-line mb-1">JavaScript · 単一HTML · MIT</p>
+              <p class="text-muted small mb-2">入力の続きをゴーストテキストで提案するプロトタイプ。Tabと矢印キーで全体・1文字単位を確定。ローカル検証用。</p>
               <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Web" target="_blank" rel="noopener noreferrer">Repo</a>
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922369" href="https://www.nicovideo.jp/watch/sm45922369" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
+                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Web" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922369" href="https://www.nicovideo.jp/watch/sm45922369" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
               </div>
             </div>
+          </div>
 
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="JavaScript"   src="https://img.shields.io/badge/JavaScript-ES6%2B-yellow">
-              <img class="badge-img" loading="lazy" alt="Platform" src="https://img.shields.io/badge/Platform-Web-lightgrey">
-              <img class="badge-img" loading="lazy" alt="License"  src="https://img.shields.io/badge/License-MIT-yellow">
-              <img class="badge-img" loading="lazy" alt="Claude"  src="https://img.shields.io/badge/Claude_Code-555?logo=claude">
+          <div class="archive-item">
+            <div class="media-thumb">
+              <img src="media/calcpy-repl.png" alt="CalcpyのREPL画面。数式入力と結果、フリック入力用の関数パレット" loading="lazy">
             </div>
-
-            <div class="row g-3 mt-1 align-items-start">
-              <div class="col-12 col-lg-5">
-                <p class="text-muted mb-2">
-                  入力の続きをゴーストテキストで提案する単一HTMLプロトタイプ。
-                  Tabと矢印キーで全体・1文字単位を確定できます。※ローカル検証用。
-                </p>
-              </div>
-
-              <div class="col-12 col-lg-7">
-                <div class="media-box">
-                  <div class="media-hero">
-                    <img src="media/chatgpt-web.png" alt="ChatGPT-Webで入力文の続きをゴーストテキスト表示した画面" loading="lazy">
-                  </div>
-                </div>
-              </div>
+            <div>
+              <h4>Calcpy</h4>
+              <p class="tech-line mb-1">Android · Kotlin/Compose · オンデバイスCPython 3.13/SymPy · 非公開プロトタイプ</p>
+              <p class="text-muted small mb-2">電卓の操作感にSymPyの厳密計算とPython REPLを統合したAndroid試作。4方向フリック入力と、Python実行の別プロセス隔離を設計。</p>
             </div>
-          </article>
-        </div>
-      </div>
-    </section>
+          </div>
 
-    <hr class="border-subtle">
-
-    <!-- Control / Simulation -->
-    <section id="control" class="anchor py-2">
-      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">制御 / シミュレーション</h2>
-      </div>
-
-      <div class="row g-3">
-        <!-- Hand Drive -->
-        <div class="col-12 col-lg-6">
-          <article class="card p-3 h-100">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">ハンドドライブ</h3>
-              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922395" href="https://www.nicovideo.jp/watch/sm45922395" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
+          <div class="archive-item">
+            <div class="media-thumb">
+              <img src="media/handdrive.png" alt="手の傾きと開閉で赤い車を運転する3Dデモの画面" loading="lazy">
             </div>
-
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="JavaScript" src="https://img.shields.io/badge/JavaScript-ES6%2B-yellow">
-              <img class="badge-img" loading="lazy" alt="Graphics" src="https://img.shields.io/badge/Graphics-Three.js-orange">
-              <img class="badge-img" loading="lazy" alt="Platform" src="https://img.shields.io/badge/Platform-Web-lightgrey">
-            </div>
-
-            <div class="media-box mt-2">
-              <div class="media-hero">
-                <img src="media/handdrive.png" alt="ハンドドライブで手の動きから車を運転する3Dデモの画面" loading="lazy">
+            <div>
+              <h4>ハンドドライブ</h4>
+              <p class="tech-line mb-1">JavaScript · Three.js</p>
+              <p class="text-muted small mb-2">Webカメラで捉えた手の傾きと開閉を、ステアリング・アクセル・ブレーキへ変換する3D運転デモ。</p>
+              <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922395" href="https://www.nicovideo.jp/watch/sm45922395" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
               </div>
             </div>
+          </div>
 
-            <p class="text-muted mt-2 mb-2">
-              Webカメラで捉えた手の傾きと開閉を、ステアリング・アクセル・ブレーキへ変換する3D運転デモです。
-            </p>
-          </article>
-        </div>
-
-        <!-- Inverted Pendulum -->
-        <div class="col-12 col-lg-6">
-          <article class="card p-3 h-100">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">倒立振子</h3>
-              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922355" href="https://www.nicovideo.jp/watch/sm45922355" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
+          <div class="archive-item">
+            <div class="media-thumb">
+              <img src="media/invpend.png" alt="倒立振子が障害物を避けて移動するシミュレーション画面" loading="lazy">
             </div>
-
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="C++" src="https://img.shields.io/badge/C++-11%2B-blue">
-              <img class="badge-img" loading="lazy" alt="Physics" src="https://img.shields.io/badge/Physics-ODE-orange">
-            </div>
-
-            <div class="media-box mt-2">
-              <div class="media-hero">
-                <img src="media/invpend.png" alt="倒立振子が障害物を避けて移動するシミュレーション画面" loading="lazy">
+            <div>
+              <h4>倒立振子</h4>
+              <p class="tech-line mb-1">C++ · ODE</p>
+              <p class="text-muted small mb-2">PID制御で倒立姿勢を保ちながら、障害物を避けてゴールへ移動するシミュレーション。</p>
+              <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922355" href="https://www.nicovideo.jp/watch/sm45922355" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
               </div>
             </div>
+          </div>
 
-            <p class="text-muted mt-2 mb-2">
-              PID制御で倒立姿勢を保ちながら、障害物を避けてゴールへ移動するシミュレーションです。
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <hr class="border-subtle">
-
-    <!-- CG / Image processing -->
-    <section id="cg" class="anchor py-2">
-      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">CG / 画像処理</h2>
-      </div>
-
-      <div class="row g-3">
-        <!-- Raytracing CSG -->
-        <div class="col-12 col-lg-6">
-          <article class="card p-3 h-100">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">レイトレーシング（GLSL + CSG）</h3>
-              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922403" href="https://www.nicovideo.jp/watch/sm45922403" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
+          <div class="archive-item">
+            <div class="media-thumb">
+              <img src="media/raytrace-csg.png" alt="CSGで組み合わせた形状をリアルタイムにレイトレーシング描画した画面" loading="lazy">
             </div>
-
-            <div class="mt-2">
-                <img class="badge-img" loading="lazy" alt="C++" src="https://img.shields.io/badge/C++-11%2B-blue">
-                <img class="badge-img" loading="lazy" alt="GLSL" src="https://img.shields.io/badge/OpenGL/GLSL-3.3-blue">
-            </div>
-
-            <div class="media-box mt-2">
-              <div class="media-hero">
-                <img src="media/raytrace-csg.png" alt="CSGで組み合わせた形状をリアルタイムにレイトレーシング描画した画面" loading="lazy">
+            <div>
+              <h4>レイトレーシング（GLSL + CSG）</h4>
+              <p class="tech-line mb-1">C++ · OpenGL/GLSL</p>
+              <p class="text-muted small mb-2">CSGの和・差・積で形状を組み替え、反射・屈折・透過までリアルタイム描画。</p>
+              <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922403" href="https://www.nicovideo.jp/watch/sm45922403" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
               </div>
             </div>
+          </div>
 
-            <p class="text-muted mt-2 mb-2">
-              CSGの和・差・積で形状を組み替え、反射・屈折・透過までリアルタイム描画しました。
-            </p>
-          </article>
-        </div>
-
-        <!-- Raytracing Python -->
-        <div class="col-12 col-lg-6">
-          <article class="card p-3 h-100">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">レイトレーシング（Python）</h3>
-              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922410" href="https://www.nicovideo.jp/watch/sm45922410" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
+          <div class="archive-item">
+            <div class="media-thumb">
+              <img src="media/raytrace-python.png" alt="Pythonでフルスクラッチ実装したレイトレーシングの出力画像" loading="lazy">
             </div>
-
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
-            </div>
-
-            <div class="media-box mt-2">
-              <div class="media-hero">
-                <img src="media/raytrace-python.png" alt="Pythonでフルスクラッチ実装したレイトレーシングの出力画像" loading="lazy">
+            <div>
+              <h4>レイトレーシング（Python）</h4>
+              <p class="tech-line mb-1">Python</p>
+              <p class="text-muted small mb-2">レイと球の交差、材質、反射・屈折の再帰計算をフルスクラッチ実装。</p>
+              <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922410" href="https://www.nicovideo.jp/watch/sm45922410" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
               </div>
             </div>
+          </div>
 
-            <p class="text-muted mt-2 mb-2">
-              レイと球の交差、材質、反射・屈折の再帰計算をPythonでフルスクラッチ実装しました。
-            </p>
-          </article>
-        </div>
-
-        <!-- Shadow Mapping -->
-        <div class="col-12 col-lg-6">
-          <article class="card p-3 h-100">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">シャドウマッピング</h3>
+          <div class="archive-item">
+            <div class="media-thumb">
+              <img src="media/shadowmap.jpg" alt="シャドウマッピングで影を描画したCGの画面" loading="lazy">
             </div>
-
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
+            <div>
+              <h4>シャドウマッピング</h4>
+              <p class="tech-line mb-1">Python</p>
+              <p class="text-muted small mb-2">デプスマップで影を生成し、バイアス調整でシャドウアクネとピーターパン現象を抑制。</p>
             </div>
+          </div>
 
-            <div class="media-box mt-2">
-              <div class="media-hero">
-                <img src="media/shadowmap.jpg" alt="シャドウマッピングで影を描画したCGの画面" loading="lazy">
+          <div class="archive-item">
+            <div class="media-thumb">
+              <img src="media/wave-paraboloid.png" alt="伝播する波と放物面の変形をワイヤーフレームで描画したアニメーション画面" loading="lazy">
+            </div>
+            <div>
+              <h4>波と放物面のアニメーション</h4>
+              <p class="tech-line mb-1">Python</p>
+              <p class="text-muted small mb-2">既存の描画基盤を再利用し、伝播する波と放物面の変形をワイヤーフレームで可視化。</p>
+              <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922419" href="https://www.nicovideo.jp/watch/sm45922419" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
               </div>
             </div>
+          </div>
 
-            <p class="text-muted mt-2 mb-2">
-              デプスマップで影を生成し、バイアス調整でシャドウアクネとピーターパン現象を抑えました。
-            </p>
-          </article>
-        </div>
-
-        <!-- Wave & Paraboloid -->
-        <div class="col-12 col-lg-6">
-          <article class="card p-3 h-100">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">波と放物面のアニメーション</h3>
-              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922419" href="https://www.nicovideo.jp/watch/sm45922419" target="_blank" rel="noopener noreferrer">&#9654; Video</a>
-            </div>
-
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
-            </div>
-
-            <div class="media-box mt-2">
-              <div class="media-hero">
-                <img src="media/wave-paraboloid.png" alt="伝播する波と放物面の変形をワイヤーフレームで描画したアニメーション画面" loading="lazy">
+          <div class="archive-item">
+            <div class="media-grid" style="max-width:460px;">
+              <div class="media-thumb">
+                <img src="media/canny-original.png" alt="Canny法の入力画像（自習室の掲示）" loading="lazy">
+              </div>
+              <div class="media-thumb">
+                <img src="media/canny-edge.png" alt="Canny法で抽出したエッジ画像" loading="lazy">
               </div>
             </div>
-
-            <p class="text-muted mt-2 mb-2">
-              既存の描画基盤を再利用し、伝播する波と放物面の変形をワイヤーフレームで可視化しました。
-            </p>
-          </article>
-        </div>
-
-        <!-- Canny -->
-        <div class="col-12">
-          <article class="card p-3">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">Canny法（エッジ抽出）</h3>
+            <div>
+              <h4>Canny法（エッジ抽出）</h4>
+              <p class="tech-line mb-1">Python</p>
+              <p class="text-muted small mb-2">ライブラリに頼らず、Canny法のエッジ抽出処理を一から実装。左が入力、右が出力。</p>
             </div>
-
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
-            </div>
-
-            <p class="text-muted mt-2 mb-2">
-              ライブラリに頼らず、Canny法のエッジ抽出処理を一から実装しました。
-            </p>
-
-            <!-- Image-heavy comparison -->
-            <div class="media-box mt-2">
-              <div class="media-grid">
-                <div>
-                  <div class="media-thumb">
-                    <img src="media/canny-original.png" alt="Canny法の入力画像" loading="lazy">
-                  </div>
-                  <div class="small text-muted mt-2">入力画像</div>
-                </div>
-                <div>
-                  <div class="media-thumb">
-                    <img src="media/canny-edge.png" alt="Canny法で抽出したエッジ画像" loading="lazy">
-                  </div>
-                  <div class="small text-muted mt-2">出力（エッジ）</div>
-                </div>
-              </div>
-            </div>
-
-          </article>
-        </div>
-      </div>
-    </section>
+          </div>
 
         </div>
       </details>
@@ -1890,117 +1238,23 @@
 
     <hr class="border-subtle">
 
-    <!-- Research -->
-    <section id="research-detail" class="anchor py-2" hidden>
-      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">研究</h2>
-      </div>
-
-      <div class="row g-3">
-        <div class="col-12">
-          <article class="card p-3">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">畳み込みニューラルネットワークによる接触抵抗式トモグラフィ型触覚センサの空間分解能の向上</h3>
-            </div>
-
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="Conference" src="https://img.shields.io/badge/Conference-SI2022-blue">
-              <img class="badge-img" loading="lazy" alt="Conference" src="https://img.shields.io/badge/Conference-IROS%202022-blue">
-              <img class="badge-img" loading="lazy" alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
-              <img class="badge-img" loading="lazy" alt="ML" src="https://img.shields.io/badge/ML-Keras%2FCNN-orange">
-            </div>
-
-            <div class="row g-3 mt-1 align-items-start">
-              <div class="col-12 col-lg-5">
-                <p class="text-muted mb-2">
-                  SI2022（国内）およびIROS 2022（国際）にてポスター発表を行った。<br>
-                  電気インピーダンストモグラフィに基づく触覚センサにおいて、シミュレーションで生成した訓練データを用いて畳み込みニューラルネットワーク(CNN)を学習させ、限られた計測電位から高精度な圧力分布の再構成を実現し、空間分解能の向上を達成した。<br>
-                  実機での2点接触実験を踏まえ、訓練データに与えるノイズレベルを調整し、2点を弁別可能にした。<br>
-                  1点接触のシミュレーションでは、CNNにより空間分解能指標と位置誤差を従来の線形手法の約22%に低減した。<br>
-                  ロボットハンドの把持制御や医療応用への展開が期待される技術である。
-                </p>
-                <div class="text-muted small">
-                    <strong>Authors</strong>: Akira Kojima, Shunsuke Yoshimoto, Akio Yamamoto
-                </div>
-                <div class="text-muted small">
-                  <strong>技術</strong>
-                  <ul class="tech-list">
-                    <li>電気インピーダンストモグラフィ (EIT)</li>
-                    <li>畳み込みニューラルネットワーク (CNN / Keras)</li>
-                    <li>シミュレーションによる訓練データ生成</li>
-                    <li>圧力分布再構成</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="col-12 col-lg-7">
-                <div class="media-box">
-                  <div class="media-hero">
-                    <img src="media/SI2022_poster-web.webp" alt="SI2022 ポスター" loading="lazy">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <!-- Frontiers paper -->
-        <div class="col-12">
-          <article class="card p-3">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">Optimization of electrode positions for equalizing local spatial performance of a tomographic tactile sensor<br>（トモグラフィ型触覚センサの局所空間性能の均一化に向けた電極位置の最適化）</h3>
-              <a class="btn btn-outline-info btn-sm" href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">論文ページ</a>
-            </div>
-
-            <div class="mt-2">
-              <img class="badge-img" loading="lazy" alt="Journal" src="https://img.shields.io/badge/Journal-Frontiers_in_Robotics_and_AI-blue">
-              <img class="badge-img" loading="lazy" alt="Year" src="https://img.shields.io/badge/Year-2023-green">
-              <img class="badge-img" loading="lazy" alt="DOI" src="https://img.shields.io/badge/DOI-10.3389%2Ffrobt.2023.1157911-orange">
-            </div>
-
-            <p class="text-muted mt-2 mb-2">
-              Frontiers in Robotics and AI に掲載された査読付き論文。<br>
-              接触抵抗式トモグラフィ型触覚センサにおいて、検出領域全体で均一な空間分解能を実現するための電極配置の最適化手法を提案した。<br>
-              接触位置による性能のばらつきに対し、電極間隔を調整するアルゴリズムを開発。シミュレーションでは、最悪領域の空間分解能指標（HWHM、小さいほど良い）を等間隔配置より19.2%（16電極）・6.63%（64電極）低減した。
-            </p>
-
-            <div class="text-muted small">
-              <strong>Authors</strong>: Akira Kojima, Shunsuke Yoshimoto, Akio Yamamoto
-            </div>
-            <div class="text-muted small mt-1">
-              <strong>技術</strong>
-              <ul class="tech-list">
-                <li>電極配置最適化アルゴリズム</li>
-                <li>接触抵抗式トモグラフィ型触覚センサ</li>
-                <li>空間分解能の均一化シミュレーション</li>
-              </ul>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <hr class="border-subtle" hidden>
-
-    <!-- Contact -->
+    <!-- 連絡先 -->
     <section id="contact" class="anchor py-2 mb-4">
       <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
         <h2 class="h4 section-title mb-0">連絡先</h2>
       </div>
 
-      <div class="card p-3">
-        <div class="d-flex flex-wrap gap-2">
-          <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com">Mail: a.kojima8924@gmail.com</a>
-          <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub: kojima8924</a>
-        </div>
-        <div class="text-muted small mt-2">
-          主な領域：AIを活用・統合したアプリ開発 / Python / C++ / Flutter / FastAPI
-        </div>
+      <div class="d-flex flex-wrap gap-2 mb-2">
+        <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com">Mail: a.kojima8924@gmail.com</a>
+        <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub: kojima8924</a>
+      </div>
+      <div class="text-muted small mb-3">
+        主な領域：AIを活用・統合したアプリ開発 / Python / C++ / Flutter / FastAPI
+      </div>
 
-        <div class="mt-3 d-flex flex-wrap gap-2 no-print">
-          <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio.pdf" download>PDF Download</a>
-          <button class="btn btn-outline-info btn-sm" type="button" onclick="window.print()">Print</button>
-        </div>
+      <div class="d-flex flex-wrap gap-2 no-print">
+        <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（2ページ）</a>
+        <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio.pdf" download>完全版PDF</a>
       </div>
 
       <div class="text-muted small mt-3">
@@ -2025,7 +1279,7 @@
         closeBtn.className = "lightbox-close";
         closeBtn.type = "button";
         closeBtn.setAttribute("aria-label", "拡大表示を閉じる");
-        closeBtn.textContent = "\u00d7";
+        closeBtn.textContent = "×";
         closeBtn.addEventListener("click", e => { e.stopPropagation(); close(); });
         overlay.prepend(closeBtn);
         backgroundElements.forEach(el => { el.setAttribute("inert", ""); });
@@ -2074,7 +1328,7 @@
         });
       });
 
-      // Videoボタン → ニコニコ埋め込み
+      // デモ動画ボタン → ニコニコ埋め込み
       document.querySelectorAll(".btn-video[data-nico]").forEach(btn => {
         btn.addEventListener("click", e => {
           e.preventDefault();
@@ -2166,13 +1420,12 @@
       function apply(theme){
         root.setAttribute("data-theme", theme);
         const isLight = theme === "light";
-        // match navbar text color
+        // navbarのBootstrapテーマもページテーマへ同期
         document.querySelector(".navbar").setAttribute("data-bs-theme", isLight ? "light" : "dark");
 
         btn.textContent = isLight ? "☀️ Light" : "🌙 Dark";
         // 表示は現在の状態、aria-labelは状態と操作結果の両方を伝える
         btn.setAttribute("aria-label", isLight ? "現在ライトテーマ。ダークテーマに切り替え" : "現在ダークテーマ。ライトテーマに切り替え");
-        btn.classList.toggle("text-muted", true);
       }
 
       let saved;
@@ -2180,7 +1433,6 @@
       if(saved === "light" || saved === "dark"){
         apply(saved);
       } else {
-        // prefer system
         const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
         apply(prefersLight ? "light" : "dark");
       }
@@ -2224,7 +1476,6 @@
       }
       new bootstrap.ScrollSpy(document.body, { target: "#nav" });
     });
-
   </script>
 </body>
 </html>

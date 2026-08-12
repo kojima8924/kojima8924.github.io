@@ -19,6 +19,7 @@ from urllib.parse import quote
 PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_SOURCE = PROJECT_ROOT / "index.html"
 DEFAULT_OUTPUT = PROJECT_ROOT / "media" / "Akira_Kojima_Portfolio.pdf"
+DEFAULT_SUMMARY_OUTPUT = PROJECT_ROOT / "media" / "Akira_Kojima_Portfolio_Summary.pdf"
 
 
 class _QuietRequestHandler(SimpleHTTPRequestHandler):
@@ -211,7 +212,16 @@ def _write_pdf_atomically(page: object, output: Path) -> int:
         temporary_path.unlink(missing_ok=True)
 
 
-def make_pdf(source: Path, output: Path, timeout_seconds: float) -> int:
+def _count_pages(output: Path) -> int:
+    """生成後のPDFの実ページ数を返す（README記載との整合確認用）。"""
+
+    import pymupdf
+
+    with pymupdf.open(output) as document:
+        return document.page_count
+
+
+def make_pdf(source: Path, output: Path, timeout_seconds: float, mode: str = "full") -> int:
     try:
         from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
         from playwright.sync_api import sync_playwright
@@ -257,6 +267,11 @@ def make_pdf(source: Path, output: Path, timeout_seconds: float) -> int:
                         wait_until="domcontentloaded",
                         timeout=timeout_ms,
                     )
+                    if mode == "summary":
+                        # 採用向けサマリー: .pdf-full-only を print CSS で非表示にする
+                        page.evaluate(
+                            "document.body.classList.add('pdf-summary')"
+                        )
                     missing_images = _wait_until_ready(page, timeout_ms)
                     if missing_images:
                         details = "\n  - ".join(missing_images)
@@ -315,19 +330,41 @@ def _parse_args() -> argparse.Namespace:
         metavar="SECONDS",
         help="ページ読込のタイムアウト秒数（既定: 90）",
     )
+    parser.add_argument(
+        "--mode",
+        choices=("summary", "full", "both"),
+        default="both",
+        help="summary=採用向け（.pdf-full-only を除外）/ full=完全版 / both=両方（既定）",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = _parse_args()
-    try:
-        size = make_pdf(args.source, args.output, args.timeout)
-    except (OSError, RuntimeError, ValueError) as exc:
-        print(f"PDF生成失敗: {exc}", file=sys.stderr)
-        return 1
 
-    output = args.output.expanduser().resolve()
-    print(f"PDF生成完了: {output} ({size / (1024 * 1024):.1f} MiB)")
+    jobs: list[tuple[str, Path]] = []
+    if args.mode in ("full", "both"):
+        jobs.append(("full", args.output))
+    if args.mode in ("summary", "both"):
+        summary_output = (
+            DEFAULT_SUMMARY_OUTPUT
+            if args.output == DEFAULT_OUTPUT
+            else args.output.with_name(f"{args.output.stem}_Summary.pdf")
+        )
+        jobs.append(("summary", summary_output))
+
+    for mode, output in jobs:
+        try:
+            size = make_pdf(args.source, output, args.timeout, mode=mode)
+            pages = _count_pages(output.expanduser().resolve())
+        except (OSError, RuntimeError, ValueError) as exc:
+            print(f"PDF生成失敗（{mode}）: {exc}", file=sys.stderr)
+            return 1
+        resolved = output.expanduser().resolve()
+        print(
+            f"PDF生成完了（{mode}）: {resolved} "
+            f"({size / (1024 * 1024):.1f} MiB / {pages}ページ)"
+        )
     return 0
 
 

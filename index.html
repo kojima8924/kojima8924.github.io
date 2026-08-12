@@ -342,6 +342,12 @@
     .btn-soft{
       border: 1px solid var(--border);
       background: color-mix(in srgb, var(--card) 70%, transparent);
+      /* Bootstrapの--bs-btn-color(黒)を継承するとダークで文字が消えるため明示 */
+      --bs-btn-color: var(--muted);
+      --bs-btn-hover-color: var(--fg);
+      --bs-btn-active-color: var(--fg);
+      --bs-btn-hover-bg: color-mix(in srgb, var(--card) 95%, transparent);
+      --bs-btn-hover-border-color: color-mix(in srgb, var(--accent) 45%, transparent);
     }
 
     /* 経歴タイムライン（カード枠なし） */

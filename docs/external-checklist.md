@@ -4,11 +4,11 @@
 
 ## GitHubプロフィール（github.com/kojima8924）
 
-- [ ] Clage Cook と scriptvedit をピン留めの先頭2件にする（現在のピン状態を要確認）
+- [ ] Clage Cook と ScriptVEdit をピン留めの先頭2件にする（現在のピン状態を要確認）
 - [ ] プロフィールREADMEを作成し、ポートフォリオURLと主要3作品（Clage Cook / ChromiumforA / ScriptVEdit）を掲載する
 - [ ] 古いChatGPT-Windows / ChatGPT-Web が主要作品より目立たない並びにする
 
-## scriptvedit リポジトリ
+## ScriptVEdit リポジトリ（旧scriptveditから改名済み・2026-08-11）
 
 - [ ] README冒頭の `git clone <repo>` プレースホルダーを実URLに置き換える（2026-08-11時点で残存を確認済み）
 - [ ] About欄・topics（python / ffmpeg / dsl / video-editing / ai-agent 等）を設定

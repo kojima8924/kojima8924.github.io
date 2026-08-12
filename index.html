@@ -227,10 +227,10 @@
     .c-python{ background:#3776ab; }
     .c-flutter{ background:#02569b; }
     .c-dart{ background:#0175c2; }
-    .c-fastapi{ background:#009688; }
+    .c-fastapi{ background:#00695c; }
     .c-ffmpeg{ background:#007808; }
     .c-android{ background:#3ddc84; color:#0b2e19; }
-    .c-chromium{ background:#4285f4; }
+    .c-chromium{ background:#174ea6; }
     .c-kotlin{ background:#7f52ff; }
     .c-dify{ background:#6b4fbb; }
     .c-keras{ background:#d00000; }
@@ -380,6 +380,16 @@
       --bs-btn-hover-border-color: color-mix(in srgb, var(--accent) 45%, transparent);
     }
 
+    /* 作品ダイジェスト（採用担当者が最初に読む4行） */
+    .work-digest{
+      list-style:none;
+      margin:0; padding:0;
+      display:grid; gap:.2rem;
+      font-size:.9rem;
+      color:var(--muted);
+    }
+    .work-digest strong{ color:var(--fg); font-weight:600; }
+
     /* 経歴タイムライン（カード枠なし） */
     .timeline{
       display:grid; grid-template-columns:auto 1fr;
@@ -410,7 +420,7 @@
       .archive-item{ grid-template-columns: 220px 1fr; align-items:start; }
     }
     .archive-item .media-thumb{ max-width:320px; }
-    .archive-item h4{ font-size:1rem; margin-bottom:.2rem; }
+    .archive-item h3{ font-size:1rem; margin-bottom:.2rem; }
 
     /* Lightbox */
     .lightbox-overlay{
@@ -672,6 +682,18 @@
       .timeline .ev{ color:#444 !important; }
       .stack-map{ font-size:9px !important; gap:1px !important; }
 
+      .work-digest{ font-size:10px !important; gap:1px !important; }
+      /* カード内の折りたたみ: 印刷では開いた状態で小見出し化 */
+      .card details > summary{
+        font-size:10px !important;
+        font-weight:700;
+        list-style:none;
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+      }
+      .card details > summary::-webkit-details-marker,
+      .card details > summary::marker{ display:none; content:""; }
+
       /* アコーディオン（過去作品・開発背景）: 印刷では開いて掲載 */
       details.card > summary, details.archive > summary{
         font-size:12px !important;
@@ -695,7 +717,7 @@
         page-break-inside: avoid !important;
         grid-template-columns: 160px 1fr !important;
       }
-      .archive-item h4{ font-size:11px !important; }
+      .archive-item h3{ font-size:11px !important; }
       .archive-item p{ font-size:9px !important; margin:0 !important; }
       .archive-item .media-thumb{ max-height:90px; }
 
@@ -712,6 +734,9 @@
       body.pdf-summary .media-thumb{ max-height:95px; }
       body.pdf-summary hr.border-subtle{ margin:3px 0 !important; }
       body.pdf-summary .shot-row .media-phone{ height:135px !important; }
+      body.pdf-summary .work-digest{ gap:0 !important; }
+      /* サマリーではダイジェスト4行で代表させ、詳細折りたたみは完全版のみ収録 */
+      body.pdf-summary #works details{ display:none !important; }
     }
   </style>
 </head>
@@ -810,7 +835,7 @@
                 <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">GitHub</a>
               </div>
             </div>
-            <div class="badges mt-2" aria-label="Clage Cookの使用技術">
+            <div class="badges mt-2" role="group" aria-label="Clage Cookの使用技術">
               <span class="tbadge c-mit">MIT License</span>
               <span class="tbadge c-flutter">Flutter</span>
               <span class="tbadge c-dart">Dart</span>
@@ -834,41 +859,48 @@
               </div>
             </div>
 
-            <p class="text-muted small mt-3 mb-1">
-              <strong>設計判断:</strong>
-              プロバイダごとに異なるAPI契約（認証ヘッダ・エンドポイント・応答形式）を共通のインターフェースに吸収し、
-              一部のAIが失敗しても完了済みの回答を保持して統合まで進める流れにしました。進行状況はSSEでUIへ統一配信します。
-              APIキーはOSのsecure storageへ保存し、会話履歴を端末内だけに置くDirect接続と、開発用のreference serverを分離しています。
-            </p>
-            <p class="text-muted small mb-1">
-              <strong>実装・検証:</strong>
-              Flutter/DartのUI実装はAIエージェントへ任せ、生成されたアプリをレビューして
-              画面仕様・挙動・エラー処理の修正方針を指示し、WindowsとAndroid実機で動作を確認しました。
-              公開リポジトリとCIで確認できます。
-            </p>
-            <p class="text-muted small mb-0">
-              <strong>公開状況:</strong> 公開ベータ。本番運用向けサポート・後方互換性は未保証です。
-            </p>
+            <ul class="work-digest mt-3">
+              <li><strong>難所:</strong> 4社で異なるAPI契約（認証ヘッダ・エンドポイント・応答形式）の吸収と、一部のAIが失敗しても完了済み回答を保持する統合フロー</li>
+              <li><strong>役割:</strong> 仕様・設計判断・生成物のレビュー・実機検証（Flutter/DartのUI実装はAIエージェントへ委任）</li>
+              <li><strong>確認先:</strong> 公開リポジトリ（CI）・Windows / Android実機画面</li>
+              <li><strong>公開状況:</strong> 公開ベータ。本番運用向けサポート・後方互換性は未保証</li>
+            </ul>
 
-            <div class="shot-row mt-3" aria-label="Clage CookのAndroid実機画面">
-              <div>
-                <div class="media-phone">
-                  <img src="media/clagecook-oss-android-overview.jpg" alt="Android版で4つのAIの回答状況と統合回答を一覧表示した画面" loading="lazy">
+            <details class="mt-2">
+              <summary class="small fw-semibold">設計と検証の詳細・Android実機画面</summary>
+              <div class="mt-2">
+                <p class="text-muted small mb-1">
+                  <strong>設計判断:</strong>
+                  プロバイダごとに異なるAPI契約を共通のインターフェースに吸収し、
+                  一部のAIが失敗しても完了済みの回答を保持して統合まで進める流れにしました。進行状況はSSEでUIへ統一配信します。
+                  APIキーはOSのsecure storageへ保存し、会話履歴を端末内だけに置くDirect接続と、開発用のreference serverを分離しています。
+                </p>
+                <p class="text-muted small mb-2">
+                  <strong>実装・検証:</strong>
+                  生成されたアプリをレビューして画面仕様・挙動・エラー処理の修正方針を指示し、
+                  WindowsとAndroid実機で動作を確認しました。
+                </p>
+                <div class="shot-row" role="group" aria-label="Clage CookのAndroid実機画面">
+                  <div>
+                    <div class="media-phone">
+                      <img src="media/clagecook-oss-android-overview.jpg" alt="Android版で4つのAIの回答状況と統合回答を一覧表示した画面" loading="lazy">
+                    </div>
+                    <div class="small text-muted mt-2 text-center">一覧：各AIの回答と統合回答</div>
+                  </div>
+                  <div>
+                    <div class="media-phone">
+                      <img src="media/clagecook-oss-android.png" alt="Android版で相互批評（DEBATE)後もClaudeの初回回答を保持して表示した画面" loading="lazy">
+                    </div>
+                    <div class="small text-muted mt-2 text-center">詳細：相互批評後も初回回答を保持</div>
+                  </div>
                 </div>
-                <div class="small text-muted mt-2 text-center">一覧：各AIの回答と統合回答</div>
               </div>
-              <div>
-                <div class="media-phone">
-                  <img src="media/clagecook-oss-android.png" alt="Android版で相互批評（DEBATE）後もClaudeの初回回答を保持して表示した画面" loading="lazy">
-                </div>
-                <div class="small text-muted mt-2 text-center">詳細：相互批評後も初回回答を保持</div>
-              </div>
-            </div>
+            </details>
 
-            <details class="mt-3 pdf-full-only">
+            <details class="mt-2 pdf-full-only">
               <summary class="small fw-semibold">開発背景 — 非公開版を毎日運用し、公式APIで再実装</summary>
               <div class="mt-2">
-                <div class="badges mb-2" aria-label="非公開版の使用技術">
+                <div class="badges mb-2" role="group" aria-label="非公開版の使用技術">
                   <span class="tbadge c-kotlin">Kotlin / Jetpack Compose</span>
                   <span class="tbadge c-python">Python</span>
                   <span class="tbadge c-fastapi">FastAPI</span>
@@ -916,7 +948,7 @@
                 <span class="badge rounded-pill text-bg-secondary">非公開</span>
               </div>
             </div>
-            <div class="badges mt-2" aria-label="ChromiumforAの使用技術">
+            <div class="badges mt-2" role="group" aria-label="ChromiumforAの使用技術">
               <span class="tbadge c-android">Android</span>
               <span class="tbadge c-chromium">Chromium改造</span>
               <span class="tbadge c-gray">検索結果の再評価</span>
@@ -928,7 +960,7 @@
               ページ要約と選択文へのAI処理も統合しました。
             </p>
 
-            <div class="cfa-compare mt-2" aria-label="同じ『人工知能』のGoogle検索に対する通常表示とAI評価後の比較">
+            <div class="cfa-compare mt-2" role="group" aria-label="同じ『人工知能』のGoogle検索に対する通常表示とAI評価後の比較">
               <figure>
                 <div class="cfa-shot">
                   <img src="media/cfa-serp-before.png" alt="AI評価前の「人工知能」Google検索結果。人工知能学会、FPTソフトウェア、IBMの順に表示" loading="lazy">
@@ -962,7 +994,7 @@
               <li>サイト別UI・動画再生補助</li>
             </ul>
 
-            <div class="shot-row mt-3" aria-label="ChromiumforAのAndroid実機画面">
+            <div class="shot-row mt-3" role="group" aria-label="ChromiumforAのAndroid実機画面">
               <div>
                 <div class="media-phone">
                   <img src="media/cfa-fab-menu.png" alt="Wikipedia表示中にFABメニューを開いた実機画面。ページ要約・翻訳・サイトパッチなどの項目" loading="lazy">
@@ -1006,7 +1038,7 @@
                 <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46610886" href="https://www.nicovideo.jp/watch/sm46610886" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
               </div>
             </div>
-            <div class="badges mt-2" aria-label="ScriptVEditの使用技術">
+            <div class="badges mt-2" role="group" aria-label="ScriptVEditの使用技術">
               <span class="tbadge c-mit">MIT License</span>
               <span class="tbadge c-python">Python</span>
               <span class="tbadge c-ffmpeg">FFmpeg</span>
@@ -1104,7 +1136,7 @@
               電極配置の最適化では、最悪領域の空間分解能指標（HWHM、小さいほど良い）を等間隔配置に対して最大19.2%低減し、
               筆頭著者としてFrontiers in Robotics and AIに掲載されました。
             </p>
-            <div class="badges mb-2" aria-label="研究の使用技術">
+            <div class="badges mb-2" role="group" aria-label="研究の使用技術">
               <span class="tbadge c-keras">CNN (Keras)</span>
               <span class="tbadge c-gray">シミュレーション訓練データ</span>
               <span class="tbadge c-gray">電極配置最適化</span>
@@ -1128,7 +1160,7 @@
           <h3 class="h5 mb-0 card-title">美容クリニック向けLINE応答AI</h3>
           <span class="badge rounded-pill text-bg-secondary">受託開発・開発中・匿名掲載</span>
         </div>
-        <div class="badges mt-2" aria-label="LINE応答AIの使用技術">
+        <div class="badges mt-2" role="group" aria-label="LINE応答AIの使用技術">
           <span class="tbadge c-dify">Dify</span>
           <span class="tbadge c-gray">LINE Webhook</span>
           <span class="tbadge c-gray">RAG</span>
@@ -1201,7 +1233,7 @@
               <img src="media/chatgpt-windows.png" alt="ChatGPT-Windowsで会話とストリーミング回答を表示した画面" loading="lazy">
             </div>
             <div>
-              <h4>ChatGPT-Windows</h4>
+              <h3 class="h6 archive-title">ChatGPT-Windows</h3>
               <p class="tech-line mb-1">Python · PySide6 (Qt6) · MIT</p>
               <p class="text-muted small mb-2">翻訳・補完・要約をホットキーとクリップボードから呼び出せるWindows常駐クライアント。ストリーミング表示と、Windows資格情報マネージャーへのAPIキー保存を実装。</p>
               <div class="d-flex gap-2 flex-wrap">
@@ -1216,7 +1248,7 @@
               <img src="media/chatgpt-web.png" alt="ChatGPT-Webで入力文の続きをゴーストテキスト表示した画面" loading="lazy">
             </div>
             <div>
-              <h4>ChatGPT-Web</h4>
+              <h3 class="h6 archive-title">ChatGPT-Web</h3>
               <p class="tech-line mb-1">JavaScript · 単一HTML · MIT</p>
               <p class="text-muted small mb-2">入力の続きをゴーストテキストで提案するプロトタイプ。Tabと矢印キーで全体・1文字単位を確定。ローカル検証用。</p>
               <div class="d-flex gap-2 flex-wrap">
@@ -1231,7 +1263,7 @@
               <img src="media/calcpy-repl.png" alt="CalcpyのREPL画面。数式入力と結果、フリック入力用の関数パレット" loading="lazy">
             </div>
             <div>
-              <h4>Calcpy</h4>
+              <h3 class="h6 archive-title">Calcpy</h3>
               <p class="tech-line mb-1">Android · Kotlin/Compose · オンデバイスCPython 3.13/SymPy · 非公開プロトタイプ</p>
               <p class="text-muted small mb-2">電卓の操作感にSymPyの厳密計算とPython REPLを統合したAndroid試作。4方向フリック入力と、Python実行の別プロセス隔離を設計。</p>
             </div>
@@ -1242,7 +1274,7 @@
               <img src="media/handdrive.png" alt="手の傾きと開閉で赤い車を運転する3Dデモの画面" loading="lazy">
             </div>
             <div>
-              <h4>ハンドドライブ</h4>
+              <h3 class="h6 archive-title">ハンドドライブ</h3>
               <p class="tech-line mb-1">JavaScript · Three.js</p>
               <p class="text-muted small mb-2">Webカメラで捉えた手の傾きと開閉を、ステアリング・アクセル・ブレーキへ変換する3D運転デモ。</p>
               <div class="d-flex gap-2 flex-wrap">
@@ -1256,7 +1288,7 @@
               <img src="media/invpend.png" alt="倒立振子が障害物を避けて移動するシミュレーション画面" loading="lazy">
             </div>
             <div>
-              <h4>倒立振子</h4>
+              <h3 class="h6 archive-title">倒立振子</h3>
               <p class="tech-line mb-1">C++ · ODE</p>
               <p class="text-muted small mb-2">PID制御で倒立姿勢を保ちながら、障害物を避けてゴールへ移動するシミュレーション。</p>
               <div class="d-flex gap-2 flex-wrap">
@@ -1270,7 +1302,7 @@
               <img src="media/raytrace-csg.png" alt="CSGで組み合わせた形状をリアルタイムにレイトレーシング描画した画面" loading="lazy">
             </div>
             <div>
-              <h4>レイトレーシング（GLSL + CSG）</h4>
+              <h3 class="h6 archive-title">レイトレーシング（GLSL + CSG）</h3>
               <p class="tech-line mb-1">C++ · OpenGL/GLSL</p>
               <p class="text-muted small mb-2">CSGの和・差・積で形状を組み替え、反射・屈折・透過までリアルタイム描画。</p>
               <div class="d-flex gap-2 flex-wrap">
@@ -1284,7 +1316,7 @@
               <img src="media/raytrace-python.png" alt="Pythonでフルスクラッチ実装したレイトレーシングの出力画像" loading="lazy">
             </div>
             <div>
-              <h4>レイトレーシング（Python）</h4>
+              <h3 class="h6 archive-title">レイトレーシング（Python）</h3>
               <p class="tech-line mb-1">Python</p>
               <p class="text-muted small mb-2">レイと球の交差、材質、反射・屈折の再帰計算をフルスクラッチ実装。</p>
               <div class="d-flex gap-2 flex-wrap">
@@ -1298,7 +1330,7 @@
               <img src="media/shadowmap.jpg" alt="シャドウマッピングで影を描画したCGの画面" loading="lazy">
             </div>
             <div>
-              <h4>シャドウマッピング</h4>
+              <h3 class="h6 archive-title">シャドウマッピング</h3>
               <p class="tech-line mb-1">Python</p>
               <p class="text-muted small mb-2">デプスマップで影を生成し、バイアス調整でシャドウアクネとピーターパン現象を抑制。</p>
             </div>
@@ -1309,7 +1341,7 @@
               <img src="media/wave-paraboloid.png" alt="伝播する波と放物面の変形をワイヤーフレームで描画したアニメーション画面" loading="lazy">
             </div>
             <div>
-              <h4>波と放物面のアニメーション</h4>
+              <h3 class="h6 archive-title">波と放物面のアニメーション</h3>
               <p class="tech-line mb-1">Python</p>
               <p class="text-muted small mb-2">既存の描画基盤を再利用し、伝播する波と放物面の変形をワイヤーフレームで可視化。</p>
               <div class="d-flex gap-2 flex-wrap">
@@ -1328,7 +1360,7 @@
               </div>
             </div>
             <div>
-              <h4>Canny法（エッジ抽出）</h4>
+              <h3 class="h6 archive-title">Canny法（エッジ抽出）</h3>
               <p class="tech-line mb-1">Python</p>
               <p class="text-muted small mb-2">ライブラリに頼らず、Canny法のエッジ抽出処理を一から実装。左が入力、右が出力。</p>
             </div>

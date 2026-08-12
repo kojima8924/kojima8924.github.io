@@ -696,6 +696,20 @@
         break-inside: avoid !important;
         page-break-inside: avoid !important;
       }
+      /* 開発背景は見出し・本文・実機画像を一体で次ページへ送る
+         （見出しだけの取り残しと、画像だけの断片化の両方を防ぐ） */
+      #clagecook-background{
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      /* 開発背景の実機画像は補足なので印刷では小さく（ブロックを1ページに収める） */
+      #clagecook-background .media-phone{ height:105px !important; }
+      /* 完全版ではChromiumforAも新ページ開始（前ページ末尾の空枠断片を防ぐ）。
+         サマリーはp1に収まるため対象外 */
+      body:not(.pdf-summary) #chromiumfora-card{
+        break-before: page !important;
+        page-break-before: always !important;
+      }
       /* ScriptVEditは新ページから開始（前ページ末尾に空の枠線断片が残るのを防ぐ） */
       #scriptvedit-card{
         break-before: page !important;
@@ -920,7 +934,7 @@
               </div>
             </details>
 
-            <details class="mt-2 pdf-full-only">
+            <details id="clagecook-background" class="mt-2 pdf-full-only">
               <summary class="small fw-semibold">開発背景 — 非公開版を毎日運用し、公式APIで再実装</summary>
               <div class="mt-2">
                 <div class="badges mb-2" role="group" aria-label="非公開版の使用技術">
@@ -964,6 +978,7 @@
         <!-- ChromiumforA -->
         <div class="col-12">
           <article id="chromiumfora-card" class="card p-3">
+            <div class="print-keep">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <h3 class="h5 mb-0 card-title">ChromiumforA — Google検索をAIで再評価</h3>
               <div class="d-flex gap-2 flex-wrap">
@@ -1002,6 +1017,7 @@
               </figure>
             </div>
             <p class="cfa-swipe-hint text-muted small text-center mt-1 mb-0" aria-hidden="true">横にスワイプして比較 →</p>
+            </div>
 
             <p class="text-muted small mt-3 mb-1">
               <strong>担当:</strong> Chromium本体への組み込み、操作設計、認証情報の扱い、安全性検証。
@@ -1218,7 +1234,7 @@
             <span class="yr">2026–</span><span class="ev">フリーランスのAIアプリケーションエンジニア</span>
           </div>
           <p class="text-muted small mb-1"><strong>資格:</strong> 基本情報技術者試験 合格（2026年8月）</p>
-          <p class="text-muted small mb-0"><strong>プログラミング実績:</strong> AtCoder 水色 / paiza Sランク</p>
+          <p class="text-muted small mb-0"><strong>プログラミング実績:</strong> AtCoder 水色（レーティング1440）/ paizaスキルチェック Sランク</p>
         </div>
         <div class="col-12 col-lg-7">
           <ul class="stack-map">

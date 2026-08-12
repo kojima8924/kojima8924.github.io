@@ -29,8 +29,18 @@ FORBIDDEN_PATTERNS = [
     (r">\s*Repo\s*<|>\s*Video\s*<|>\s*Private\s*<|>\s*Print\s*<", "英語ラベル（GitHub/デモ動画/非公開へ統一）"),
     (r"課題設定から実機検証まで|使い続けられる形|鵜呑みにせず|単なるデモではなく", "抽象的な包括表現が残存"),
     (r"ダメ出し", "口語的表現（レビュー・修正方針の指示 等へ）"),
-    (r"AtCoder(?! 水色)|Atcoder|atcoder(?!\.jp)|AtCoder Cyan", "AtCoder表記の揺れ（「AtCoder 水色」に統一）"),
-    (r"Paiza|PAIZA|paiza(?! Sランク)", "paiza表記の揺れ（「paiza Sランク」に統一）"),
+]
+
+# 表示テキスト（script/style以外）にのみ適用する検査。
+# raw HTMLへ適用するとURL（atcoder.jp / paiza.jp）まで誤検出するため分離する。
+TEXT_FORBIDDEN_PATTERNS = [
+    (r"Atcoder|ATCODER|AtCoder Cyan|AtCoder ?シアン", "AtCoder表記の揺れ（「AtCoder 水色」に統一）"),
+    (r"Paiza|PAIZA", "paiza表記の揺れ（小文字「paiza」に統一）"),
+    (r"paiza S(?!ランク)(?!ランク)|paiza S ?Rank", "paizaランク表記の揺れ（「Sランク」に統一）"),
+]
+TEXT_REQUIRED_STRINGS = [
+    ("AtCoder 水色", "プログラミング実績（表記統一）"),
+    ("Sランク", "paizaのランク表記"),
 ]
 
 # README等の関連文書にも適用する検査（index.htmlとの文書間矛盾の検出）
@@ -52,8 +62,6 @@ REQUIRED_STRINGS = [
     ("a.kojima8924@gmail.com", "メール導線"),
     ("github.com/kojima8924", "GitHub導線"),
     ("frobt.2023.1157911", "論文リンク"),
-    ("AtCoder 水色", "プログラミング実績（表記統一）"),
-    ("paiza Sランク", "プログラミング実績（表記統一）"),
 ]
 
 
@@ -67,8 +75,20 @@ class _Parser(HTMLParser):
         self.blank_links: list[str] = []      # target=_blank で rel 不足
         self.empty_hrefs = 0
         self.external_links: list[str] = []
+        self.text_parts: list[str] = []       # 表示テキスト（script/style除く）
+        self._ignored_depth = 0
+
+    def handle_data(self, data: str) -> None:
+        if not self._ignored_depth:
+            self.text_parts.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in {"script", "style"} and self._ignored_depth:
+            self._ignored_depth -= 1
 
     def handle_starttag(self, tag: str, attrs: list) -> None:
+        if tag in {"script", "style"}:
+            self._ignored_depth += 1
         a = dict(attrs)
         if "id" in a:
             self.ids.append(a["id"])
@@ -145,6 +165,16 @@ def main() -> int:
         hits = re.findall(pattern, html)
         if hits:
             errors.append(f"{reason}: {len(hits)}件（例: {hits[0]!r}）")
+
+    # 7a) 表示テキストのみに適用する検査（URLを誤検出しない）
+    visible_text = " ".join(parser.text_parts)
+    for pattern, reason in TEXT_FORBIDDEN_PATTERNS:
+        hits = re.findall(pattern, visible_text)
+        if hits:
+            errors.append(f"[表示テキスト] {reason}: {len(hits)}件（例: {hits[0]!r}）")
+    for needle, reason in TEXT_REQUIRED_STRINGS:
+        if needle not in visible_text:
+            errors.append(f"[表示テキスト] 必須文字列が見つからない（{reason}）: {needle!r}")
 
     # 7b) 22%の誤解表現: 「…22%低減」は「約22%まで低減」の形以外を弾く
     for m in re.finditer(r"22[%％](低減|削減|改善)", html):

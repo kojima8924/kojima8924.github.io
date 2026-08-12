@@ -203,12 +203,42 @@
       margin: 28px 0;
     }
 
-    /* テキストの技術スタック表記（バッジ代替） */
+    /* テキストの技術スタック表記 */
     .tech-line{
       color: var(--muted);
       font-size: .88rem;
       letter-spacing: .2px;
     }
+
+    /* 技術バッジ（CSS製・外部通信なし。色は各技術の公式ブランドカラー） */
+    .badges{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+    .tbadge{
+      display:inline-flex;
+      font-size:.72rem;
+      line-height:1;
+      border-radius:4px;
+      overflow:hidden;
+      font-weight:600;
+      letter-spacing:.2px;
+      color:#fff;
+      padding:4px 8px;
+    }
+    .c-mit{ background:#97ca00; color:#1d2b00; }
+    .c-python{ background:#3776ab; }
+    .c-flutter{ background:#02569b; }
+    .c-dart{ background:#0175c2; }
+    .c-fastapi{ background:#009688; }
+    .c-ffmpeg{ background:#007808; }
+    .c-android{ background:#3ddc84; color:#0b2e19; }
+    .c-chromium{ background:#4285f4; }
+    .c-kotlin{ background:#7f52ff; }
+    .c-dify{ background:#6b4fbb; }
+    .c-keras{ background:#d00000; }
+    .c-cpp{ background:#00599c; }
+    .c-glsl{ background:#5586a4; }
+    .c-js{ background:#f7df1e; color:#323330; }
+    .c-qt{ background:#41cd52; color:#0c3315; }
+    .c-gray{ background:#555; }
 
     /* Media */
     .media-box{
@@ -534,6 +564,8 @@
       .card p, .card li{ font-size:10px !important; }
       .card p{ margin-bottom:2px !important; }
       .tech-line{ font-size:9px !important; }
+      .badges{ gap:3px !important; }
+      .tbadge{ font-size:7px !important; padding:2px 5px !important; }
 
       .media-box{
         border:1px solid #ccc !important;
@@ -653,8 +685,6 @@
       details.archive > summary::-webkit-details-marker,
       details.archive > summary::marker{ display:none; content:""; }
       #archive details.archive{
-        break-before: page !important;
-        page-break-before: always !important;
         break-inside: auto !important;
         page-break-inside: auto !important;
       }
@@ -752,6 +782,7 @@
 
       <div class="d-flex flex-wrap gap-2 hero-actions no-print">
         <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（2ページ）</a>
+        <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio.pdf" download>完全版PDF</a>
         <a class="btn btn-outline-info" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub</a>
         <a class="btn btn-outline-info" href="mailto:a.kojima8924@gmail.com">メール</a>
       </div>
@@ -779,7 +810,15 @@
                 <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">GitHub</a>
               </div>
             </div>
-            <p class="tech-line mt-1 mb-0">Flutter · Dart · Direct BYOK · Secure Storage · Python/FastAPI (reference server)</p>
+            <div class="badges mt-2" aria-label="Clage Cookの使用技術">
+              <span class="tbadge c-mit">MIT License</span>
+              <span class="tbadge c-flutter">Flutter</span>
+              <span class="tbadge c-dart">Dart</span>
+              <span class="tbadge c-gray">Direct BYOK</span>
+              <span class="tbadge c-gray">Secure Storage</span>
+              <span class="tbadge c-python">Python</span>
+              <span class="tbadge c-fastapi">FastAPI</span>
+            </div>
 
             <p class="text-muted mt-2 mb-2">
               Claude・Gemini・ChatGPT・Grokへ同じ質問を並列に送り、回答の比較・相互批評・統合までを1画面で行うアプリです。
@@ -829,7 +868,12 @@
             <details class="mt-3 pdf-full-only">
               <summary class="small fw-semibold">開発背景 — 非公開版を毎日運用し、公式APIで再実装</summary>
               <div class="mt-2">
-                <p class="tech-line mb-2">Kotlin/Jetpack Compose · Python/FastAPI · Glance widget</p>
+                <div class="badges mb-2" aria-label="非公開版の使用技術">
+                  <span class="tbadge c-kotlin">Kotlin / Jetpack Compose</span>
+                  <span class="tbadge c-python">Python</span>
+                  <span class="tbadge c-fastapi">FastAPI</span>
+                  <span class="tbadge c-gray">Glance widget</span>
+                </div>
                 <div class="row g-3 align-items-start">
                   <div class="col-12 col-md-6">
                     <p class="text-muted small mb-2">
@@ -872,7 +916,12 @@
                 <span class="badge rounded-pill text-bg-secondary">非公開</span>
               </div>
             </div>
-            <p class="tech-line mt-1 mb-0">Android · Chromium改造 · 検索結果の再評価 · ページ要約</p>
+            <div class="badges mt-2" aria-label="ChromiumforAの使用技術">
+              <span class="tbadge c-android">Android</span>
+              <span class="tbadge c-chromium">Chromium改造</span>
+              <span class="tbadge c-gray">検索結果の再評価</span>
+              <span class="tbadge c-gray">ページ要約</span>
+            </div>
 
             <p class="text-muted mt-2 mb-2">
               Android版Chromiumを改造し、Google検索の結果ページへAIの評価コメントを挿入して、評価後の並び順を提示します。
@@ -957,7 +1006,12 @@
                 <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46610886" href="https://www.nicovideo.jp/watch/sm46610886" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
               </div>
             </div>
-            <p class="tech-line mt-1 mb-0">Python · FFmpeg · MIT License · pytest</p>
+            <div class="badges mt-2" aria-label="ScriptVEditの使用技術">
+              <span class="tbadge c-mit">MIT License</span>
+              <span class="tbadge c-python">Python</span>
+              <span class="tbadge c-ffmpeg">FFmpeg</span>
+              <span class="tbadge c-gray">pytest</span>
+            </div>
 
             <p class="text-muted mt-2 mb-2">
               動画のタイムラインをPythonコードで記述し、FFmpegコマンドへ変換して映像を生成するDSLです。
@@ -1033,7 +1087,12 @@
                 <div class="small text-muted mt-1">2点接触の再構成（線形手法 vs CNN）</div>
               </div>
             </div>
-            <a class="small" href="media/SI2022_poster-web.webp" target="_blank" rel="noopener noreferrer">ポスター全体（SI2022）を見る</a>
+            <div class="mt-2 pdf-full-only">
+              <div class="media-thumb">
+                <img src="media/SI2022_poster-web.webp" alt="EIT触覚センサのCNN再構成をまとめたSI2022ポスター全体" loading="lazy">
+              </div>
+              <div class="small text-muted mt-1">ポスター全体（SI2022）— クリックで拡大</div>
+            </div>
           </div>
           <div class="col-12 col-md-7">
             <p class="text-muted mb-2">
@@ -1045,7 +1104,11 @@
               電極配置の最適化では、最悪領域の空間分解能指標（HWHM、小さいほど良い）を等間隔配置に対して最大19.2%低減し、
               筆頭著者としてFrontiers in Robotics and AIに掲載されました。
             </p>
-            <p class="tech-line mb-2">CNN (Keras) · シミュレーションによる訓練データ生成 · 電極配置最適化</p>
+            <div class="badges mb-2" aria-label="研究の使用技術">
+              <span class="tbadge c-keras">CNN (Keras)</span>
+              <span class="tbadge c-gray">シミュレーション訓練データ</span>
+              <span class="tbadge c-gray">電極配置最適化</span>
+            </div>
             <a class="btn btn-outline-info btn-sm" href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">査読論文</a>
           </div>
         </div>
@@ -1065,7 +1128,12 @@
           <h3 class="h5 mb-0 card-title">美容クリニック向けLINE応答AI</h3>
           <span class="badge rounded-pill text-bg-secondary">受託開発・開発中・匿名掲載</span>
         </div>
-        <p class="tech-line mt-1 mb-0">Dify · LINE Webhook · RAG · 状態管理</p>
+        <div class="badges mt-2" aria-label="LINE応答AIの使用技術">
+          <span class="tbadge c-dify">Dify</span>
+          <span class="tbadge c-gray">LINE Webhook</span>
+          <span class="tbadge c-gray">RAG</span>
+          <span class="tbadge c-gray">状態管理</span>
+        </div>
         <p class="text-muted mt-2 mb-1">
           LINEでの問い合わせ一次対応を支援するAIです。FAQ回答、予約フォームへの案内、必要なときのスタッフへの引き継ぎを扱います。
         </p>

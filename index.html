@@ -683,6 +683,29 @@
       .stack-map{ font-size:9px !important; gap:1px !important; }
 
       .work-digest{ font-size:10px !important; gap:1px !important; }
+
+      /* 画像とキャプションを同一ページに保つ（レビュー指摘: 分離防止） */
+      .shot-row > div,
+      figure,
+      .print-keep{
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      /* 経歴・資格・主要技術はAI委任注記まで一体で扱う */
+      #career .row{
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      /* ScriptVEditは新ページから開始（前ページ末尾に空の枠線断片が残るのを防ぐ） */
+      #scriptvedit-card{
+        break-before: page !important;
+        page-break-before: always !important;
+      }
+      /* 過去作品を4〜5ページへ均等配分（最終ページの大きな空白を防ぐ） */
+      #archive .archive-item:nth-of-type(6){
+        break-before: page !important;
+        page-break-before: always !important;
+      }
       /* カード内の折りたたみ: 印刷では開いた状態で小見出し化 */
       .card details > summary{
         font-size:10px !important;
@@ -994,7 +1017,7 @@
               <li>サイト別UI・動画再生補助</li>
             </ul>
 
-            <div class="shot-row mt-3" role="group" aria-label="ChromiumforAのAndroid実機画面">
+            <div class="shot-row mt-3 pdf-full-only" role="group" aria-label="ChromiumforAのAndroid実機画面">
               <div>
                 <div class="media-phone">
                   <img src="media/cfa-fab-menu.png" alt="Wikipedia表示中にFABメニューを開いた実機画面。ページ要約・翻訳・サイトパッチなどの項目" loading="lazy">
@@ -1031,32 +1054,34 @@
         <!-- ScriptVEdit -->
         <div class="col-12">
           <article id="scriptvedit-card" class="card p-3">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">ScriptVEdit — Pythonで動画を記述する編集DSL（OSS）</h3>
-              <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ScriptVEdit" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46610886" href="https://www.nicovideo.jp/watch/sm46610886" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
+            <div class="print-keep">
+              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <h3 class="h5 mb-0 card-title">ScriptVEdit — Pythonで動画を記述する編集DSL（OSS）</h3>
+                <div class="d-flex gap-2 flex-wrap">
+                  <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ScriptVEdit" target="_blank" rel="noopener noreferrer">GitHub</a>
+                  <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46610886" href="https://www.nicovideo.jp/watch/sm46610886" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
+                </div>
               </div>
-            </div>
-            <div class="badges mt-2" role="group" aria-label="ScriptVEditの使用技術">
-              <span class="tbadge c-mit">MIT License</span>
-              <span class="tbadge c-python">Python</span>
-              <span class="tbadge c-ffmpeg">FFmpeg</span>
-              <span class="tbadge c-gray">pytest</span>
-            </div>
-
-            <p class="text-muted mt-2 mb-2">
-              動画のタイムラインをPythonコードで記述し、FFmpegコマンドへ変換して映像を生成するDSLです。
-              コードだけで動画を組み立てられるため、AIエージェントによる動画制作にも使えます。
-              解説動画自体もScriptVEditで制作しました。
-            </p>
-
-            <div class="media-box">
-              <div class="media-hero">
-                <img src="media/scriptvedit-code-video.jpg" alt="左のPythonコードから右の映像が生成されている解説動画の一場面" loading="lazy">
+              <div class="badges mt-2" role="group" aria-label="ScriptVEditの使用技術">
+                <span class="tbadge c-mit">MIT License</span>
+                <span class="tbadge c-python">Python</span>
+                <span class="tbadge c-ffmpeg">FFmpeg</span>
+                <span class="tbadge c-gray">pytest</span>
               </div>
-              <div class="small text-muted mt-2">
-                左に使用したPythonコード、右にその実行結果を示す解説動画の一場面
+
+              <p class="text-muted mt-2 mb-2">
+                動画のタイムラインをPythonコードで記述し、FFmpegコマンドへ変換して映像を生成するDSLです。
+                コードだけで動画を組み立てられるため、AIエージェントによる動画制作にも使えます。
+                解説動画自体もScriptVEditで制作しました。
+              </p>
+
+              <div class="media-box">
+                <div class="media-hero">
+                  <img src="media/scriptvedit-code-video.jpg" alt="左のPythonコードから右の映像が生成されている解説動画の一場面" loading="lazy">
+                </div>
+                <div class="small text-muted mt-2">
+                  左に使用したPythonコード、右にその実行結果を示す解説動画の一場面
+                </div>
               </div>
             </div>
 

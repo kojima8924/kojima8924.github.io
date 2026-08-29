@@ -4,19 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>小嶋 明 | AIアプリケーションエンジニア Portfolio</title>
-  <meta name="description" content="複数LLMを扱うFlutterアプリ Clage Cook、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
+  <meta name="description" content="複数LLMを扱うFlutterアプリ Clage Cook、AIが答えを教えない学習サービス Trivium、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
 
   <!-- OGP -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="小嶋 明 | AIアプリケーションエンジニア Portfolio" />
-  <meta property="og:description" content="複数LLMを扱うFlutterアプリ Clage Cook、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
+  <meta property="og:description" content="複数LLMを扱うFlutterアプリ Clage Cook、AIが答えを教えない学習サービス Trivium、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
   <meta property="og:image" content="https://kojima8924.github.io/media/ogp-portfolio.png" />
   <meta property="og:image:alt" content="小嶋明のAIアプリ開発・機械学習ポートフォリオ" />
   <meta property="og:url" content="https://kojima8924.github.io/" />
   <meta property="og:locale" content="ja_JP" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="小嶋 明 | AIアプリケーションエンジニア Portfolio" />
-  <meta name="twitter:description" content="複数LLMを扱うFlutterアプリ Clage Cook、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
+  <meta name="twitter:description" content="複数LLMを扱うFlutterアプリ Clage Cook、AIが答えを教えない学習サービス Trivium、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
   <meta name="twitter:image" content="https://kojima8924.github.io/media/ogp-portfolio.png" />
   <meta name="twitter:image:alt" content="小嶋明のAIアプリ開発・機械学習ポートフォリオ" />
   <link rel="canonical" href="https://kojima8924.github.io/" />
@@ -240,6 +240,15 @@
     .c-qt{ background:#41cd52; color:#0c3315; }
     .c-gray{ background:#555; }
 
+    /* 縦に長い連続スクリーンショット（LINEの一連の流れ）用 */
+    .flow-shot{
+      max-width: 320px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--imgbg);
+    }
+    .flow-shot img{ width:100%; height:auto; display:block; cursor: zoom-in; }
     /* Media */
     .nowrap{ white-space: nowrap; }
     .media-box{
@@ -634,6 +643,7 @@
       .media-phone img{ border-radius:5px !important; }
       .media-phone::after{ display:none !important; }
       .media-hero::after, .media-thumb::after{ display:none !important; }
+      .flow-shot{ max-width:150px !important; border:1px solid #ccc !important; }
 
       /* 見出し */
       .section-title{
@@ -713,6 +723,11 @@
         break-before: page !important;
         page-break-before: always !important;
       }
+      /* Triviumカードも新ページ開始（前ページ末尾に空枠の帯が残るのを防ぐ） */
+      #trivium-card{
+        break-before: page !important;
+        page-break-before: always !important;
+      }
       /* ScriptVEditは新ページから開始（前ページ末尾に空の枠線断片が残るのを防ぐ） */
       #scriptvedit-card{
         break-before: page !important;
@@ -773,7 +788,7 @@
       body.pdf-summary .card p, body.pdf-summary .card li{ font-size:9.5px !important; }
       body.pdf-summary .media-thumb{ max-height:95px; }
       body.pdf-summary hr.border-subtle{ margin:3px 0 !important; }
-      body.pdf-summary .shot-row .media-phone{ height:135px !important; }
+      body.pdf-summary .shot-row .media-phone{ height:190px !important; }
       body.pdf-summary .work-digest{ gap:0 !important; }
       /* サマリーではダイジェスト4行で代表させ、詳細折りたたみは完全版のみ収録 */
       body.pdf-summary #works details{ display:none !important; }
@@ -830,6 +845,7 @@
 
       <p class="text-muted hero-lead mb-2">
         複数のLLMを一つの画面で扱うFlutterアプリ「<a href="#works">Clage Cook</a>」、
+        AIが答えを教えない学習サービス「<a href="#works">Trivium</a>」（Next.js・LINE連携・稼働中）、
         Android ChromiumへのAI機能統合「<a href="#works">ChromiumforA</a>」、
         PythonとFFmpegによる動画編集DSL「<a href="#works">ScriptVEdit</a>」を開発しています。
         実装にはAIエージェントを利用し、私は要件・仕様・設計上の判断、生成物のレビュー、実機確認、採否の判断を担っています。
@@ -841,12 +857,13 @@
 
       <ul class="hero-evidence text-muted mb-3">
         <li>公開OSS: <a href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">Clage Cook</a>（CI・Windows/Android実機）・<a href="https://github.com/kojima8924/ScriptVEdit" target="_blank" rel="noopener noreferrer">ScriptVEdit</a>（コード・テスト・出力動画・性能計測）</li>
+        <li>稼働中のWebサービス: <a href="https://trivium.153.126.213.251.sslip.io" target="_blank" rel="noopener noreferrer">Trivium</a>（<a href="https://github.com/kojima8924/trivium-ai" target="_blank" rel="noopener noreferrer">公開リポジトリ</a>・テスト226件・LINE公式アカウント）</li>
         <li>Android実機開発: ChromiumforA（比較画像・操作動画、非公開）／受託開発: LINE応答AI（開発中・匿名掲載）</li>
         <li>査読論文: <a href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">Frontiers in Robotics and AI</a>（筆頭著者）</li>
       </ul>
 
       <div class="d-flex flex-wrap gap-2 hero-actions no-print">
-        <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（2ページ）</a>
+        <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（3ページ）</a>
         <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio.pdf" download>完全版PDF</a>
         <a class="btn btn-outline-info" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub</a>
         <a class="btn btn-outline-info" href="mailto:a.kojima8924@gmail.com">メール</a>
@@ -971,6 +988,128 @@
                         <div class="small text-muted mt-2 text-center">使用量ウィジェット</div>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </article>
+        </div>
+
+        <!-- Trivium -->
+        <div class="col-12">
+          <article id="trivium-card" class="card p-3">
+            <div class="print-keep">
+              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <h3 class="h5 mb-0 card-title">Trivium — AIが答えを教えない学習サービス（OSS・稼働中）</h3>
+                <div class="d-flex gap-2 flex-wrap">
+                  <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/trivium-ai" target="_blank" rel="noopener noreferrer">GitHub</a>
+                  <a class="btn btn-outline-info btn-sm" href="https://trivium.153.126.213.251.sslip.io" target="_blank" rel="noopener noreferrer">サイトを開く</a>
+                </div>
+              </div>
+              <div class="badges mt-2" role="group" aria-label="Triviumの使用技術">
+                <span class="tbadge c-mit">MIT License</span>
+                <span class="tbadge c-gray">Next.js 16</span>
+                <span class="tbadge c-gray">React 19</span>
+                <span class="tbadge c-gray">TypeScript</span>
+                <span class="tbadge c-gray">Prisma / PostgreSQL</span>
+                <span class="tbadge c-gray">LINE Messaging API</span>
+                <span class="tbadge c-gray">OpenAI API</span>
+                <span class="tbadge c-dify">Dify</span>
+                <span class="tbadge c-gray">Docker / GitHub Actions</span>
+              </div>
+
+              <p class="text-muted mt-2 mb-2">
+                READ（読む）・WRITE（書く）・LOGIC（論理）の短い課題に対し、AIが答えではなく<strong>一段だけヒント</strong>を返す学習サービスです。
+                入口はLINE公式アカウントで、Webはたまった記録を見るダッシュボード。Googleログイン・課題309問・実績61種を備え、さくらVPS上で稼働しています。
+              </p>
+
+              <div class="shot-row mt-3" role="group" aria-label="TriviumのWeb画面とLINE画面">
+                <div>
+                  <div class="media-phone">
+                    <img src="media/trivium-web-dashboard.jpg" alt="Triviumのダッシュボード。READ/WRITE/LOGICの到達レベルを三角形で表示し、XPとAIの寸評を並べた画面" loading="lazy">
+                  </div>
+                  <div class="small text-muted mt-2 text-center">Webのダッシュボード（スマホ表示）</div>
+                </div>
+                <div>
+                  <div class="media-phone">
+                    <img src="media/trivium-line-hint.jpg" alt="LINEで出題された問題に「ヒント」と送ると、担当AIのフミが答えではなく問い返しを一段だけ返している画面" loading="lazy">
+                  </div>
+                  <div class="small text-muted mt-2 text-center">LINE: 答えではなく一段だけヒント</div>
+                </div>
+              </div>
+            </div>
+
+            <ul class="work-digest mt-3">
+              <li><strong>難所:</strong> 能力の数値をLLMに決めさせると再現性と説明可能性が失われる。複合課題の失敗を全系統に配ると1問で無関係な系統まで下がる</li>
+              <li><strong>役割:</strong> スコアリング設計（到達レベルの決定論算出・ヒステリシス・失敗の帰属・Pythonゲート）などの中核アイデアと仕様を考案。実装はAIエージェントへ委任し、検証基準の策定・統合レビュー・本番検証を担当</li>
+              <li><strong>確認先:</strong> 公開リポジトリ（CI）・稼働中のサイト・LINE公式アカウント</li>
+              <li><strong>公開状況:</strong> MIT Licenseで公開。個人開発のプロトタイプ</li>
+            </ul>
+
+            <details class="mt-2">
+              <summary class="small fw-semibold">設計と検証の詳細・LINEの実機画面</summary>
+              <div class="mt-2">
+                <p class="text-muted small mb-1">
+                  <strong>設計判断:</strong>
+                  能力の数値は学習イベントから<strong>決定論的に再計算</strong>し、LLMが担当するのはヒント・講評・作問・会話だけにしました。
+                  選択式のように正誤が確定する課題では、LLMが「正解」と判定してもコード側が上書きします。
+                  レベルが1問ごとに上下しないよう昇格0.7・降格0.5のヒステリシスを置き、複合課題の失敗は「難易度と到達レベルの差が最大の1系統」にだけ帰属させます。
+                  出題のゆらぎは乱数ではなくハッシュ（利用者・系統・回答数）で決めるため、「次」を連打して問題を引き直すことはできず、テストで再現もできます。
+                </p>
+                <p class="text-muted small mb-1">
+                  <strong>AI生成物の検証:</strong>
+                  事前生成した課題は「作ったら採用」にせず、Python問題は<strong>実際にコードを実行</strong>して出力と選択肢を照合し、
+                  選択式は<strong>正解を伏せた別のAIが同じ答えに到達するか</strong>を確認、記述式は別役のAIが5段階で評価。
+                  「正解の選択肢だけが長い」といった解けてしまう手がかりも機械的に弾いています。計画250問に対し<strong>合格した246問だけを採用</strong>し、通らなかった4枠は空のまま残しました。
+                </p>
+                <p class="text-muted small mb-2">
+                  <strong>実装・検証:</strong>
+                  判断ロジックを純粋関数へ切り出したことで、<strong>DBもAPIキーも無しでテスト226件が0.5秒</strong>で走ります。
+                  CIは本番と同じDockerイメージを実際にビルドして起動し、マイグレーション適用とヘルスチェックまで確認します。
+                  LINEの応答期限に間に合わない生成処理は、先に短い返信を返してから裏で生成し、あとからプッシュする構成にしました。
+                </p>
+
+                <div class="shot-row" role="group" aria-label="TriviumのLINE実機画面">
+                  <div>
+                    <div class="media-phone">
+                      <img src="media/trivium-line-task.jpg" alt="LINEの出題画面。選択肢とヒント・パス・Webで解くのボタン、下部にREAD/WRITE/LOGICのリッチメニューが並ぶ" loading="lazy">
+                    </div>
+                    <div class="small text-muted mt-2 text-center">リッチメニューからその場で1問</div>
+                  </div>
+                  <div>
+                    <div class="media-phone">
+                      <img src="media/trivium-line-persona.jpg" alt="LINEでロゴスに能力分析を頼み、担当系統の観点で回答している画面。下部に4人格へ切り替えるボタンが並ぶ" loading="lazy">
+                    </div>
+                    <div class="small text-muted mt-2 text-center">4人格が担当系統で応答</div>
+                  </div>
+                </div>
+
+                <div class="media-grid mt-2 pdf-full-only">
+                  <div>
+                    <div class="media-thumb">
+                      <img src="media/trivium-web-logic.jpg" alt="TriviumのWeb版でLOGICの課題に取り組んでいる画面" loading="lazy">
+                    </div>
+                    <div class="small text-muted mt-2">Webでも課題・ヒント・採点が動く</div>
+                  </div>
+                  <div>
+                    <div class="media-thumb">
+                      <img src="media/trivium-line-material.jpg" alt="LINEで教材を尋ねると、案内役のミチが到達レベルを根拠に書籍3冊を理由つきで提案している画面" loading="lazy">
+                    </div>
+                    <div class="small text-muted mt-2">到達レベルを根拠に教材を提案</div>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="mt-2 pdf-full-only">
+              <summary class="small fw-semibold">1問を解くと何が起きるか（実機の流れ）</summary>
+              <div class="mt-2">
+                <div class="media-box">
+                  <div class="flow-shot mx-auto">
+                    <img src="media/trivium-line-flow.jpg" alt="LINEで難易度9の論理課題に正解し、実績解除・レベルアップ・XP加算・担当AIと案内役の寸評が続けて届く一連の流れ" loading="lazy">
+                  </div>
+                  <div class="small text-muted mt-2">
+                    出題 → 正解 → 実績解除 → レベルアップ（Lv.7→Lv.8）→ XP加算 → 担当AIと案内役の寸評。数値はすべて学習記録から決定論で計算している
                   </div>
                 </div>
               </div>
@@ -1245,7 +1384,9 @@
             <li><strong>DSL・ツール設計</strong> — <span>ScriptVEditの記法、素材キャッシュ、アンカー解決、並列化</span></li>
             <li><strong>Android / Chromium改造</strong> — <span>ChromiumforA</span></li>
             <li><strong>FFmpeg</strong> — <span>ScriptVEditの映像生成</span></li>
-            <li><strong>Dify / RAG</strong> — <span>受託のLINE応答AI</span></li>
+            <li><strong>Next.js / Prisma / PostgreSQL</strong> — <span>Triviumの設計（スコアリング・出題ロジック・データモデル）</span></li>
+            <li><strong>Dify / RAG</strong> — <span>受託のLINE応答AI、Triviumの教材検索</span></li>
+            <li><strong>LINE Messaging API</strong> — <span>Triviumの出題・会話、受託のLINE応答AI</span></li>
             <li><strong>CNN (Keras)</strong> — <span>EIT触覚センサ研究の再構成モデル</span></li>
             <li><strong>C++ / GLSL</strong> — <span>過去作品の制御・CG（倒立振子、レイトレーシング）</span></li>
           </ul>
@@ -1433,7 +1574,7 @@
       </div>
 
       <div class="d-flex flex-wrap gap-2 no-print">
-        <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（2ページ）</a>
+        <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（3ページ）</a>
         <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio.pdf" download>完全版PDF</a>
       </div>
 
@@ -1490,7 +1631,7 @@
       }
 
       // 画像・動画をマウス・タッチ・キーボードで拡大表示
-      document.querySelectorAll(".media-hero img, .media-hero video, .media-thumb img, .media-thumb video, .media-phone img, .cfa-shot img").forEach(el => {
+      document.querySelectorAll(".media-hero img, .media-hero video, .media-thumb img, .media-thumb video, .media-phone img, .cfa-shot img, .flow-shot img").forEach(el => {
         const label = el.getAttribute("alt") || el.getAttribute("aria-label") || "メディア";
         el.tabIndex = 0;
         el.setAttribute("role", "button");

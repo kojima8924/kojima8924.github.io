@@ -22,7 +22,7 @@
 セクション順は Hero → 代表作品 → 研究 → 受託案件 → 経歴・資格・主要技術 → 過去作品 → 連絡先。
 DOM順と視覚順は一致させています（CSS orderによる並べ替えはしない）。
 
-- Heroは制作物名（Clage Cook / ChromiumforA / ScriptVEdit）と確認手段（リポジトリ・CI・実機画面・論文・動画）を明示し、学歴は短いメタ情報として表示
+- Heroは制作物名（Clage Cook / Trivium / ChromiumforA / ScriptVEdit）と確認手段（リポジトリ・CI・実機画面・稼働中のサイト・論文・動画）を明示し、学歴は短いメタ情報として表示
 - 代表作品はケーススタディ形式（設計判断・担当・技術的な難所・計測条件）。AI利用の範囲は作品ごとに明示する（例: ScriptVEditはDSL仕様と各機構のアイデアをAIと相談しながら主に本人が決め、実装・テストケース生成・スクリーンショットによる出力確認はAIエージェントへ委任。エフェクト品質と生成動画の最終評価は本人）
 - 受託案件（美容クリニック向けLINE応答AI）は開発中・匿名・KPI非公開のため公開作品の後に配置
 - 過去作品10件は折りたたみの簡潔な一覧（サムネイル・技術・1文説明）
@@ -50,8 +50,8 @@ HTMLを確定した後、次のコマンドで2種類のPDFを更新します。
 
 ```powershell
 python make_pdf.py            # 両方生成（--mode summary|full で個別生成）
-# media/Akira_Kojima_Portfolio_Summary.pdf  採用向け（A4・2ページ・約0.4 MiB）
-# media/Akira_Kojima_Portfolio.pdf          完全版（A4・5ページ・約0.8 MiB）
+# media/Akira_Kojima_Portfolio_Summary.pdf  採用向け（A4・3ページ・約0.4 MiB）
+# media/Akira_Kojima_Portfolio.pdf          完全版（A4・7ページ・約1.0 MiB）
 ```
 
 スクリプトはローカルHTTPサーバーを一時的に起動し、アコーディオンを全展開して印刷対象画像の読込を確認してからA4 PDFを生成します。

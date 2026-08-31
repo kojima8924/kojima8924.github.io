@@ -249,6 +249,8 @@
       background: var(--imgbg);
     }
     .flow-shot img{ width:100%; height:auto; display:block; cursor: zoom-in; }
+    .flow-shot-row{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    .flow-shot-row .flow-shot{ flex:0 1 250px; align-self:flex-start; }
     /* Media */
     .nowrap{ white-space: nowrap; }
     .media-box{
@@ -594,13 +596,14 @@
       }
       .media-hero{
         aspect-ratio:16/9;
-        max-height:150px;
+        max-height:170px;
         border:1px solid #ccc !important;
         background:#fff !important;
       }
       .media-hero img, .media-hero video{ object-fit:contain; }
       /* 図枠内で画像を中央寄せ（枠右側に空白が残るのを防ぐ） */
-      .media-box .media-hero{ display:flex; align-items:center; justify-content:center; }
+      /* aspect-ratio×max-heightで要素幅が縮むため、枠内で要素ごと中央へ */
+      .media-box .media-hero{ display:flex; align-items:center; justify-content:center; margin-left:auto; margin-right:auto; }
       .media-thumb, .media-thumb img{
         border:1px solid #ccc !important;
         background:#fff !important;
@@ -643,7 +646,8 @@
       .media-phone img{ border-radius:5px !important; }
       .media-phone::after{ display:none !important; }
       .media-hero::after, .media-thumb::after{ display:none !important; }
-      .flow-shot{ max-width:150px !important; border:1px solid #ccc !important; }
+      .flow-shot{ max-width:300px !important; border:1px solid #ccc !important; }
+      .flow-shot-row{ break-inside:avoid; }
 
       /* 見出し */
       .section-title{
@@ -724,12 +728,12 @@
         page-break-before: always !important;
       }
       /* Triviumカードも新ページ開始（前ページ末尾に空枠の帯が残るのを防ぐ） */
-      #trivium-card{
+      body:not(.pdf-summary) #trivium-card{
         break-before: page !important;
         page-break-before: always !important;
       }
       /* ScriptVEditは新ページから開始（前ページ末尾に空の枠線断片が残るのを防ぐ） */
-      #scriptvedit-card{
+      body:not(.pdf-summary) #scriptvedit-card{
         break-before: page !important;
         page-break-before: always !important;
       }
@@ -782,13 +786,33 @@
       /* ── 採用向けサマリーPDF: 完全版のみの要素を隠す ── */
       body.pdf-summary .pdf-full-only{ display:none !important; }
       body.pdf-summary{ font-size:10.5px !important; }
-      body.pdf-summary .media-hero{ max-height:120px; }
       body.pdf-summary .media-phone{ height:120px !important; }
-      body.pdf-summary .cfa-shot{ height:150px !important; }
       body.pdf-summary .card p, body.pdf-summary .card li{ font-size:9.5px !important; }
-      body.pdf-summary .media-thumb{ max-height:95px; }
       body.pdf-summary hr.border-subtle{ margin:3px 0 !important; }
-      body.pdf-summary .shot-row .media-phone{ height:190px !important; }
+      body.pdf-summary .shot-row .media-phone{ height:150px !important; }
+      body.pdf-summary .media-hero{ max-height:90px; }
+      body.pdf-summary #clagecook-card .media-hero{ max-height:120px; }
+      body.pdf-summary .cfa-shot{ height:100px !important; }
+      body.pdf-summary .media-thumb{ max-height:85px; }
+      body.pdf-summary .card .h5{ margin-bottom:6px !important; }
+      body.pdf-summary .card p{ line-height:1.35 !important; }
+      body.pdf-summary .work-digest li{ line-height:1.28 !important; }
+      body.pdf-summary h2.h4{ margin-bottom:4px !important; }
+      body.pdf-summary section hr{ margin:2px 0 !important; }
+      body.pdf-summary .card p.mb-2{ margin-bottom:4px !important; }
+      body.pdf-summary #contact .mt-3{ margin-top:4px !important; }
+      body.pdf-summary .card{ padding:4px !important; }
+      body.pdf-summary .media-box{ padding:2px !important; }
+      body.pdf-summary .g-3{ --bs-gutter-y:0.25rem !important; }
+      body.pdf-summary .work-digest{ margin-top:8px !important; }
+      body.pdf-summary .small.text-muted.mt-2, body.pdf-summary figcaption{ margin-top:3px !important; }
+      /* サマリーでは補足要素を省く（フル版には残る） */
+      body.pdf-summary .summary-hide{ display:none !important; }
+      /* サマリーはカードが小さいので、分割せず丸ごと次ページへ送る（空枠断片も防げる） */
+      body.pdf-summary #works .card{
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
       body.pdf-summary .work-digest{ gap:0 !important; }
       /* サマリーではダイジェスト4行で代表させ、詳細折りたたみは完全版のみ収録 */
       body.pdf-summary #works details{ display:none !important; }
@@ -1024,7 +1048,7 @@
                 解いた記録は能力プロフィール（3分野の到達レベル）として蓄積され、XP・実績・連続日数で継続を後押しし、
                 到達レベルに応じた教材も提案します。Webのダッシュボードでは推移のグラフや設定を扱えます。
               </p>
-              <p class="text-muted small mb-2">
+              <p class="text-muted small mb-2 summary-hide">
                 Googleログイン、課題309問（難易度1〜10）、実績61種、教材カタログ145件、AIによる作問、
                 未達成の日のリマインド通知まで備え、さくらVPS上で稼働しています。
               </p>
@@ -1046,7 +1070,7 @@
             </div>
 
             <ul class="work-digest mt-3">
-              <li><strong>作ったもの:</strong> 出題・採点・ヒント・能力プロフィール・教材推薦・通知までを、LINEとWebの2つの入口から同じ学習ループで動かすサービス一式（認証・DB・デプロイまで通しで構築）</li>
+              <li class="summary-hide"><strong>作ったもの:</strong> 出題・採点・ヒント・能力プロフィール・教材推薦・通知までを、LINEとWebの2つの入口から同じ学習ループで動かすサービス一式（認証・DB・デプロイまで通しで構築）</li>
               <li><strong>難所:</strong> LINEの応答期限内に生成が終わらない／能力の数値が1問ごとに揺れる／AIが作った問題の品質が担保できない、の3つ</li>
               <li><strong>役割:</strong> サービスの企画と仕様、学習の測り方（到達レベルの決め方・出題難易度の上げ方）などの中核アイデアを考案。実装はAIエージェントへ委任し、検証基準の策定・統合レビュー・本番検証を担当</li>
               <li><strong>確認先:</strong> 公開リポジトリ（CI）・稼働中のサイト・LINE公式アカウント</li>
@@ -1118,8 +1142,13 @@
               <summary class="small fw-semibold">1問を解くと何が起きるか（実機の流れ）</summary>
               <div class="mt-2">
                 <div class="media-box">
-                  <div class="flow-shot mx-auto">
-                    <img src="media/trivium-line-flow.jpg" alt="LINEで難易度9の論理課題に正解し、実績解除・レベルアップ・XP加算・担当AIと案内役の寸評が続けて届く一連の流れ" loading="lazy">
+                  <div class="flow-shot-row">
+                    <div class="flow-shot">
+                      <img src="media/trivium-line-flow-1.jpg" alt="LINEに届いた難易度9の論理課題の問題文と、選択肢から回答を送るまで" loading="lazy">
+                    </div>
+                    <div class="flow-shot">
+                      <img src="media/trivium-line-flow-2.jpg" alt="正解判定と解説に続き、実績解除・レベルアップ（Lv.7→Lv.8）・XP加算・担当AIと案内役の寸評が届く" loading="lazy">
+                    </div>
                   </div>
                   <div class="small text-muted mt-2">
                     出題 → 回答 → 解説 → 実績解除 → レベルアップ（Lv.7→Lv.8）→ XP加算 → 担当AIと案内役の寸評まで、1問解くと一連の反応が返る
@@ -1182,7 +1211,7 @@
               認証情報の扱いに関する問題を再現テストで検出し、構造を変更したうえで同条件で再検証しました。
             </p>
 
-            <ul class="cfa-feature-list mt-2" aria-label="ChromiumforAの主な閲覧支援機能">
+            <ul class="cfa-feature-list mt-2 summary-hide" aria-label="ChromiumforAの主な閲覧支援機能">
               <li>Wikipedia要約・専用検索・関連項目</li>
               <li>ページ要約・選択文AI</li>
               <li>サイト別UI・動画再生補助</li>
@@ -1403,7 +1432,7 @@
             <li><strong>CNN (Keras)</strong> — <span>EIT触覚センサ研究の再構成モデル</span></li>
             <li><strong>C++ / GLSL</strong> — <span>過去作品の制御・CG（倒立振子、レイトレーシング）</span></li>
           </ul>
-          <p class="text-muted small mt-2 mb-0">
+          <p class="text-muted small mt-2 mb-0 summary-hide">
             Flutter/Dart（Clage CookのUI）は実装をAIエージェントへ委任し、UI仕様・生成物のレビュー・
             修正方針の決定とWindows/Android実機検証を担当。
             FastAPI（reference server）も実装は委任し、API設計・レビュー・結合動作の確認を担当しています。
@@ -1562,7 +1591,7 @@
             <div>
               <h3 class="h6 archive-title">Canny法（エッジ抽出）</h3>
               <p class="tech-line mb-1">Python</p>
-              <p class="text-muted small mb-2">ライブラリに頼らず、Canny法のエッジ抽出処理を一から実装。左が入力、右が出力。</p>
+              <p class="summary-hide text-muted small mb-2">ライブラリに頼らず、Canny法のエッジ抽出処理を一から実装。左が入力、右が出力。</p>
             </div>
           </div>
 

@@ -50,12 +50,13 @@ HTMLを確定した後、次のコマンドで2種類のPDFを更新します。
 
 ```powershell
 python make_pdf.py            # 両方生成（--mode summary|full で個別生成）
-# media/Akira_Kojima_Portfolio_Summary.pdf  採用向け（A4・3ページ・約0.4 MiB）
-# media/Akira_Kojima_Portfolio.pdf          完全版（A4・7ページ・約1.0 MiB）
+# media/Akira_Kojima_Portfolio_Summary.pdf  採用向け（A4・2ページ・約0.4 MiB）
+# media/Akira_Kojima_Portfolio.pdf          完全版（A4・7ページ・約1.3 MiB）
 ```
 
 スクリプトはローカルHTTPサーバーを一時的に起動し、アコーディオンを全展開して印刷対象画像の読込を確認してからA4 PDFを生成します。
 採用向けは `body.pdf-summary` を付与し、`.pdf-full-only` の要素（受託案件・過去作品・補足ギャラリー等）を除外した同一DOMからの出力です。
+さらに `summary-hide` クラスの補足要素（数値概要・機能リスト・AI委任注記など）も採用向けでは省き、A4 2ページに収めています。
 生成後、埋め込み画像を150dpi・JPEG品質80へ再圧縮し、実ページ数を表示します。
 `--source`、`--output`、`--timeout` で入出力と待ち時間を変更できます。
 

@@ -1,18 +1,12 @@
 {
- "light": {
-  "violations": [],
-  "testEngine": {
-   "name": "axe-core",
-   "version": "4.10.2"
-  },
-  "timestamp": "2026-08-31T10:03:00.572Z"
- },
  "dark": {
+  "axe_version": "4.10.2",
   "violations": [],
-  "testEngine": {
-   "name": "axe-core",
-   "version": "4.10.2"
-  },
-  "timestamp": "2026-08-31T10:03:01.703Z"
+  "violation_count": 0
+ },
+ "light": {
+  "axe_version": "4.10.2",
+  "violations": [],
+  "violation_count": 0
  }
 }

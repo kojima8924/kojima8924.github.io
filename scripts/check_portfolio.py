@@ -41,7 +41,7 @@ TEXT_FORBIDDEN_PATTERNS = [
     (r"(?:AtCoder[^。]{0,12}|paiza[^。]{0,20})を?取得", "AtCoder/paizaを資格のように「取得」と表現している"),
 ]
 TEXT_REQUIRED_STRINGS = [
-    ("AtCoder 水色（最高レーティング1440）", "AtCoder実績"),
+    ("AtCoder 水色（最高レーティング1440・参加者上位6.27%）", "AtCoder実績"),
     ("paizaスキルチェック Sランク", "paiza実績"),
     ("従来法の約22%まで低減", "研究の22%表現"),
     ("最大19.2%低減", "HWHMの表現"),

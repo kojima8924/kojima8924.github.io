@@ -152,6 +152,66 @@ PDF_METADATA = {
 }
 
 
+# 再圧縮しない画像（資格のデジタルバッジ。AWS の利用ルール上、画質を落とす改変もしない）
+UNALTERED_IMAGES = [Path(__file__).resolve().parent / "media" / "badge-aws-ai-practitioner.png"]
+
+
+def _find_unaltered_images(document) -> list:
+    """UNALTERED_IMAGES と同じ寸法・アルファ付きの埋め込み画像を (ページ番号, xref, 元ファイル) で返す。"""
+    import pymupdf
+
+    targets = []
+    for path in UNALTERED_IMAGES:
+        if path.exists():
+            pix = pymupdf.Pixmap(str(path))
+            targets.append((path, pix.width, pix.height))
+    found = []
+    for page in document:
+        for info in page.get_images(full=True):
+            xref, smask, width, height = info[0], info[1], info[2], info[3]
+            for path, tw, th in targets:
+                if smask and (width, height) == (tw, th):
+                    found.append((page.number, xref, path))
+    return found
+
+
+# 帯図の中のサービスロゴ（Dify など 200px 前後の小さな画像）は、再圧縮で 150dpi 基準に縮めると
+# 数ピクセルまで潰れる（2026-09-19 に Dify ロゴが 4×4px になったのを確認）。小さい画像は元のまま戻す
+SMALL_IMAGE_MAX_PX = 256
+
+
+def _find_small_images(document) -> list:
+    """アルファを持たない小さな埋め込み画像を (ページ番号, 配置矩形, 元の画像バイト列) で返す。
+
+    rewrite_images は画像を新しい xref に置き換えることがあるので、再圧縮後は xref ではなく
+    ページ上の配置矩形で同じ画像を探して戻す。
+    """
+    found = []
+    cache = {}
+    for page in document:
+        for info in page.get_image_info(xrefs=True):
+            xref = info.get("xref") or 0
+            if xref <= 0 or max(info["width"], info["height"]) > SMALL_IMAGE_MAX_PX:
+                continue
+            if document.xref_get_key(xref, "SMask")[0] != "null":
+                continue
+            if xref not in cache:
+                extracted = document.extract_image(xref)
+                cache[xref] = extracted.get("image") if extracted else None
+            if cache[xref]:
+                found.append((page.number, tuple(round(v, 1) for v in info["bbox"]), cache[xref]))
+    return found
+
+
+def _restore_small_images(document, small: list) -> None:
+    for page_number, bbox, data in small:
+        page = document[page_number]
+        for info in page.get_image_info(xrefs=True):
+            if tuple(round(v, 1) for v in info["bbox"]) == bbox and (info.get("xref") or 0) > 0:
+                page.replace_image(info["xref"], stream=data)
+                break
+
+
 def _compress_pdf_images(output: Path, mode: str = "full") -> int:
     """埋め込み画像を印刷十分な解像度へ再圧縮し、配布しやすいサイズに抑える。
 
@@ -179,6 +239,8 @@ def _compress_pdf_images(output: Path, mode: str = "full") -> int:
             metadata = dict(document.metadata or {})
             metadata.update(PDF_METADATA.get(mode, PDF_METADATA["full"]))
             document.set_metadata(metadata)
+            keep = _find_unaltered_images(document)
+            small = _find_small_images(document)
             document.rewrite_images(
                 dpi_threshold=180,
                 dpi_target=150,
@@ -186,6 +248,9 @@ def _compress_pdf_images(output: Path, mode: str = "full") -> int:
                 lossy=True,
                 lossless=True,
             )
+            for page_number, xref, path in keep:
+                document[page_number].replace_image(xref, filename=str(path))
+            _restore_small_images(document, small)
             document.ez_save(str(temporary_path))
 
         size = temporary_path.stat().st_size

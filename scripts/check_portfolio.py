@@ -24,11 +24,18 @@ FORBIDDEN_PATTERNS = [
     (r"aisum-|ai-summary|AIによる要約", "AI要約関連の文字列が残存"),
     (r"\border-(?:1|2|3|4|5|last|first)\b", "CSS orderクラス（DOM順と視覚順の乖離）"),
     (r"本人の設計|本人の責任範囲|発展・証拠・状態", "テンプレート的な旧ラベルが残存"),
-    # 22%表現は文脈依存のためFORBIDDENでは扱わず、mainで前後文脈を見て検査する
+    # 21%（旧22%）表現は文脈依存のためFORBIDDENでは扱わず、mainで前後文脈を見て検査する
     (r"ScriptVedit|Scriptvedit|ChromiumForA|chromiumfora(?![-_])", "プロジェクト名の表記揺れ"),
     (r">\s*Repo\s*<|>\s*Video\s*<|>\s*Private\s*<|>\s*Print\s*<", "英語ラベル（GitHub/デモ動画/非公開へ統一）"),
     (r"課題設定から実機検証まで|使い続けられる形|鵜呑みにせず|単なるデモではなく", "抽象的な包括表現が残存"),
     (r"ダメ出し", "口語的表現（レビュー・修正方針の指示 等へ）"),
+    # 2026-09-19 の外部レビューと再調査で「書かない」と決めた表現（alt も対象にするため raw HTML に掛ける。根拠は slide の facts.md）
+    (r"安全コーパス|AI沈黙|沈黙保証|不可逆化|外部LLMなしで処理", "受託案件の強すぎる表現（facts.md の言い換えを使う）"),
+    (r"切替条件を見直|発火を抑制|ナレッジを整理して(?:網羅|改善)|正答率", "受託案件の改善理由・指標の誤った書き方（検索設定の変更・確認項目の網羅率）"),
+    (r"API契約|イベント契約", "Clage Cook の「契約」表記（API仕様・統一イベント形式へ）"),
+    (r"最大\s*19\.2|26問|1秒以内|その後も改善|(?<!バッジ)(?<!学習実績バッジ)実績\s*61\s*種", "研究・Trivium の誤読されやすい表現"),
+    (r"倍率が分割数に対して過大|可視区間トリムが抜けていたと特定", "ScriptVEdit の O(N²) を本人が発見したように読める表現"),
+    (r"クラウドLLM|クラウド\s*LLM|再監査", "受託案件の匿名化の説明は、正規表現とローカルLLMの段階に限る"),
 ]
 
 # 表示テキスト（script/style以外）にのみ適用する検査。
@@ -41,10 +48,11 @@ TEXT_FORBIDDEN_PATTERNS = [
     (r"(?:AtCoder[^。]{0,12}|paiza[^。]{0,20})を?取得", "AtCoder/paizaを資格のように「取得」と表現している"),
 ]
 TEXT_REQUIRED_STRINGS = [
-    ("AtCoder 水色（最高レーティング1440・参加者上位6.27%）", "AtCoder実績"),
+    ("AtCoder 水色（最高レーティング1440。2026年9月時点で上位6.27%）", "AtCoder実績（6.27%は現在レーティングでの順位）"),
     ("paizaスキルチェック Sランク", "paiza実績"),
-    ("従来法の約22%まで低減", "研究の22%表現"),
-    ("最大19.2%低減", "HWHMの表現"),
+    ("最高レーティング1920", "paiza最高レーティング"),
+    ("従来法の約21%まで低減", "研究の21%表現"),
+    ("19.2%低減", "HWHMの表現"),
     ("ScriptVEdit", "公式プロジェクト名"),
     ("基本情報技術者 取得（2026年8月）", "資格表記"),
     ("AWS Certified AI Practitioner 取得（2026年9月）", "資格表記"),
@@ -57,16 +65,17 @@ DOC_FORBIDDEN_PATTERNS = [
     (r"ダメ出し", "口語的表現"),
 ]
 DOC_REQUIRED_STRINGS = [
-    ("約22%まで低減", "研究の22%表現"),
+    ("約21%まで低減", "研究の21%表現"),
     ("ScriptVEdit", "公式プロジェクト名"),
 ]
 
 # 表示テキストとして必要な語（存在チェック）
 REQUIRED_STRINGS = [
-    ("従来法の約22%まで低減", "研究の22%表現"),
-    ("最大19.2%低減", "HWHMの表現"),
+    ("従来法の約21%まで低減", "研究の21%表現"),
+    ("19.2%低減", "HWHMの表現"),
     ("ScriptVEdit", "公式プロジェクト名"),
     ("a.kojima8924@gmail.com", "メール導線"),
+    ("credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7", "AWS認定の検証リンク（Credly）"),
     ("github.com/kojima8924", "GitHub導線"),
     ("frobt.2023.1157911", "論文リンク"),
 ]
@@ -183,11 +192,17 @@ def main() -> int:
         if needle not in visible_text:
             errors.append(f"[表示テキスト] 必須文字列が見つからない（{reason}）: {needle!r}")
 
-    # 7b) 22%の誤解表現: 「…22%低減」は「約22%まで低減」の形以外を弾く
-    for m in re.finditer(r"22[%％](低減|削減|改善)", html):
+    # 7b) 21%の誤解表現: 「…21%低減」は「約21%まで低減」の形以外を弾く（旧表記の22%も同様）
+    for m in re.finditer(r"2[12][%％](低減|削減|改善)", html):
         context = html[max(0, m.start() - 8): m.end()]
         if "まで" not in context and "に低減" not in context:
             errors.append(f"『22%低減』型の誤解表現: …{context}…")
+
+    # 7c) 資格の検証URL（Credly）は JSON-LD・Hero・バッジ・検証リンクの4箇所で完全一致させる
+    credly_urls = re.findall(r"https?://(?:www\.)?credly\.com/[^\s\"'<>]+", html)
+    expected_credly = "https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url"
+    if set(credly_urls) != {expected_credly} or len(credly_urls) != 4:
+        errors.append(f"Credly の検証URLが不一致または箇所数が違う（4箇所の完全一致を期待）: {sorted(set(credly_urls))} ×{len(credly_urls)}")
 
     # 8) 必須文字列
     for needle, reason in REQUIRED_STRINGS:
@@ -208,7 +223,7 @@ def main() -> int:
         for needle, reason in DOC_REQUIRED_STRINGS:
             if needle not in doc:
                 errors.append(f"[{doc_name}] 必須文字列が見つからない（{reason}）: {needle!r}")
-        for m in re.finditer(r"22[%％](低減|削減|改善)", doc):
+        for m in re.finditer(r"2[12][%％](低減|削減|改善)", doc):
             context = doc[max(0, m.start() - 8): m.end()]
             if "まで" not in context and "に低減" not in context:
                 errors.append(f"[{doc_name}] 『22%低減』型の誤解表現: …{context}…")

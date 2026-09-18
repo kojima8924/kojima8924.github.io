@@ -13,6 +13,10 @@
 - `make_pdf.py`: 公開HTMLからA4 PDFを生成するスクリプト（採用向け/完全版の2モード）
 - `make_ogp.py`: HTML/CSSだけで1200×630のOGP画像を生成するスクリプト
 - `scripts/check_portfolio.py`: リンク・alt・表記揺れ等の自動検査
+- `scripts/import_figures.py`: 帯図（`media/fig/*.svg`）を slide リポジトリの PDF から変換して取り込む
+  （図の正本は `C:\code\slide\cases\2026-09-18_CV・ポートフォリオ図版\` と `…\2026-09-18_履歴書用_受託案件構成図\`。
+  文言はそこにある `facts.md`（各リポジトリから根拠つきで集めた事実シート）の範囲だけ。図を直すときは slide 側を直して
+  `slide.py check` で PDF を作り直し、このスクリプトを再実行する。SVG は文字をパス化してあるので閲覧環境のフォントに依存しない）
 - `docs/`: 検証ログ（`verification/`）と、外部ページで対応する項目のメモ
 - `requirements-pdf.txt`: PDF生成用のPython依存
 - `proposal/`: 次の更新を試すローカル作業版。誤公開防止のためGit管理対象外
@@ -24,10 +28,22 @@ DOM順と視覚順は一致させています（CSS orderによる並べ替え�
 
 - Heroは制作物名（Clage Cook / Trivium / ChromiumforA / ScriptVEdit）と確認手段（リポジトリ・CI・実機画面・稼働中のサイト・論文・動画）を明示し、学歴は短いメタ情報として表示
 - 代表作品はケーススタディ形式（設計判断・担当・技術的な難所・計測条件）。AI利用の範囲は作品ごとに明示する（例: ScriptVEditはDSL仕様と各機構のアイデアをAIと相談しながら主に本人が決め、実装・テストケース生成・スクリーンショットによる出力確認はAIエージェントへ委任。エフェクト品質と生成動画の最終評価は本人）
-- 受託案件（美容クリニック向けLINE応答AI）は開発中・匿名・KPI非公開のため公開作品の後に配置
+- 長文を読まずに分かるよう、Clage Cook / Trivium / ScriptVEdit / 研究 / 受託案件（構成＋改善実績）/ 経歴に帯図（`.fig-band`）を置く。
+  帯図は幅 1280px 基準で作ってあり、狭い画面では横スクロール、タップでライトボックス拡大。採用向けPDF（2ページ）にも帯図を載せ、
+  代わりに帯図と重複する実機画面（Clage Cook / ScriptVEdit のヒーロー画像、Trivium の実機2枚、研究の図2枚）と重複段落（`summary-hide`）を省く
+- 受託案件（美容クリニック向けLINE応答AI）は開発中・匿名のため公開作品の後に配置。施設を特定しない範囲で掲載許可を得ており、
+  顧客名・画面・利用者データは非公開、技術的な改善数値（応対14,051件の匿名化、7設問・確認項目26点の回答網羅率 50%→81%、
+  7設問の平均応答時間 12.4→6.5秒、pytest 395件 など。限定語は facts.md のとおり落とさない）は掲載する
 - 過去作品10件は折りたたみの簡潔な一覧（サムネイル・技術・1文説明）
 - 技術バッジはshields.io画像を使わず、CSS製の自前バッジで表示（外部通信なし・PDF生成が安定・代表作品と研究に適用。過去作品一覧はテキスト表記）
-- 研究数値の表記は「従来法の約22%まで低減」「HWHMを最大19.2%低減」で統一
+- 資格は AWS Certified AI Practitioner のデジタルバッジ（`media/badge-aws-ai-practitioner.png`、Credly 発行の画像を縮小しただけで加工しない）を
+  経歴セクションに置き、Credly の検証ページ（https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url ）へリンク。
+  Hero の確認手段と JSON-LD（`hasCredential`）にも同じURLを載せる。紙面ではバッジ画像そのものがリンク（テキストの「Credlyで検証」は画面だけ）
+- 文言の事実関係は slide の `facts.md`（各リポジトリを根拠つきで調べた事実シート）に合わせる。2026-09-19 の外部レビューと再調査で、
+  受託の網羅率改善の原因（検索設定の変更）・開発段階（試作環境・本番導入前）、ScriptVEdit の O(N²) の特定経緯（AI併用の監査）、
+  Trivium の開発期間（初回コミットから約21時間）、Clage Cook の途中回答の扱い、AtCoder の 6.27% が現在レーティングでの順位であることを直した
+- 研究数値の表記は「従来法の約21%まで低減」「最悪領域のHWHMを19.2%低減（16電極のシミュレーション）」で統一
+  （2026-09-17 に生データから再計算して 22%→21% に改めた。経緯と根拠は CV リポジトリの README）
 - SNS共有画像は生成AIを使わず、HTML/CSSから決定的に描画
 
 ## ローカル確認
@@ -50,8 +66,8 @@ HTMLを確定した後、次のコマンドで2種類のPDFを更新します。
 
 ```powershell
 python make_pdf.py            # 両方生成（--mode summary|full で個別生成）
-# media/Akira_Kojima_Portfolio_Summary.pdf  採用向け（A4・2ページ・約0.4 MiB）
-# media/Akira_Kojima_Portfolio.pdf          完全版（A4・7ページ・約1.3 MiB）
+# media/Akira_Kojima_Portfolio_Summary.pdf  採用向け（A4・2ページ・約0.9 MiB。帯図入り・受託案件の構成図入り・実機画面は一部省略）
+# media/Akira_Kojima_Portfolio.pdf          完全版（A4・9ページ・約1.9 MiB。帯図＋実機画面。受託案件は新ページから）
 ```
 
 スクリプトはローカルHTTPサーバーを一時的に起動し、アコーディオンを全展開して印刷対象画像の読込を確認してからA4 PDFを生成します。
@@ -81,7 +97,8 @@ AtCoder / paizaの表記は表示テキストにのみ適用し、`atcoder.jp` /
 
 ## 更新時の確認
 
-1. HTMLとPDF（2種類）の内容を同じ更新で揃える
+1. HTMLとPDF（2種類）の内容を同じ更新で揃える。帯図を変えたときは slide 側で PDF を作り直してから `python scripts/import_figures.py`
+   （`--check` で slide 側の PDF が SVG より新しい図を列挙できる）
 2. `python scripts/check_portfolio.py` を通す
 3. PC／スマホ、dark／light、印刷時の改ページを確認する
 4. 作品画像、GitHub、論文、動画のリンク切れがないか確認する

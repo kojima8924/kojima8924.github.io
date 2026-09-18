@@ -52,7 +52,22 @@
         "https://github.com/kojima8924"
       ],
       "email": "a.kojima8924@gmail.com",
-      "knowsAbout": ["Python", "C++", "生成AI", "AIエージェント", "機械学習", "画像処理", "制御工学", "CG"]
+      "knowsAbout": ["Python", "C++", "生成AI", "AIエージェント", "機械学習", "画像処理", "制御工学", "CG"],
+      "hasCredential": [
+        {
+          "@type": "EducationalOccupationalCredential",
+          "name": "AWS Certified AI Practitioner",
+          "credentialCategory": "certification",
+          "recognizedBy": { "@type": "Organization", "name": "Amazon Web Services" },
+          "url": "https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url"
+        },
+        {
+          "@type": "EducationalOccupationalCredential",
+          "name": "基本情報技術者",
+          "credentialCategory": "certification",
+          "recognizedBy": { "@type": "Organization", "name": "独立行政法人 情報処理推進機構（IPA）" }
+        }
+      ]
     }
   }
   </script>
@@ -171,6 +186,7 @@
       display:grid; gap:.25rem;
       font-size:.95rem;
     }
+    .hero-lead a, .hero-evidence a{ color: var(--accent); }   /* Bootstrap 既定の #0d6efd はコントラスト 4.27（AA 未満） */
     .hero-evidence li::before{
       content:"—";
       color:var(--accent);
@@ -258,6 +274,25 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 10px;
+    }
+    /* 帯図（slide リポジトリで作った構成図。media/fig/*.svg、文字はパス化済み）
+       白地の図なので dark/light どちらでも白い帯として置く。幅が狭い画面では横スクロールで文字サイズを保つ */
+    .fig-band{
+      margin: 12px 0 0;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 10px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .fig-band img{ width:100%; height:auto; display:block; cursor: zoom-in; }
+    /* 帯図の枠は白地なので、キャプションはテーマに関係なく濃いグレー（dark の --muted #b9c7d8 だと白地でコントラスト 1.71） */
+    .fig-band figcaption, .fig-band figcaption.text-muted{ margin-top:6px; color:#4a5a70 !important; }
+    .fig-band .fig-hint{ display:none; }
+    @media (max-width: 767.98px){
+      .fig-band img{ min-width: 760px; }
+      .fig-band .fig-hint{ display:inline; }
     }
     .media-hero{
       aspect-ratio: 16 / 9;
@@ -409,6 +444,15 @@
     }
     .timeline .yr{ color:var(--accent); font-weight:700; white-space:nowrap; }
     .timeline .ev{ color:var(--muted); }
+    /* 資格のデジタルバッジ（Credly の検証ページへリンク。バッジ画像は加工しない＝AWS のバッジ利用ガイドライン） */
+    .cert-row{ display:flex; gap:12px; align-items:center; }
+    .cert-badge{ flex:0 0 auto; display:block; line-height:0; border-radius:8px; background:#fff; padding:4px; }   /* AWS のルール「白またはごく明るい背景に置く」をダークテーマでも守る */
+    .cert-badge img{ width:76px; height:76px; display:block; }
+    .cert-row a:not(.cert-badge){ color: var(--accent); }
+    .cert-names{ word-break: keep-all; }   /* 狭い画面で「（2026 / 年9月）」のように語中で割れないよう、空白でだけ折り返す */   /* Bootstrap 既定の #0d6efd は背景 #f7f9fc でコントラスト 4.26（AA 未満） */
+    .media-thumb img.fit-contain{ object-fit: contain; }   /* グラフは切らずに全体を見せる */
+    /* 採用向けPDFだけに出す要素（Web・完全版では帯図で代替） */
+    .summary-only{ display:none; }
 
     /* 技術と作品の対応リスト */
     .stack-map{
@@ -554,6 +598,10 @@
       .hero .lead{ font-size:11px !important; line-height:1.4 !important; margin-bottom:4px !important; }
       .hero-lead, .hero-degree{ font-size:10px !important; }
       .hero-evidence{ font-size:9.5px !important; gap:1px !important; }
+      .cert-row{ gap:8px !important; }
+      /* 紙面ではバッジ画像そのものが Credly へのリンク（テキストの「Credlyで検証」は画面だけ） */
+      .cert-badge img{ width:13mm !important; height:13mm !important; }
+      body.pdf-summary #career .timeline{ margin-bottom:4px !important; }
       .hero .btn{ font-size:9px !important; padding:1px 5px !important; min-height:auto !important; }
 
       /* Bootstrapの2カラム維持 */
@@ -577,8 +625,9 @@
         break-inside: avoid;
         page-break-inside: avoid;
       }
-      /* 長いケーススタディカードは内部分割を許可 */
-      #works .card{
+      /* 長いケーススタディカードは内部分割を許可（受託案件も帯図2枚で長いので完全版では分割可。figure 単位は分割しない） */
+      #works .card,
+      body:not(.pdf-summary) #client .card{
         break-inside: auto !important;
         page-break-inside: auto !important;
       }
@@ -648,6 +697,10 @@
       .media-hero::after, .media-thumb::after{ display:none !important; }
       .flow-shot{ max-width:300px !important; border:1px solid #ccc !important; }
       .flow-shot-row{ break-inside:avoid; }
+      /* LINE実機フロー2枚は縦長なので印刷では高さを抑え、前のページの残りに入るようにする（2026-09-18） */
+      .flow-shot img{ max-height:110mm !important; width:auto !important; max-width:100%; margin:0 auto; }
+      /* 画像2枚とキャプションを一体で扱う（キャプションだけ次ページへ落ちて1ページ浪費するのを防ぐ） */
+      #trivium-card details .media-box{ break-inside:avoid !important; page-break-inside:avoid !important; }
 
       /* 見出し */
       .section-title{
@@ -721,14 +774,14 @@
       }
       /* 開発背景の実機画像は補足なので印刷では小さく（ブロックを1ページに収める） */
       #clagecook-background .media-phone{ height:105px !important; }
-      /* 完全版ではChromiumforAも新ページ開始（前ページ末尾の空枠断片を防ぐ）。
-         サマリーはp1に収まるため対象外 */
-      body:not(.pdf-summary) #chromiumfora-card{
+      /* 帯図を入れて各カードが伸びたので（2026-09-18）、Trivium の強制改ページは外して .print-keep（見出し＋帯図＋実機画面）の
+         単位で流し込む。ChromiumforA は外すと前ページ末尾に空枠断片（71mm）が出たので新ページ開始のまま */
+      /* 受託案件は図2枚を含み途中で切れると空枠断片が残るので、完全版では見出しごと新ページから（2026-09-19） */
+      body:not(.pdf-summary) #client{
         break-before: page !important;
         page-break-before: always !important;
       }
-      /* Triviumカードも新ページ開始（前ページ末尾に空枠の帯が残るのを防ぐ） */
-      body:not(.pdf-summary) #trivium-card{
+      body:not(.pdf-summary) #chromiumfora-card{
         break-before: page !important;
         page-break-before: always !important;
       }
@@ -737,11 +790,7 @@
         break-before: page !important;
         page-break-before: always !important;
       }
-      /* 過去作品を4〜5ページへ均等配分（最終ページの大きな空白を防ぐ） */
-      #archive .archive-item:nth-of-type(6){
-        break-before: page !important;
-        page-break-before: always !important;
-      }
+      /* 過去作品は流し込み（帯図で前のセクションが伸びたので、6件目の強制改ページは外した。2026-09-18） */
       /* カード内の折りたたみ: 印刷では開いた状態で小見出し化 */
       .card details > summary{
         font-size:10px !important;
@@ -803,11 +852,22 @@
       body.pdf-summary #contact .mt-3{ margin-top:4px !important; }
       body.pdf-summary .card{ padding:4px !important; }
       body.pdf-summary .media-box{ padding:2px !important; }
+      /* 採用向け2ページも帯図を載せる。帯図が説明を担うので、重複する実機画面（Clage Cook / ScriptVEdit のヒーロー画像、
+         Trivium の実機2枚、研究の図2枚）は省き、ChromiumforA の比較画面は残す */
+      body.pdf-summary .fig-band{ padding:2px 4px !important; margin-top:4px !important; }
+      body.pdf-summary .fig-band img{ width:85% !important; margin:0 auto; }
+      body.pdf-summary .fig-band figcaption{ display:none !important; }
+      body.pdf-summary #works .media-box{ display:none !important; }
+      body.pdf-summary #trivium-card .shot-row{ display:none !important; }
+      body.pdf-summary #research .card > .row > .col-md-5{ display:none !important; }
+      body.pdf-summary #research .card > .row > .col-md-7{ flex:0 0 100% !important; width:100% !important; max-width:100% !important; }
       body.pdf-summary .g-3{ --bs-gutter-y:0.25rem !important; }
       body.pdf-summary .work-digest{ margin-top:8px !important; }
       body.pdf-summary .small.text-muted.mt-2, body.pdf-summary figcaption{ margin-top:3px !important; }
       /* サマリーでは補足要素を省く（フル版には残る） */
       body.pdf-summary .summary-hide{ display:none !important; }
+      /* サマリーだけに出す要素（Webと完全版では帯図が代わりに出る） */
+      body.pdf-summary .summary-only{ display:grid !important; }
       /* サマリーはカードが小さいので、分割せず丸ごと次ページへ送る（空枠断片も防げる） */
       body.pdf-summary #works .card{
         break-inside: avoid !important;
@@ -872,11 +932,11 @@
         LINEで1日3問の学習サービス「<a href="#works">Trivium</a>」（Next.js・LINE連携・稼働中）、
         Android ChromiumへのAI機能統合「<a href="#works">ChromiumforA</a>」、
         PythonとFFmpegによる動画編集DSL「<a href="#works">ScriptVEdit</a>」を開発しています。
-        実装にはAIエージェントを利用し、私は要件・仕様・設計上の判断、生成物のレビュー、実機確認、採否の判断を担っています。
+        実装にはAIエージェントを利用し、私は要件・仕様・設計上の判断、生成物のレビュー（主に仕様・画面・動作の確認。必要に応じてコードも確認）、実機確認、採否の判断を担っています。
         具体的な分担は各作品に記載しています。
       </p>
       <p class="hero-degree mb-3">
-        東京大学 工学部 精密工学科卒・同大学院 修士課程修了（博士課程でEIT触覚センサを研究、2026年3月退学）。基本情報技術者・AWS AI Practitioner。
+        東京大学 工学部 精密工学科卒・同大学院 修士課程修了（博士課程でEIT触覚センサを研究、2026年3月退学）。基本情報技術者・AWS Certified AI Practitioner。
       </p>
 
       <ul class="hero-evidence text-muted mb-3">
@@ -884,10 +944,11 @@
         <li>稼働中のWebサービス: <a href="https://trivium.153.126.213.251.sslip.io" target="_blank" rel="noopener noreferrer">Trivium</a>（<a href="https://github.com/kojima8924/trivium-ai" target="_blank" rel="noopener noreferrer">公開リポジトリ</a>・テスト226件・LINE公式アカウント）</li>
         <li>Android実機開発: ChromiumforA（比較画像・操作動画、非公開）／受託開発: LINE応答AI（開発中・匿名掲載）</li>
         <li>査読論文: <a href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">Frontiers in Robotics and AI</a>（筆頭著者）</li>
+        <li>資格: <a href="https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url" target="_blank" rel="noopener noreferrer">AWS Certified AI Practitioner</a>（Credlyのデジタルバッジで検証可）・基本情報技術者</li>
       </ul>
 
       <div class="d-flex flex-wrap gap-2 hero-actions no-print">
-        <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（3ページ）</a>
+        <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（2ページ）</a>
         <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio.pdf" download>完全版PDF</a>
         <a class="btn btn-outline-info" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub</a>
         <a class="btn btn-outline-info" href="mailto:a.kojima8924@gmail.com">メール</a>
@@ -931,6 +992,11 @@
               APIキーは利用者自身のもの（BYOK）を使います。
             </p>
 
+            <figure class="fig-band">
+              <img src="media/fig/clagecook-flow.svg" alt="Clage Cookの会議フロー図。質問を1回入力すると4社（Claude・Gemini・ChatGPT・Grok）へ並列送信し、比較、相互批評（DEBATE）、統合回答（1画面）の順に進む。補足: API差の吸収（4社で異なるエンドポイント・認証・応答形式を共通の要求／回答形式に正規化）、耐障害（一部のAIが失敗しても完了した回答だけで統合し、途中で切れた回答は表示・保存するが統合に混ぜない）、BYOK（APIキーはOSのセキュアストレージに保存し通常設定と保存先を分離、Direct接続は履歴を端末内だけに置く）、進行配信（統一イベント形式でUIへ配信、サーバ経由時はHTTP SSE）。Flutter製・公開ベータ。実装はAIへ委任し、仕様・アーキテクチャの決定、生成物への修正指示、Windows / Android実機での確認を担当" loading="lazy">
+              <figcaption class="small text-muted">会議の流れと設計のポイント<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
+            </figure>
+
             <div class="media-box">
               <div class="media-hero">
                 <img src="media/clagecook-oss-windows.png" alt="Clage Cook デスクトップ版で4つのAIの回答と統合回答を表示した画面" loading="lazy">
@@ -941,10 +1007,10 @@
             </div>
 
             <ul class="work-digest mt-3">
-              <li><strong>難所:</strong> 4社で異なるAPI契約（認証ヘッダ・エンドポイント・応答形式）の吸収と、一部のAIが失敗しても完了済み回答を保持する統合フロー</li>
-              <li><strong>役割:</strong> 仕様・設計判断・生成物のレビュー・実機検証（Flutter/DartのUI実装はAIエージェントへ委任）</li>
+              <li><strong>難所:</strong> 4社で異なるAPI仕様（エンドポイント・認証ヘッダ・応答形式）の吸収と、一部のAIが失敗しても完了した回答だけで統合へ進むフロー（途中で切れた回答は統合に混ぜない）</li>
+              <li><strong>役割:</strong> 仕様・アーキテクチャの決定、生成物への修正指示、Windows / Android実機での確認（Flutter/DartのUI、開発用FastAPIサーバーとテストを含む実装はAIエージェントへ委任）</li>
               <li><strong>確認先:</strong> 公開リポジトリ（CI）・Windows / Android実機画面</li>
-              <li><strong>公開状況:</strong> 公開ベータ。本番運用向けサポート・後方互換性は未保証</li>
+              <li class="summary-hide"><strong>公開状況:</strong> 公開ベータ。本番運用向けサポート・後方互換性は未保証</li>
             </ul>
 
             <details class="mt-2">
@@ -952,8 +1018,8 @@
               <div class="mt-2">
                 <p class="text-muted small mb-1">
                   <strong>設計判断:</strong>
-                  プロバイダごとに異なるAPI契約を共通のインターフェースに吸収し、
-                  一部のAIが失敗しても完了済みの回答を保持して統合まで進める流れにしました。進行状況はSSEでUIへ統一配信します。
+                  プロバイダごとに異なるAPI仕様を共通の要求／回答形式に正規化し、
+                  一部のAIが失敗しても完了した回答だけで統合まで進め、途中で切れた回答は表示・保存しても統合には混ぜない流れにしました。進行状況は統一イベント形式でUIへ配信します（サーバ経由時はSSE）。
                   APIキーはOSのsecure storageへ保存し、会話履歴を端末内だけに置くDirect接続と、開発用のreference serverを分離しています。
                 </p>
                 <p class="text-muted small mb-2">
@@ -979,7 +1045,7 @@
             </details>
 
             <details id="clagecook-background" class="mt-2 pdf-full-only">
-              <summary class="small fw-semibold">開発背景 — 非公開版を毎日運用し、公式APIで再実装</summary>
+              <summary class="small fw-semibold">開発背景 — 非公開版を日常的に運用し、公式APIで再実装</summary>
               <div class="mt-2">
                 <div class="badges mb-2" role="group" aria-label="非公開版の使用技術">
                   <span class="tbadge c-kotlin">Kotlin / Jetpack Compose</span>
@@ -990,7 +1056,7 @@
                 <div class="row g-3 align-items-start">
                   <div class="col-12 col-md-6">
                     <p class="text-muted small mb-2">
-                      各社AIの回答比較・統合をAndroidから毎日使える常駐システムとして非公開で運用してきました。
+                      各社AIの回答比較・統合をAndroidから日常的に使える常駐システムとして非公開で運用してきました。
                       生成の継続、再接続後の復帰、使用量ウィジェットを設計し、この会議フローを公式APIベースで再実装したものが公開版です。
                     </p>
                     <p class="text-muted small mb-0">
@@ -1047,11 +1113,17 @@
                 リッチメニューから課題が届き、詰まったときは担当のAIキャラが段階的にヒントを出し、決着すると解説と講評が返ります。
                 解いた記録は能力プロフィール（3分野の到達レベル）として蓄積され、XP・実績・連続日数で継続を後押しし、
                 到達レベルに応じた教材も提案します。Webのダッシュボードでは推移のグラフや設定を扱えます。
+                面談デモ用に着手し、初回コミットから約21時間（105コミット）でLINE・Web・本番デプロイまで完成させたプロトタイプで、現在も稼働しています。
               </p>
               <p class="text-muted small mb-2 summary-hide">
-                Googleログイン、課題309問（難易度1〜10）、実績61種、教材カタログ145件、AIによる作問、
-                未達成の日のリマインド通知まで備え、さくらVPS上で稼働しています。
+                Googleログイン、課題309問（難易度1〜10。うちAI作問246問）、学習実績バッジ61種、教材カタログ145件、
+                未達成の日のリマインド通知まで備え、VPS上で稼働しています。
               </p>
+
+              <figure class="fig-band">
+                <img src="media/fig/trivium-flow.svg" alt="Triviumの構成とAI作問の検証を示す図。利用者はLINEとWebから使い、Next.js / TypeScript / Prisma / PostgreSQL（Docker・GitHub Actions → GHCR → VPSで本番稼働）を経てOpenAI API（Dify経由も選択可）へつながる。LINEの応答期限には、先に短い返信を返し、裏で生成して、プッシュ配信する。設計方針は、学習指標の集計は決定論、LLMは解釈・生成に限定。AI作問（計画250スロット）は、Python問題はコードを実行して答えを照合し、選択式は正解を伏せた別のAIが解き直して一致を確認し、採用246／250（1スロット最大3回で通らなかった4スロットは不採用）。初回コミットから約21時間・105コミットで、LINE・Web・本番デプロイまで完成。課題309問（手書き63＋AI作問246、難易度1〜10）、単体テスト226件（DB・APIキー不要）。CIは型検査・lint・テスト・ビルド。別のDockerワークフローで本番と同じDockerfileを実ビルドし、PostgreSQLにマイグレーションしてヘルスチェックする" loading="lazy">
+                <figcaption class="small text-muted">構成と、AIが作った問題を採用するまでの検証<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
+              </figure>
 
               <div class="shot-row mt-3" role="group" aria-label="TriviumのWeb画面とLINE画面">
                 <div>
@@ -1074,7 +1146,7 @@
               <li><strong>難所:</strong> LINEの応答期限内に生成が終わらない／能力の数値が1問ごとに揺れる／AIが作った問題の品質が担保できない、の3つ</li>
               <li><strong>役割:</strong> サービスの企画と仕様、学習の測り方（到達レベルの決め方・出題難易度の上げ方）などの中核アイデアを考案。実装はAIエージェントへ委任し、検証基準の策定・統合レビュー・本番検証を担当</li>
               <li><strong>確認先:</strong> 公開リポジトリ（CI）・稼働中のサイト・LINE公式アカウント</li>
-              <li><strong>公開状況:</strong> MIT Licenseで公開。個人開発のプロトタイプ</li>
+              <li class="summary-hide"><strong>公開状況:</strong> MIT Licenseで公開。個人開発のプロトタイプ</li>
             </ul>
 
             <details class="mt-2">
@@ -1098,12 +1170,12 @@
                   LINEは応答期限が短いため、先に短い返信を返してから裏で生成し、あとからプッシュする構成にしました。
                   能力の数値は学習記録から毎回計算し直す方式にして、1問ごとに上下しないようレベルの昇格・降格にしきい値差を持たせています。
                   事前生成した課題は「作ったら採用」にせず、Python問題は実際にコードを実行して答えを照合、
-                  選択式は正解を伏せた別のAIが同じ答えに到達するかを確認し、計画250問のうち<strong>合格した246問だけを採用</strong>しました。
+                  選択式は正解を伏せた別のAIが同じ答えに到達するかを確認し、計画250スロットのうち<strong>検証を通った246問だけを採用</strong>しました。
                 </p>
                 <p class="text-muted small mb-2">
                   <strong>実装・検証:</strong>
-                  判断ロジックを純粋関数へ切り出したことで、<strong>DBもAPIキーも無しでテスト226件が0.5秒</strong>で走ります。
-                  CIは本番と同じDockerイメージを実際にビルドして起動し、マイグレーション適用とヘルスチェックまで確認します。
+                  判断ロジックを純粋関数へ切り出したことで、<strong>DBもAPIキーも無しで単体テスト226件が全件通ります</strong>（テスト本体は約0.5秒）。
+                  CIは本番と同じDockerfileでイメージを実際にビルドして起動し、PostgreSQLへのマイグレーション適用とヘルスチェックまで確認します。
                 </p>
 
                 <div class="shot-row" role="group" aria-label="TriviumのLINE実機画面">
@@ -1182,7 +1254,7 @@
               ページ要約と選択文へのAI処理も統合しました。
             </p>
 
-            <div class="cfa-compare mt-2" role="group" aria-label="同じ『人工知能』のGoogle検索に対する通常表示とAI評価後の比較">
+            <div class="cfa-compare mt-2 summary-hide" role="group" aria-label="同じ『人工知能』のGoogle検索に対する通常表示とAI評価後の比較">
               <figure>
                 <div class="cfa-shot">
                   <img src="media/cfa-serp-before.png" alt="AI評価前の「人工知能」Google検索結果。人工知能学会、FPTソフトウェア、IBMの順に表示" loading="lazy">
@@ -1204,11 +1276,11 @@
             </div>
 
             <p class="text-muted small mt-3 mb-1">
-              <strong>担当:</strong> Chromium本体への組み込み、操作設計、認証情報の扱い、安全性検証。
+              <strong>担当:</strong> 機能のアイデア（検索結果の再評価・ページ要約など）を考え、Chromium本体への組み込みを含む実装はほぼAIエージェントへ委任しています。
             </p>
-            <p class="text-muted small mb-1">
+            <p class="text-muted small mb-1 summary-hide">
               <strong>技術的な難所:</strong>
-              認証情報の扱いに関する問題を再現テストで検出し、構造を変更したうえで同条件で再検証しました。
+              開発中に認証情報の扱いに関する問題が再現テストで見つかり、構造を変更して同条件で再検証しています。
             </p>
 
             <ul class="cfa-feature-list mt-2 summary-hide" aria-label="ChromiumforAの主な閲覧支援機能">
@@ -1244,7 +1316,7 @@
               </div>
             </details>
 
-            <p class="text-muted small mt-2 mb-0">
+            <p class="text-muted small mt-2 mb-0 summary-hide">
               <strong>確認できるもの:</strong> 同一検索語の通常表示／AI評価後の比較、Android実機画面、操作動画。
               個人検証用のため非公開で、画面・動画・設計のみ公開しています。
             </p>
@@ -1275,6 +1347,11 @@
                 解説動画自体もScriptVEditで制作しました。
               </p>
 
+              <figure class="fig-band">
+                <img src="media/fig/scriptvedit-flow.svg" alt="ScriptVEditのパイプラインと計測結果の図。Pythonで書くDSL（演算子でタイムラインを記述）→タイムライン解決（アンカー解決・素材キャッシュ）→区間に分割して並列レンダリング（8分割）→FFmpegで結合して動画。レンダリング時間（2分56秒・87オブジェクトの実プロジェクト、20論理コアPC、2026年7月）は当時の逐次経路1012秒→8分割並列106秒で、比較元には後に修正した非効率を含む。逐次経路のO(N²)を解消（2026年8月、別の合成ベンチ、N=40）して約68秒→約5秒。AIエージェントを併用した全体監査で特定し、可視区間trimで解消、回帰テスト10件で固定。DSLの記法と各機構の仕組みはAIと相談しながら本人がほぼ決定し、実装全般・テスト生成・スクリーンショットでの出力確認はAIエージェントへ委任、エフェクトの品質と生成動画の出来は本人が目視で評価" loading="lazy">
+                <figcaption class="small text-muted">処理の流れと並列化の実測<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
+              </figure>
+
               <div class="media-box">
                 <div class="media-hero">
                   <img src="media/scriptvedit-code-video.jpg" alt="左のPythonコードから右の映像が生成されている解説動画の一場面" loading="lazy">
@@ -1285,17 +1362,18 @@
               </div>
             </div>
 
-            <p class="text-muted small mt-3 mb-1">
+            <p class="text-muted small mt-3 mb-1 summary-hide">
               <strong>考案したもの:</strong> DSLの記法、素材キャッシュ、要素配置のアンカー解決、区間ごとの並列レンダリング。
             </p>
-            <p class="text-muted small mb-1">
+            <p class="text-muted small mb-1 summary-hide">
               <strong>AI利用の範囲:</strong>
               上記の仕組みを含む実装全般と、テストケースの生成、スクリーンショットによる出力確認はAIエージェントへ任せました。
               DSLの仕様と各仕組みのアイデアはAIと相談しながらほぼ自分で決め、
               エフェクトの品質と、テーマだけ与えてAIに作らせた動画の出来は自分の目で評価しています。
             </p>
-            <p class="text-muted small mb-0">
-              <strong>計測条件:</strong> 2分56秒・87オブジェクトの実プロジェクトを20コアPCで計測 — 逐次1012秒、並列8で106秒。
+            <p class="text-muted small mb-0 summary-hide">
+              <strong>計測条件:</strong> 2分56秒・87オブジェクトの実プロジェクトを20論理コアPCで計測 — 当時の逐次経路1012秒、並列8で106秒（2026年7月。比較元の逐次経路には後に修正した非効率を含みます）。
+              2026年8月には、AIエージェントを併用した全体監査で逐次経路のO(N²)処理を特定し、可視区間trimで解消しました（別の合成ベンチで約68秒→約5秒、回帰テスト10件で固定）。
               公開リポジトリ、テスト、コードと出力動画で確認できます。
             </p>
 
@@ -1333,7 +1411,7 @@
             <div class="media-grid">
               <div>
                 <div class="media-thumb">
-                  <img src="media/research-eval.webp" alt="空間分解能と位置誤差の棒グラフ。CNNが線形手法に対して両指標を約22%まで低減" loading="lazy">
+                  <img class="fit-contain" src="media/research-eval.webp" alt="空間分解能と位置誤差の棒グラフ。CNNが線形手法に対して両指標を約21%まで低減" loading="lazy">
                 </div>
                 <div class="small text-muted mt-1">空間分解能・位置誤差（線形手法 vs CNN）</div>
               </div>
@@ -1352,30 +1430,35 @@
             </div>
           </div>
           <div class="col-12 col-md-7">
-            <p class="text-muted mb-2">
+            <p class="text-muted mb-2 summary-hide">
               EIT（電気インピーダンストモグラフィ）触覚センサの逆問題にCNNを適用し、
-              1点接触のシミュレーションで空間分解能指標と位置誤差を従来法の約22%まで低減しました
-              （SI2022・IROS 2022でポスター発表）。
+              1点接触のシミュレーションで空間分解能指標と位置誤差を従来法の約21%まで低減しました
+              （SI2022・IROS 2022ワークショップでポスター発表）。
             </p>
-            <p class="text-muted mb-2">
-              電極配置の最適化では、最悪領域の空間分解能指標（HWHM、小さいほど良い）を等間隔配置に対して最大19.2%低減し、
-              筆頭著者としてFrontiers in Robotics and AIに掲載されました。
+            <p class="text-muted mb-2 summary-hide">
+              電極配置の最適化では、最悪領域の空間分解能指標（HWHM、小さいほど良い）を等間隔配置に対して19.2%低減し
+              （16電極のシミュレーション。64電極の試作基板では中央領域で19.5%）、
+              筆頭著者としてFrontiers in Robotics and AIに掲載されました（構想・設計・実験は共同で行い、結果の解析と論文初稿の執筆を担当）。
             </p>
             <div class="badges mb-2" role="group" aria-label="研究の使用技術">
               <span class="tbadge c-keras">CNN (Keras)</span>
               <span class="tbadge c-gray">シミュレーション訓練データ</span>
               <span class="tbadge c-gray">電極配置最適化</span>
             </div>
-            <a class="btn btn-outline-info btn-sm" href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">査読論文</a>
+            <a class="btn btn-outline-info btn-sm" href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">査読論文（電極配置最適化）</a>
           </div>
         </div>
+        <figure class="fig-band">
+          <img src="media/fig/research-flow.svg" alt="2つの研究を分けて示す図。研究1 CNNによる触覚分布の再構成（IROS 2022ワークショップ・SI2022のポスター）: EIT触覚センサ→CNN（Keras）で再構成（シミュレーションで訓練）→接触分布。空間分解能指標RES 48.1%→10.2%、位置誤差13.0mm→2.8mm（1点接触シミュレーション、160mm角モデル）で、いずれも従来法の約21%まで低減。研究2 電極配置の最適化（査読付き筆頭論文・Frontiers 2023）: 最悪領域のHWHMを19.2%低減（16電極・シミュレーション、等間隔配置比。64電極の試作基板では中央領域19.5%低減）。共同での実験、結果の解析と論文初稿の執筆を担当（共同研究）。A. Kojima et al., Frontiers in Robotics and AI, Vol. 10, 1157911, 2023" loading="lazy">
+          <figcaption class="small text-muted">2つの研究（学会ポスター／査読付き論文）の手法と結果<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
+        </figure>
       </div>
     </section>
 
     <hr class="border-subtle pdf-full-only">
 
     <!-- 受託案件 -->
-    <section id="client" class="anchor py-2 pdf-full-only">
+    <section id="client" class="anchor py-2">
       <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
         <h2 class="h4 section-title mb-0">受託案件</h2>
       </div>
@@ -1386,18 +1469,32 @@
           <span class="badge rounded-pill text-bg-secondary">受託開発・開発中・匿名掲載</span>
         </div>
         <div class="badges mt-2" role="group" aria-label="LINE応答AIの使用技術">
+          <span class="tbadge c-python">Python</span>
+          <span class="tbadge c-fastapi">FastAPI</span>
           <span class="tbadge c-dify">Dify</span>
-          <span class="tbadge c-gray">LINE Webhook</span>
           <span class="tbadge c-gray">RAG</span>
-          <span class="tbadge c-gray">状態管理</span>
+          <span class="tbadge c-gray">LINE Messaging API</span>
+          <span class="tbadge c-gray">OpenAI Responses API</span>
+          <span class="tbadge c-gray">pytest</span>
         </div>
         <p class="text-muted mt-2 mb-1">
-          LINEでの問い合わせ一次対応を支援するAIです。FAQ回答、予約フォームへの案内、必要なときのスタッフへの引き継ぎを扱います。
+          LINE公式アカウントの問い合わせ一次対応を支援するAIです。FAQ回答、予約フォームへの案内、必要なときのスタッフへの引き継ぎを扱います。
+          2026年4月に受注し、開発担当は本人1名です。実装はAIエージェントへ委任し、要件整理、設計と検証方針の決定、生成物のレビュー、
+          定例ミーティングでの進捗報告と次期開発の提案（提案3件のうち2件を実装・納品）を担当しています。
+          現在は開発者PC上の試作環境で稼働・検証中の段階（本番導入前）です。
         </p>
-        <p class="text-muted small mb-0">
-          Dify応答フロー、LINE Webhook、RAGナレッジ、状態管理を実装済みで、回答品質と安全性を検証中です。
-          施設を特定しない範囲で掲載許可を得ています。顧客名・画面・利用者/運用データ・KPIは非公開です。
+        <p class="text-muted small mb-1 summary-hide">
+          医療機関向けの安全設計として、予約確定・診断など誤案内や個人情報のリスクが高い4項目を「実装しない」と仕様化して顧客に説明し、有人対応中はAIが返信しない設計（状態を判定できない場合も見送る）、障害時は料金等を含まない定型文で電話窓口のみ案内、運用ログの利用者IDのハッシュ化、Webhook署名検証（既定で有効）を実装して、関連動作をpytestで確認しています（テストは全体で395件）。
+          施設を特定しない範囲で掲載許可を得ています。顧客名・画面・利用者データは非公開で、技術的な改善の数値のみ掲載しています。
         </p>
+        <figure class="fig-band">
+          <img src="media/fig/clinic-flow.svg" alt="LINE応答AIのシステム構成図。利用者（LINE公式アカウント）→受信サーバ（FastAPI・Webhook署名検証、状態管理・有人対応への切替）→応答AI（Dify・RAGでナレッジ検索、必要時は公式サイト検索へ切替）→LLM（OpenAI Responses API、公式サイト限定検索）。回答はFAQ回答／予約フォーム案内／スタッフへ引き継ぎの3分岐。スタッフへ引き継ぐと有人対応になり、対応中はAIが返信しない" loading="lazy">
+          <figcaption class="small text-muted">システム構成と回答の3分岐<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
+        </figure>
+        <figure class="fig-band summary-hide">
+          <img src="media/fig/clinic-results.svg" alt="LINE応答AIの改善実績の図。過去のLINE応対14,051件を、正規表現、ローカルLLM検査、ローカルLLMでの回収の3段階で匿名化し、検査を通過した会話は12,853件。②でNGになった会話も、ローカルLLMで残った個人情報を特定・補修して再検査し、2,788件を回収。見つかった置換漏れを型分類し、8種の正規表現ルールとして前処理に追加。回答網羅率（7設問・確認項目26点）は50%→81%（検索設定（Top-K）の見直し後、同じ7設問で再計測）。平均応答時間（同じ7設問）は12.4秒→6.5秒、最大28.8秒→9.0秒で、公式サイト検索への切替が3設問から0設問に減少。公式サイト全64ページと照合し、プラン名の取り違えなどの誤りを修正。pytest 395件で保護し、別途、応答テストは延べ約200回（設問74種）。予約確定・診断・登録外情報の推測回答・LINE上での個人情報収集の4項目は仕様として『実装しない』と明記し、顧客向け資料で説明" loading="lazy">
+          <figcaption class="small text-muted">匿名化パイプラインと改善の数値<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
+        </figure>
       </article>
     </section>
 
@@ -1409,24 +1506,36 @@
         <h2 class="h4 section-title mb-0">経歴・資格・主要技術</h2>
       </div>
 
+      <figure class="fig-band summary-hide mt-0 mb-3">
+        <img src="media/fig/career-timeline.svg" alt="経歴のタイムライン図。2018年4月〜2022年3月 東京大学 工学部 精密工学科 卒業→2022年4月〜2024年9月 東京大学大学院 修士課程（人間環境学専攻）修了→2024年10月〜2026年3月 同 博士後期課程（EIT触覚センサ×機械学習。退学）→2026年4月〜現在 フリーランス（AIアプリケーション開発）。IROS 2022ワークショップ・SI2022でポスター発表、2023年に査読論文（筆頭）、TA（有限要素法）を2023年11月〜2024年1月と2024年11月〜2025年1月に担当、2026年8月 基本情報技術者 取得、2026年9月 AWS Certified AI Practitioner 取得" loading="lazy">
+        <figcaption class="small text-muted">学歴・職歴と発表・資格<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
+      </figure>
       <div class="row g-4">
         <div class="col-12 col-lg-5">
-          <div class="timeline mb-3">
+          <div class="timeline mb-3 summary-only">
             <span class="yr">2018–22</span><span class="ev">東京大学 工学部 精密工学科</span>
             <span class="yr">2022–24</span><span class="ev">東京大学大学院 修士課程 修了</span>
             <span class="yr">2024–26</span><span class="ev">同博士課程でEIT触覚センサを研究（2026年3月退学）</span>
             <span class="yr">2026–</span><span class="ev">フリーランスのAIアプリケーションエンジニア</span>
           </div>
-          <p class="text-muted small mb-1"><strong>資格:</strong> 基本情報技術者 取得（2026年8月）／ AWS Certified AI Practitioner 取得（2026年9月）</p>
-          <p class="text-muted small mb-0"><strong>プログラミング実績:</strong> AtCoder 水色（最高レーティング1440・参加者上位6.27%）/ <span class="nowrap">paizaスキルチェック Sランク</span></p>
+          <div class="cert-row">
+            <a class="cert-badge" href="https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url" target="_blank" rel="noopener noreferrer">
+              <img src="media/badge-aws-ai-practitioner.png" width="76" height="76" alt="AWS Certified AI Practitioner のデジタルバッジ（Credlyで検証）">
+            </a>
+            <div>
+              <p class="text-muted small mb-1 cert-names"><strong>資格:</strong> 基本情報技術者 取得（2026年8月）／ AWS Certified AI Practitioner 取得（2026年9月）<a class="ms-1 nowrap no-print" href="https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url" target="_blank" rel="noopener noreferrer">Credlyで検証</a></p>
+              <p class="text-muted small mb-0"><strong>プログラミング実績:</strong> AtCoder 水色（最高レーティング1440。2026年9月時点で上位6.27%）/ <span class="nowrap">paizaスキルチェック Sランク</span>（最高レーティング1920）</p>
+            </div>
+          </div>
         </div>
         <div class="col-12 col-lg-7">
+          <p class="text-muted small mb-1">技術と作品の対応（本人が実装したのは主に Python・C++。ほかは実装をAIへ委任した作品の構成技術を含む）</p>
           <ul class="stack-map">
             <li><strong>Python</strong> — <span>EIT触覚センサ研究、過去作品の画像処理・CGの実装</span></li>
             <li><strong>DSL・ツール設計</strong> — <span>ScriptVEditの記法、素材キャッシュ、アンカー解決、並列化</span></li>
             <li><strong>Android / Chromium改造</strong> — <span>ChromiumforA</span></li>
             <li><strong>FFmpeg</strong> — <span>ScriptVEditの映像生成</span></li>
-            <li><strong>Dify / RAG</strong> — <span>受託のLINE応答AI、Triviumの教材検索</span></li>
+            <li><strong>Dify / RAG</strong> — <span>受託のLINE応答AI（Triviumでも任意経路として選択可）</span></li>
             <li><strong>LINE Messaging API</strong> — <span>Triviumの出題・会話、受託のLINE応答AI</span></li>
             <li><strong>CNN (Keras)</strong> — <span>EIT触覚センサ研究の再構成モデル</span></li>
             <li><strong>C++ / GLSL</strong> — <span>過去作品の制御・CG（倒立振子、レイトレーシング）</span></li>
@@ -1434,8 +1543,8 @@
           <p class="text-muted small mt-2 mb-0 summary-hide">
             Flutter/Dart（Clage CookのUI）は実装をAIエージェントへ委任し、UI仕様・生成物のレビュー・
             修正方針の決定とWindows/Android実機検証を担当。
-            FastAPI（reference server）とNext.js/TypeScript/Prisma（Trivium）も実装は委任し、
-            API・データモデルの設計、生成物のレビュー、結合動作と本番稼働の確認を担当しています。
+            FastAPI（Clage Cookの開発用reference server）とNext.js/TypeScript/Prisma（Trivium）も実装は委任しました。
+            Clage CookではAPI差の共通化などアーキテクチャの決定を、Triviumでは検証基準の策定・統合レビュー・本番検証を担当しています。
           </p>
         </div>
       </div>
@@ -1616,7 +1725,7 @@
       </div>
 
       <div class="d-flex flex-wrap gap-2 no-print">
-        <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（3ページ）</a>
+        <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（2ページ）</a>
         <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio.pdf" download>完全版PDF</a>
       </div>
 
@@ -1673,7 +1782,7 @@
       }
 
       // 画像・動画をマウス・タッチ・キーボードで拡大表示
-      document.querySelectorAll(".media-hero img, .media-hero video, .media-thumb img, .media-thumb video, .media-phone img, .cfa-shot img, .flow-shot img").forEach(el => {
+      document.querySelectorAll(".media-hero img, .media-hero video, .media-thumb img, .media-thumb video, .media-phone img, .cfa-shot img, .flow-shot img, .fig-band img").forEach(el => {
         const label = el.getAttribute("alt") || el.getAttribute("aria-label") || "メディア";
         el.tabIndex = 0;
         el.setAttribute("role", "button");

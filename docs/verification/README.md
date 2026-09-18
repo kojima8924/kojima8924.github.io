@@ -1,15 +1,21 @@
-# 検証ログ（2026-09-18・コミット時点の実行結果）
+# 検証ログ（2026-09-19・外部レビューを受けた改修のコミット時点の実行結果）
 
 第2回レビューの指摘「検証ログが成果物に含まれず独立に再確認できない」への対応。
 ページを更新したら以下を再実行してこのフォルダを更新する。
 
 | ファイル | 内容 | 結果 |
 |---|---|---|
-| `check_portfolio.log` | `python scripts/check_portfolio.py --external` の出力 | エラー0・警告0（外部リンク17件全到達） |
-| `w3c-nu.json` | W3C Nu HTML validator（https://validator.w3.org/nu/?out=json）の生JSON | error 0件（infoのみ） |
-| `axe-core.json` | axe-core 4.10 実行結果（dark/light両テーマ・details全展開） | violations 0件（両テーマ） |
+| `check_portfolio.log` | `python scripts/check_portfolio.py --external` の出力 | エラー0・警告0（画像43枚・外部リンク18件全到達） |
+| `w3c-nu.json` | W3C Nu HTML validator（https://validator.w3.org/nu/?out=json）の生JSON | error 0件・warning 0件（infoのみ17件） |
+| `axe-core.json` | axe-core 4.10.2 実行結果（dark/light両テーマ・details全展開。テーマは Playwright の `color_scheme` で初回描画時に確定させる） | violations 0件（両テーマ） |
+
+横スクロールなし（`scrollWidth <= innerWidth`）を幅 360 / 390 / 768 / 1280px で確認（帯図は `.fig-band` 内の横スクロールに閉じ込めてある）。
 
 PDFの紙面受入検査（画像とキャプションの同居・孤立見出しなし・最終ページ空白50%未満）は
 ページ画像の目視検査で実施:
-- 採用向け2ページ: 合格
-- 完全版7ページ: 合格
+- 採用向け2ページ（帯図・受託案件の構成図入り。重複する実機画面と段落は省略）: 合格
+- 完全版9ページ（帯図＋実機画面。受託案件は見出しごと新ページから、LINE実機フロー2枚は高さ110mm）: 合格。空枠断片・孤立見出し・孤立キャプションなし。
+  画像の実効解像度はすべて100dpi以上（帯図内の小さなロゴは再圧縮せず元の画像のまま埋め込む）
+
+注意: 2026-09-18 の帯図追加時のログは dark テーマの判定が実際には light で走っていた（`data-bs-theme` を後から変えていたため）。
+2026-09-19 に `color_scheme` で初回描画から dark にして再検査し、帯図キャプションのコントラスト不足（白地に #b9c7d8、1.71）を見つけて修正した。

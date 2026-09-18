@@ -46,6 +46,8 @@ TEXT_REQUIRED_STRINGS = [
     ("従来法の約22%まで低減", "研究の22%表現"),
     ("最大19.2%低減", "HWHMの表現"),
     ("ScriptVEdit", "公式プロジェクト名"),
+    ("基本情報技術者 取得（2026年8月）", "資格表記"),
+    ("AWS Certified AI Practitioner 取得（2026年9月）", "資格表記"),
 ]
 
 # README等の関連文書にも適用する検査（index.htmlとの文書間矛盾の検出）

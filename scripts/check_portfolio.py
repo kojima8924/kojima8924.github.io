@@ -43,8 +43,8 @@ FORBIDDEN_PATTERNS = [
 TEXT_FORBIDDEN_PATTERNS = [
     (r"Atcoder|ATCODER|AtCoder Cyan|AtCoder ?シアン", "AtCoder表記の揺れ（「AtCoder 水色」に統一）"),
     (r"Paiza|PAIZA", "paiza表記の揺れ（小文字「paiza」に統一）"),
-    # 「paizaスキルチェック Sランク」以外の書き方（paiza S / paiza S Rank / paiza Sランク）を検出
-    (r"paiza\s+S(?:\s*Rank|ランク)?", "paizaランク表記の揺れ（「paizaスキルチェック Sランク」に統一）"),
+    # 「paizaスキルチェック Sランク」以外の書き方（paiza S / paiza S Rank / paiza Sランク等）を検出
+    (r"paiza\s+S(?:\s*(?:Rank|ランク))?\b", "paizaランク表記の揺れ（「paizaスキルチェック Sランク」に統一）"),
     (r"(?:AtCoder[^。]{0,12}|paiza[^。]{0,20})を?取得", "AtCoder/paizaを資格のように「取得」と表現している"),
 ]
 TEXT_REQUIRED_STRINGS = [

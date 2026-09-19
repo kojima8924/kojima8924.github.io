@@ -88,18 +88,27 @@ python make_ogp.py
 ```powershell
 python scripts/check_portfolio.py             # HTML内部の検査
 python scripts/check_portfolio.py --external  # 外部リンクの到達確認も行う
+python scripts/import_figures.py --check      # 図版の参照元PDF欠損・SVGの更新要否を確認
+python -m unittest discover -s tests -v       # 検査スクリプトの回帰テスト
 ```
 
 重複ID、内部anchor切れ、ローカル参照切れ、alt欠落、`rel`不足、shields.io残存、
 プロジェクト名の表記揺れ、研究数値の誤解表現などを検査します。
 AtCoder / paizaの表記は表示テキストにのみ適用し、`atcoder.jp` / `paiza.jp` のURLを誤検出しません。
+`import_figures.py --check` は参照元PDFからSVGをメモリ内で生成し、改行を正規化して既存SVGと内容を比較します。
+参照元PDFや出力SVGが1件でも欠損している場合、または内容が異なる場合に終了コード1を返します。
+内容比較には `requirements-pdf.txt` に含まれるPyMuPDFが必要です。ファイルの更新時刻だけでは判定しないため、
+別作業でPDFを同一内容のまま再生成しても更新要とはなりません。
+通常の取り込みでも、指定した参照元PDFを最初にすべて検証します。1件でも欠損していれば何も変換せず終了コード1を返すため、
+一部のSVGだけが更新されることはありません。
+各SVGは同じディレクトリの一時ファイルへ書き終えてから置換するため、書き込み途中の失敗で既存SVGが壊れることもありません。
 実行結果は `docs/verification/`（check_portfolio・W3C Nu・axe-core）に保存しています。
 
 ## 更新時の確認
 
 1. HTMLとPDF（2種類）の内容を同じ更新で揃える。帯図を変えたときは slide 側で PDF を作り直してから `python scripts/import_figures.py`
-   （`--check` で slide 側の PDF が SVG より新しい図を列挙できる）
-2. `python scripts/check_portfolio.py` を通す
+   （`--check` で slide 側の PDF から生成した結果と内容が異なる SVG を列挙できる）
+2. `python scripts/check_portfolio.py`、`python scripts/import_figures.py --check`、`python -m unittest discover -s tests -v` を通す
 3. PC／スマホ、dark／light、印刷時の改ページを確認する
 4. 作品画像、GitHub、論文、動画のリンク切れがないか確認する
 5. OGPのtitle、description、画像をページ内容と同期する

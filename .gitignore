@@ -10,5 +10,8 @@
 # ローカル検証用の一時出力
 /tmp/
 
+# 会話で共有された原本（採用した画像だけをmedia/へコピーする）
+/.codex-remote-attachments/
+
 # Python の実行キャッシュ（scripts/ を実行すると出来る）
 __pycache__/

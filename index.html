@@ -201,6 +201,7 @@
     .media-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
     .media-grid > * { min-width:0; }
     .shot-row { display:flex; justify-content:center; gap:12px; }
+    .shot-gallery { flex-wrap:wrap; }
     .shot-row > div, .shot-row > figure { min-width:0; flex:0 1 180px; margin:0; }
     .media-phone { position:relative; aspect-ratio:9/19; width:100%; max-height:380px; overflow:hidden; border-radius:12px; border:1px solid var(--border); padding:4px; background:var(--imgbg); }
     .media-phone img { width:100%; height:100%; object-fit:contain; display:block; cursor:zoom-in; border-radius:8px; }
@@ -419,6 +420,11 @@
       body.pdf-summary .case-copy h3 { margin-bottom:4px; }
       body.pdf-summary .case-copy p { font-size:9.5px; line-height:1.45; margin-bottom:4px; }
       body.pdf-summary .case-points { font-size:9.5px; line-height:1.45; }
+      body.pdf-summary #client .metric-grid { margin:6px 0; }
+      body.pdf-summary #client .metric { padding:5px 7px; }
+      body.pdf-summary #client .case-card > .d-flex { display:flex !important; flex-wrap:nowrap !important; align-items:center !important; justify-content:space-between !important; gap:8px; }
+      body.pdf-summary #client .case-card > .d-flex .card-title { margin:0 !important; }
+      body.pdf-summary #client .case-card > .d-flex .badge { font-size:8px; white-space:nowrap; }
       body.pdf-summary .cg-media { aspect-ratio:auto; height:100px; }
       body.pdf-summary .cg-card p { font-size:9.5px; line-height:1.45; }
       body.pdf-summary .cg-card { padding:7px !important; }
@@ -526,7 +532,7 @@
                 <figcaption class="small text-muted">1点接触：空間分解能指標・位置誤差</figcaption>
               </figure>
               <figure>
-                <div class="media-thumb"><img class="fit-contain" src="media/research-recon.webp" alt="2点接触の再構成比較．線形手法ではにじむ接触点がCNNでは分離されている" loading="lazy" width="640" height="340" decoding="async"></div>
+                <div class="media-thumb"><img class="fit-contain" src="media/research-recon.webp?v=contact-legend" alt="2点接触の再構成比較．接触点の注記と導電率カラーバー付き．線形手法ではにじむ接触点がCNNでは分離されている" loading="lazy" width="1112" height="584" decoding="async"></div>
                 <figcaption class="small text-muted">2点接触：再構成画像の比較</figcaption>
               </figure>
             </div>
@@ -565,17 +571,18 @@
           <img src="media/fig/clinic-flow.svg" width="960" height="132" alt="LINE応答AIの構成．LINEからFastAPIへ届いた問い合わせを，Dify・RAGとOpenAI Responses APIで処理．FAQ回答・予約フォーム案内・スタッフ引き継ぎに分岐し，有人対応中はAIが返信しない．受信時にWebhook署名を検証し，必要時は公式サイト検索へ切り替える" loading="lazy">
           <figcaption class="small text-muted">システム構成と回答の3分岐<span class="fig-hint"> — 横にスクロール／クリックして拡大</span></figcaption>
         </figure>
-        <div class="metric-grid" aria-label="検索設定の変更前後の評価結果">
-          <div class="metric"><span>回答網羅率</span><strong>50% → 81%</strong></div>
-          <div class="metric"><span>平均応答時間</span><strong>12.4秒 → 6.5秒</strong></div>
+        <p class="small text-muted mt-2 mb-0"><b>改善手法：</b>FAQ検索で回答生成に渡す検索結果の上限（Top-K）を4件 → 10件へ増加．FAQ自体と，公式サイト検索への切替条件は変更していません．</p>
+        <div class="metric-grid" aria-label="FAQ検索の取得上限を4件から10件へ変更した前後の評価結果">
+          <div class="metric"><span>回答網羅率</span><strong>50% → 81%</strong><p class="small mb-0">参照する関連情報を増やし，回答が満たした確認項目は13/26 → 21/26に増加．</p></div>
+          <div class="metric"><span>平均応答時間</span><strong>12.4秒 → 6.5秒</strong><p class="small mb-0">公式サイトへの追加検索が7問中3問 → 0問に減少．追加検索を省けたことが短縮の要因と考えられます．</p></div>
         </div>
-        <p class="small text-muted mt-2">同じ7設問・26確認項目を，検索設定（Top-K）の変更前後で各1回比較．2026年8月2日，開発段階の計測です．</p>
+        <p class="small text-muted mt-2">同じ7設問・26確認項目を変更前後で各1回比較（2026年8月2日，開発段階）．他の設問でも同じ改善を保証するものではありません．</p>
         <details class="project-details pdf-full-only">
           <summary>匿名化処理・安全設計・検証の詳細</summary>
           <div class="details-content">
             <p class="text-muted"><strong>個人情報の扱い：</strong>過去の応対14,051会話に対し，開発者PC上で正規表現とローカルLLMの多段検査による匿名化処理を実施．12,853件が機械検査を通過しました．見つかった置換漏れを型分類し，前処理ルールへ反映しています．</p>
             <p class="text-muted"><strong>処理の改善：</strong>初回検査でNGとなった会話も，ローカルLLMで残った個人情報を特定・補修して再検査し，2,788件を回収．置換漏れの型を8種の正規表現ルールとして前処理に追加しました．機械検査の通過件数であり，完全な匿名化を保証する数値ではありません．</p>
-            <p class="text-muted"><strong>評価の補足：</strong>上記7設問の比較では，最大応答時間は28.8秒 → 9.0秒，公式サイト検索への切り替えは3設問 → 0設問．この比較を含む応答検証全体が74種類・延べ約200回です．公式サイト全64ページとの照合では，プラン名の取り違え等を修正しました．</p>
+            <p class="text-muted"><strong>評価の補足：</strong>上記7設問の比較では，最大応答時間も28.8秒 → 9.0秒に短縮．この比較を含む応答検証全体が74種類・延べ約200回です．別途行った公式サイト全64ページとの照合では，プラン名の取り違え等を修正しました．このナレッジ修正を，上記数値の改善理由には含めていません．</p>
             <p class="text-muted"><strong>対応範囲：</strong>予約確定・診断・登録外情報の推測回答・LINE上での個人情報収集は実装しないと仕様化．運用ログの利用者IDをハッシュ化し，Webhook署名検証を既定で有効にしています．関連動作をpytestで確認しています（395件はプロジェクト全体）．</p>
             <p class="text-muted mb-0"><strong>構成技術：</strong>Python / FastAPI / Dify / RAG / LINE Messaging API / OpenAI Responses API．クリニック側にデモ用アカウントでの試用・確認を依頼中です．</p>
           </div>
@@ -655,14 +662,14 @@
               </div>
             </div>
             <div class="case-visual">
-              <div class="shot-row" role="group" aria-label="TriviumのWebとLINE画面">
+              <div class="shot-row" role="group" aria-label="TriviumのLINE操作とヒントの画面例">
                 <figure>
-                  <div class="media-phone"><img src="media/trivium-web-dashboard.jpg" alt="TriviumのWeb画面．READ・WRITE・LOGICの到達レベルとAIの寸評を表示" loading="lazy" width="420" height="887" decoding="async"></div>
-                  <figcaption class="small text-muted">Web：学習の到達レベル</figcaption>
+                  <div class="media-phone"><img src="media/trivium-line-profile.jpg" alt="TriviumのLINE画面例．3分野の到達レベル，Webへの導線，6項目の操作メニュー" loading="lazy" width="591" height="1280" decoding="async"></div>
+                  <figcaption class="small text-muted">LINE：到達レベルと操作メニュー</figcaption>
                 </figure>
                 <figure>
                   <div class="media-phone"><img src="media/trivium-line-hint.jpg" alt="TriviumのLINE画面．担当AIが段階的なヒントを返している" loading="lazy" width="720" height="1560" decoding="async"></div>
-                  <figcaption class="small text-muted">LINE：段階的なヒント</figcaption>
+                  <figcaption class="small text-muted">LINE：問題から段階的ヒントへ</figcaption>
                 </figure>
               </div>
             </div>
@@ -674,9 +681,10 @@
               <p class="text-muted"><strong>品質確認：</strong>DB・APIキー不要の単体テスト226件．CIで型検査・lint・テスト・ビルドを実行し，Dockerワークフローでは本番と同じDockerfileのビルド，PostgreSQLへのマイグレーション，ヘルスチェックを確認します．</p>
               <p class="text-muted"><strong>設計：</strong>LINEには先に短い返信を返し，生成後にプッシュ配信．学習レベルの昇格・降格にはしきい値差を設けています．4人格の担当AI，Googleログイン，教材カタログ145件，実績バッジ61種，設定時刻のリマインドを備えます．初回デプロイまで105コミット，MIT Licenseで公開．</p>
               <p class="tech-line">React / Prisma / OpenAI API（Dify経由も選択可）/ GitHub Actions</p>
-              <div class="media-grid">
-                <figure><div class="media-thumb"><img src="media/trivium-web-logic.jpg" alt="TriviumのWeb版でLOGICの課題に取り組む画面" loading="lazy" width="420" height="887" decoding="async"></div><figcaption class="small text-muted">Trivium：Webでの出題・ヒント・採点</figcaption></figure>
-                <figure><div class="media-thumb"><img src="media/trivium-line-material.jpg" alt="到達レベルを根拠に，LINEの案内役AIが書籍を理由付きで提案する画面" loading="lazy" width="720" height="1560" decoding="async"></div><figcaption class="small text-muted">Trivium：学習記録に基づく教材提案</figcaption></figure>
+              <div class="shot-row shot-gallery" role="group" aria-label="TriviumのWeb画面と教材提案例">
+                <figure><div class="media-phone"><img src="media/trivium-web-dashboard.jpg" alt="TriviumのWebダッシュボード．デモデータによる3分野の三角形グラフと次の課題の提案" loading="lazy" width="420" height="887" decoding="async"></div><figcaption class="small text-muted">Trivium：Webの学習記録（デモデータ）</figcaption></figure>
+                <figure><div class="media-phone"><img src="media/trivium-web-question.jpg" alt="TriviumのWeb版．LOGICの問題文と4つの選択肢，回答ボタンを表示" loading="lazy" width="591" height="1280" decoding="async"></div><figcaption class="small text-muted">Trivium：Webでの四択問題</figcaption></figure>
+                <figure><div class="media-phone"><img src="media/trivium-line-material.jpg" alt="到達レベルを根拠に，LINEの案内役AIが書籍を理由付きで提案する画面" loading="lazy" width="720" height="1560" decoding="async"></div><figcaption class="small text-muted">Trivium：学習記録に基づく教材提案</figcaption></figure>
               </div>
             </div>
           </details>

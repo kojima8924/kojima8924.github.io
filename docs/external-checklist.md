@@ -4,8 +4,8 @@
 
 ## GitHubプロフィール（github.com/kojima8924）
 
-- [ ] Clage Cook と ScriptVEdit をピン留めの先頭2件にする（現在のピン状態を要確認）
-- [ ] プロフィールREADMEを作成し、ポートフォリオURLと主要4作品（Clage Cook / Trivium / ChromiumforA / ScriptVEdit）を掲載する
+- [ ] ピン留めは現在の状態と対象職種を確認し，研究・CGの自力実装とAI活用作品が偏らず伝わる組み合わせ・順序を選ぶ
+- [ ] プロフィールREADMEを作成し，ポートフォリオURLから研究・自力CG・主要AI3作品（Trivium / ScriptVEdit / Clage Cook）へ案内する．ChromiumforAは補足作品として扱う
 - [ ] 古いChatGPT-Windows / ChatGPT-Web が主要作品より目立たない並びにする
 
 ## ScriptVEdit リポジトリ

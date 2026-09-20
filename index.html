@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>小嶋 明 | AIアプリケーションエンジニア Portfolio</title>
-  <meta name="description" content="複数LLMを扱うFlutterアプリ Clage Cook、LINEで学ぶ学習サービス Trivium、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
+  <title>小嶋 明 | 研究・CG・AIアプリ開発 Portfolio</title>
+  <meta name="description" content="小嶋明のポートフォリオ．触覚センサ研究とCGの自力実装，受託LINE応答AI，Trivium・ScriptVEdit・Clage Cook．本人の実装経験とAIエージェントを活用した設計・検証を分けて紹介します．" />
 
   <!-- OGP -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="小嶋 明 | AIアプリケーションエンジニア Portfolio" />
-  <meta property="og:description" content="複数LLMを扱うFlutterアプリ Clage Cook、LINEで学ぶ学習サービス Trivium、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
+  <meta property="og:title" content="小嶋 明 | 研究・CG・AIアプリ開発 Portfolio" />
+  <meta property="og:description" content="研究・CGの自力実装を土台に，受託・AIアプリの設計と検証へ．論文，CG動画，実績と担当範囲を紹介します．" />
   <meta property="og:image" content="https://kojima8924.github.io/media/ogp-portfolio.png" />
-  <meta property="og:image:alt" content="小嶋明のAIアプリ開発・機械学習ポートフォリオ" />
+  <meta property="og:image:alt" content="小嶋明の研究・受託・自力CG・AI活用開発ポートフォリオ" />
   <meta property="og:url" content="https://kojima8924.github.io/" />
   <meta property="og:locale" content="ja_JP" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="小嶋 明 | AIアプリケーションエンジニア Portfolio" />
-  <meta name="twitter:description" content="複数LLMを扱うFlutterアプリ Clage Cook、LINEで学ぶ学習サービス Trivium、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ" />
+  <meta name="twitter:title" content="小嶋 明 | 研究・CG・AIアプリ開発 Portfolio" />
+  <meta name="twitter:description" content="研究・CGの自力実装を土台に，受託・AIアプリの設計と検証へ．論文，CG動画，実績と担当範囲を紹介します．" />
   <meta name="twitter:image" content="https://kojima8924.github.io/media/ogp-portfolio.png" />
-  <meta name="twitter:image:alt" content="小嶋明のAIアプリ開発・機械学習ポートフォリオ" />
+  <meta name="twitter:image:alt" content="小嶋明の研究・受託・自力CG・AI活用開発ポートフォリオ" />
   <link rel="canonical" href="https://kojima8924.github.io/" />
 
   <!-- Favicon -->
@@ -76,806 +76,357 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
   <style>
-    /* -------------------------------
-       Theme tokens (Dark/Light)
-    -------------------------------- */
-    :root{
-      --bg:#0b0f14;
-      --fg:#e7eef7;
-      --muted:#b9c7d8;
-
-      --card:#131d2a;
-      --border:#2a3b52;
-
-      --nav:#0b0f14;
-
-      --shadow: rgba(0,0,0,.18);
-      --imgbg: rgba(0,0,0,.22);
-
-      --accent: #7cc4ff;
+    /* 共通の色：本文・ボタン・図の説明をテーマ間で同じ基準にする */
+    :root {
+      --bg:#0c131c; --fg:#e8eef5; --muted:#b7c4d3; --card:#14202e;
+      --border:#304154; --nav:#0c131c; --accent:#8acaff; --self:#85d8c9;
+      --shadow:rgba(0,0,0,.12); --imgbg:#101923;
     }
-
-    html[data-theme="light"]{
-      --bg:#f7f9fc;
-      --fg:#0b1220;
-      --muted:#4a5a70;
-
-      --card:#ffffff;
-      --border:#d7deea;
-
-      --nav:#ffffff;
-
-      --shadow: rgba(18,28,45,.06);
-      --imgbg: rgba(18,28,45,.04);
-
-      --accent:#0b66c3;
+    html[data-theme="light"] {
+      --bg:#f6f8fb; --fg:#152638; --muted:#506176; --card:#fff;
+      --border:#d5dee8; --nav:#fff; --accent:#1267ac; --self:#146f65;
+      --shadow:rgba(26,48,73,.05); --imgbg:#edf1f6;
     }
-
-    html[data-theme="dark"]{ color-scheme: dark; }
-    html[data-theme="light"]{ color-scheme: light; }
-
-    body{
-      background: var(--bg);
-      color: var(--fg);
-      font-size: 16.5px;
-      line-height: 1.65;
-      transition: background-color .3s, color .3s;
+    html[data-theme="dark"] { color-scheme:dark; }
+    html[data-theme="light"] { color-scheme:light; }
+    html { scroll-behavior:smooth; }
+    body { background:var(--bg); color:var(--fg); font-size:16px; line-height:1.75; }
+    .container { max-width:1200px; }
+    a { color:var(--accent); text-underline-offset:.2em; }
+    a:hover { color:var(--fg); }
+    .text-muted, .tech-line { color:var(--muted) !important; }
+    h1,h2,h3,h4 { line-height:1.4; text-wrap:balance; }
+    .anchor, article[id], section[id] { scroll-margin-top:88px; }
+    :focus-visible { outline:3px solid var(--accent); outline-offset:4px; }
+    .skip-link {
+      position:fixed; top:8px; left:8px; z-index:10000; transform:translateY(-160%);
+      padding:.5rem .8rem; background:var(--card); border:1px solid var(--accent); border-radius:8px;
     }
-
-    /* Typography */
-    .text-muted{ color: var(--muted) !important; }
-    .section-title{
-      color: var(--fg);
-      font-weight: 700;
-      letter-spacing: .2px;
-      padding-bottom: .35rem;
-      border-bottom: 1px solid var(--border);
+    .skip-link:focus { transform:none; }
+    .navbar { background:var(--nav) !important; border-bottom:1px solid var(--border) !important; }
+    .navbar-brand { font-size:1.05rem; }
+    .navbar .nav-link { font-size:.9rem; }
+    .navbar .nav-link.active { color:var(--accent) !important; font-weight:700; }
+    .brand-short { display:none; }
+    .navbar-toggler { min-width:44px; min-height:44px; }
+    .navbar-collapse { max-height:calc(100dvh - 62px); overflow-y:auto; }
+    .hero { padding:52px 0 34px; border-bottom:1px solid var(--border); }
+    .hero-grid { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(0,1fr); gap:38px; align-items:start; }
+    .hero h1 { font-size:clamp(1.8rem,3vw,2.7rem); font-weight:750; letter-spacing:.02em; margin-bottom:12px; }
+    .hero .lead { font-size:1.2rem; line-height:1.6; font-weight:650; }
+    .hero-lead { max-width:45rem; line-height:1.55; font-size:1.45rem; margin:18px 0; }
+    .hero-name-en { font-size:.53em; color:var(--muted); font-weight:500; white-space:nowrap; }
+    .hero-description { max-width:43rem; }
+    .hero-degree { color:var(--muted); font-size:.92rem; }
+    .profile-facts {
+      border-left:3px solid var(--accent); background:var(--card);
+      padding:18px 22px; border-radius:0 12px 12px 0; font-size:.9rem;
     }
-    .card-title{ color: var(--fg); }
-
-    /* Layout */
-    .anchor{ scroll-margin-top: 84px; }
-    @media (max-width: 991.98px){
-      .anchor{ scroll-margin-top: 76px; }
+    .profile-facts p:last-child, .profile-facts ul:last-child { margin-bottom:0; }
+    .profile-facts p { margin-bottom:10px; }
+    .profile-facts strong { color:var(--fg); }
+    .profile-facts dl { margin:12px 0; display:grid; grid-template-columns:54px minmax(0,1fr); gap:12px 14px; }
+    .profile-facts dt { font-size:.8rem; color:var(--muted); margin-top:0; }
+    .profile-facts dt:first-child { margin-top:0; }
+    .profile-facts dd { margin:2px 0 0; }
+    .hero-actions { margin-top:20px; }
+    .hero-actions .btn { min-height:44px; display:inline-flex; align-items:center; justify-content:center; padding:8px 14px; }
+    .proof-links { display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:24px; padding:0; list-style:none; font-size:.9rem; }
+    .proof-links a { display:inline-block; padding:5px 0; }
+    main.container { padding-top:32px; padding-bottom:32px; }
+    main > section { padding-top:22px; padding-bottom:22px; }
+    .section-heading { display:block; margin-bottom:18px; }
+    .section-heading .section-intro { margin:10px 0 0; }
+    .section-title { color:var(--fg); font-size:1.55rem; font-weight:750; margin:0; }
+    .section-kicker { color:var(--accent); font-size:.76rem; font-weight:700; letter-spacing:.13em; margin-bottom:5px; }
+    .section-intro { color:var(--muted); max-width:70rem; margin-bottom:18px; }
+    hr.border-subtle { opacity:1; border:0; height:1px; background:var(--border); margin:20px 0; }
+    .card, .case-card, .cg-card, .project-card {
+      color:var(--fg); background:var(--card); border:1px solid var(--border);
+      border-radius:14px; box-shadow:0 4px 18px var(--shadow);
     }
-    .skip-link{
-      position:fixed; top:8px; left:8px; z-index:10000;
-      transform:translateY(-160%);
-      padding:.45rem .75rem;
-      border-radius:8px;
-      background:var(--card);
-      color:var(--fg);
-      border:1px solid var(--accent);
+    .case-card, .project-card { padding:24px; }
+    .case-grid { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:28px; align-items:start; }
+    .case-grid > *, .hero-grid > *, .cg-grid > * { min-width:0; }
+    .case-copy p { margin-bottom:12px; }
+    .case-copy h3, .project-card h3, .card-title { color:var(--fg); font-size:1.18rem; font-weight:700; }
+    .case-points { padding-left:1.2em; display:grid; gap:8px; margin-bottom:16px; }
+    .case-points li::marker { color:var(--accent); }
+    .case-points strong { color:var(--fg); }
+    .case-visual { min-width:0; }
+    .case-visual figure { margin-bottom:0; }
+    .case-visual figcaption, .media-caption { font-size:.83rem; color:var(--muted); margin-top:7px; }
+    .project-grid { display:grid; gap:20px; }
+    .project-details { border-top:1px solid var(--border); margin-top:18px; padding-top:10px; }
+    details > summary { color:var(--accent); cursor:pointer; padding:7px 0; font-size:.92rem; }
+    details[open] > summary { margin-bottom:12px; }
+    .project-details > :not(summary) { font-size:.92rem; }
+    .role-note { border-left:2px solid var(--accent); padding-left:12px; color:var(--muted); }
+    .metric-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:20px 0; }
+    .metric { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+    .metric strong { display:block; font-size:1.4rem; line-height:1.3; color:var(--accent); margin-bottom:5px; }
+    .metric p { margin-bottom:4px; }
+    .metric small, .metric .small { color:var(--muted); line-height:1.6; }
+    .cg-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+    .cg-card { overflow:hidden; display:flex; flex-direction:column; padding:18px; }
+    .cg-card h3 { font-size:1.07rem; margin:15px 0 6px; font-weight:700; }
+    .cg-card p { font-size:.93rem; margin-bottom:12px; }
+    .cg-card .tech-line { color:var(--self) !important; font-size:.83rem; }
+    .cg-card > .btn, .cg-card > .d-flex:last-child { margin-top:auto; align-self:start; }
+    .cg-media { position:relative; display:block; aspect-ratio:1; border-radius:8px; overflow:hidden; background:var(--imgbg); }
+    .cg-media img { display:block; width:100%; height:100%; object-fit:contain; }
+    .cg-media-label { position:absolute; bottom:0; right:0; background:#152638; color:#fff; padding:5px 10px; font-size:.8rem; border-top-left-radius:6px; }
+    .cg-media:hover .cg-media-label { background:#1267ac; }
+    .cg-copy { padding-top:14px; }
+    .cg-copy .tech-line { margin:0 0 5px; }
+    .cg-copy h3 { margin-top:0; }
+    .cg-copy p:last-child { margin-bottom:0; }
+    .tech-line { font-size:.86rem; }
+    .badges { display:flex; flex-wrap:wrap; gap:5px; }
+    .tbadge { display:inline-flex; border:1px solid var(--border); color:var(--muted); border-radius:4px; font-size:.73rem; line-height:1.3; padding:3px 7px; background:var(--bg); }
+    .btn-outline-info {
+      --bs-btn-color:var(--accent); --bs-btn-border-color:color-mix(in srgb,var(--accent) 55%,transparent);
+      --bs-btn-hover-bg:color-mix(in srgb,var(--accent) 10%,var(--card)); --bs-btn-hover-color:var(--fg);
+      --bs-btn-hover-border-color:var(--accent); --bs-btn-active-bg:var(--card); --bs-btn-active-color:var(--fg);
     }
-    .skip-link:focus{ transform:translateY(0); }
-
-    /* Navbar */
-    .navbar{
-      background: var(--nav) !important;
-      border-bottom: 1px solid var(--border) !important;
-      transition: background-color .3s;
+    .btn-soft {
+      border:1px solid var(--border); background:var(--card); --bs-btn-color:var(--muted);
+      --bs-btn-hover-color:var(--fg); --bs-btn-active-color:var(--fg);
+      --bs-btn-hover-border-color:var(--accent); --bs-btn-hover-bg:var(--bg);
     }
-    .navbar .nav-link.active{
-      color: var(--accent) !important;
-      font-weight: 600;
+    .btn-sm { min-height:36px; padding:5px 10px; display:inline-flex; align-items:center; gap:4px; }
+    .media-box { padding:8px; background:var(--imgbg); border:1px solid var(--border); border-radius:10px; }
+    .media-hero, .media-thumb { position:relative; overflow:hidden; aspect-ratio:16/9; border-radius:8px; background:var(--imgbg); border:1px solid var(--border); }
+    .media-hero img, .media-thumb img, .media-hero video, .media-thumb video { width:100%; height:100%; object-fit:contain; display:block; cursor:zoom-in; }
+    .media-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .media-grid > * { min-width:0; }
+    .shot-row { display:flex; justify-content:center; gap:12px; }
+    .shot-row > div, .shot-row > figure { min-width:0; flex:0 1 180px; margin:0; }
+    .media-phone { position:relative; aspect-ratio:9/19; width:100%; max-height:380px; overflow:hidden; border-radius:12px; border:1px solid var(--border); padding:4px; background:var(--imgbg); }
+    .media-phone img { width:100%; height:100%; object-fit:contain; display:block; cursor:zoom-in; border-radius:8px; }
+    .flow-shot-row { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+    .flow-shot { flex:0 1 260px; max-width:100%; align-self:start; }
+    .flow-shot img { width:100%; height:auto; display:block; cursor:zoom-in; }
+    .cfa-compare { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; max-width:650px; margin:0 auto; }
+    .cfa-compare figure { margin:0; }
+    .cfa-shot { position:relative; height:310px; background:var(--imgbg); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    .cfa-shot img { width:100%; height:100%; object-fit:contain; cursor:zoom-in; }
+    .cfa-swipe-hint { display:none; }
+    .cfa-feature-list { padding-left:1.2em; color:var(--muted); }
+    .media-hero::after, .media-thumb::after, .media-phone::after, .cfa-shot::after {
+      content:"＋"; position:absolute; bottom:6px; right:6px; color:#fff; background:#233548;
+      width:26px; height:26px; line-height:24px; text-align:center; border-radius:5px; pointer-events:none; font-size:20px;
     }
-    .brand-short{ display:none; }
-    @media (max-width: 991.98px){
-      .navbar-brand{
-        font-size:1rem;
-        white-space:nowrap;
-      }
-      .brand-full{ display:none; }
-      .brand-short{ display:inline; }
-      .navbar-collapse{
-        max-height:calc(100dvh - 60px);
-        overflow-y:auto;
-      }
+    img[role="button"]:focus-visible { outline:3px solid var(--accent); outline-offset:-3px; }
+    .fig-band { margin:18px 0 0; background:#fff; border:1px solid var(--border); border-radius:10px; padding:10px; overflow-x:auto; }
+    .fig-band img { width:100%; height:auto; display:block; cursor:zoom-in; }
+    .fig-band figcaption, .fig-band .text-muted { color:#42566d !important; font-size:.83rem; margin-top:8px; }
+    .fig-hint { display:inline; }
+    .timeline { display:grid; grid-template-columns:auto minmax(0,1fr); gap:8px 20px; font-size:.95rem; }
+    .timeline .yr { color:var(--accent); font-weight:650; }
+    .timeline .ev { color:var(--muted); }
+    .stack-map { list-style:none; padding:0; margin:0; display:grid; gap:8px; font-size:.92rem; }
+    .stack-map span { color:var(--muted); }
+    .stack-map strong { display:block; }
+    .cert-row { display:flex; gap:14px; align-items:center; min-width:0; }
+    .cert-row > div { min-width:0; }
+    .cert-badge { flex:0 0 auto; display:block; background:#fff; border-radius:6px; padding:4px; }
+    .cert-badge img { width:64px; height:64px; display:block; }
+    .cert-names { overflow-wrap:anywhere; }
+    .nowrap { white-space:nowrap; }
+    .archive-item { display:grid; grid-template-columns:180px minmax(0,1fr); gap:18px; padding:18px 0; border-bottom:1px solid var(--border); }
+    .archive-item:last-child { border:0; }
+    .archive-title { font-size:1.03rem; margin:0 0 4px; }
+    .archive-item p { font-size:.9rem; margin-bottom:8px; }
+    .archive-item .media-thumb { max-width:320px; }
+    .summary-only { display:none; }
+    #contact { border-top:1px solid var(--border); margin-top:24px; padding-top:30px; }
+    #contact a { overflow-wrap:anywhere; }
+    /* 原図を実際に拡大し，タッチ・キーボードで画像内を移動できるビューア */
+    .lightbox-overlay { position:fixed; inset:0; z-index:9999; background:rgba(5,10,17,.95); display:flex; align-items:center; justify-content:center; padding:78px 16px 20px; visibility:hidden; opacity:0; pointer-events:none; }
+    .lightbox-overlay.active { visibility:visible; opacity:1; pointer-events:auto; }
+    .lightbox-toolbar { position:absolute; top:12px; left:16px; right:16px; display:flex; gap:6px; align-items:center; }
+    .lightbox-toolbar button, .lightbox-toolbar a { min-width:44px; min-height:44px; padding:8px; background:#1d2c3d; color:#fff; border:1px solid #7e96b0; border-radius:6px; text-align:center; text-decoration:none; font-size:14px; cursor:pointer; }
+    .lightbox-toolbar button:disabled { opacity:.4; cursor:default; }
+    .lightbox-toolbar .lightbox-close { margin-left:auto; font-size:24px; line-height:1; }
+    .lightbox-viewport { max-width:1280px; width:100%; height:100%; overflow:auto; overscroll-behavior:contain; touch-action:pan-x pan-y pinch-zoom; border-radius:8px; }
+    .lightbox-stage { margin:0 auto; }
+    .lightbox-stage img { display:block; width:100%; max-width:none; max-height:none; height:auto; }
+    .lightbox-help { position:absolute; bottom:0; margin:0; font-size:11px; color:#d2dfed; pointer-events:none; }
+    .lightbox-overlay.is-video { padding-bottom:76px; }
+    .lightbox-overlay iframe { width:min(100%,960px,calc((100dvh - 160px) * 1.7778)); aspect-ratio:16/9; border:0; border-radius:8px; background:#000; }
+    .lightbox-video-close { position:absolute; bottom:16px; min-height:44px; padding:8px 18px; background:#1d2c3d; border:1px solid #7e96b0; border-radius:6px; color:#fff; }
+    .lightbox-overlay video { max-width:100%; max-height:100%; }
+    .lightbox-overlay :focus-visible { outline:3px solid #8acaff; outline-offset:2px; }
+    @media (max-width:1199.98px) {
+      .navbar-brand { font-size:.95rem; }
+      .navbar .nav-link { padding-left:6px; padding-right:6px; font-size:.86rem; }
     }
-
-    /* Hero: 単色の控えめな下地のみ */
-    .hero{
-      background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 75%);
-      border-bottom: 1px solid var(--border);
+    @media (max-width:991.98px) {
+      .brand-full { display:none; } .brand-short { display:inline; }
+      .navbar .nav-link { min-height:44px; display:flex; align-items:center; font-size:1rem; }
+      .hero-grid { grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:24px; }
+      .case-grid { grid-template-columns:1fr; gap:20px; }
+      .case-visual { max-width:660px; width:100%; margin:0 auto; }
+      .cg-grid { gap:12px; }
     }
-    .hero-lead{ max-width:52rem; line-height:1.7; }
-    .hero-degree{ color:var(--muted); font-size:.95rem; }
-    .hero-evidence{
-      list-style:none;
-      margin:0; padding:0;
-      display:grid; gap:.25rem;
-      font-size:.95rem;
+    @media (max-width:767.98px) {
+      .container { padding-left:18px; padding-right:18px; }
+      .hero { padding:32px 0 22px; }
+      .hero-grid { grid-template-columns:1fr; gap:22px; }
+      .hero .lead { font-size:1.05rem; }
+      .hero-lead { font-size:1.15rem; }
+      .hero-actions { margin-top:16px; }
+      .profile-facts { padding:13px 16px; font-size:.86rem; }
+      .proof-links { gap:4px 16px; margin-top:16px; }
+      main.container { padding-top:14px; }
+      main > section { padding-top:20px; padding-bottom:20px; }
+      .section-heading { margin-bottom:14px; }
+      .section-title { font-size:1.32rem; }
+      .case-card, .project-card { padding:18px; }
+      .case-points { font-size:.95rem; gap:9px; }
+      .metric-grid { grid-template-columns:1fr; gap:8px; }
+      .metric { padding:12px 14px; }
+      .metric strong { font-size:1.25rem; }
+      .cg-grid { grid-template-columns:1fr; gap:16px; }
+      .cg-card { padding:18px; }
+      .cg-media { aspect-ratio:1; }
+      .fig-band img { min-width:760px; }
+      .fig-band { padding:8px; }
+      .archive-item { grid-template-columns:1fr; gap:12px; }
+      .archive-item .media-thumb { width:100%; max-width:360px; }
+      .timeline { grid-template-columns:1fr; gap:3px; }
+      .timeline .ev { margin-bottom:10px; }
+      .cfa-shot { height:230px; }
+      .btn-sm { min-height:40px; }
+      .lightbox-overlay { padding-left:10px; padding-right:10px; }
+      .lightbox-toolbar { left:10px; right:10px; gap:5px; }
     }
-    .hero-lead a, .hero-evidence a{ color: var(--accent); }   /* Bootstrap 既定の #0d6efd はコントラスト 4.27（AA 未満） */
-    .hero-evidence li::before{
-      content:"—";
-      color:var(--accent);
-      margin-right:.5em;
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior:auto; }
+      *, *::before, *::after { animation:none !important; transition:none !important; }
     }
-    .hero-actions .btn{
-      min-height:44px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding-inline:1rem;
-    }
-
-    /* Card: 代表作品・研究など主要ブロックのみ */
-    .card{
-      background: var(--card);
-      color: var(--fg); /* Bootstrapの--bs-body-color(黒)継承対策 */
-      border-color: var(--border) !important;
-      box-shadow: 0 4px 16px var(--shadow);
-      border-radius: 12px;
-      transition: background-color .3s, border-color .3s;
-    }
-
-    /* Separator */
-    hr.border-subtle{
-      border: 0 !important;
-      height: 1px;
-      opacity: 1 !important;
-      background: var(--border);
-      margin: 28px 0;
-    }
-
-    /* テキストの技術スタック表記 */
-    .tech-line{
-      color: var(--muted);
-      font-size: .88rem;
-      letter-spacing: .2px;
-    }
-
-    /* 技術バッジ（CSS製・外部通信なし。色は各技術の公式ブランドカラー） */
-    .badges{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
-    .tbadge{
-      display:inline-flex;
-      font-size:.72rem;
-      line-height:1;
-      border-radius:4px;
-      overflow:hidden;
-      font-weight:600;
-      letter-spacing:.2px;
-      color:#fff;
-      padding:4px 8px;
-    }
-    .c-mit{ background:#97ca00; color:#1d2b00; }
-    .c-python{ background:#3776ab; }
-    .c-flutter{ background:#02569b; }
-    .c-dart{ background:#0175c2; }
-    .c-fastapi{ background:#00695c; }
-    .c-ffmpeg{ background:#007808; }
-    .c-android{ background:#3ddc84; color:#0b2e19; }
-    .c-chromium{ background:#174ea6; }
-    .c-kotlin{ background:#7f52ff; }
-    .c-dify{ background:#6b4fbb; }
-    .c-keras{ background:#d00000; }
-    .c-cpp{ background:#00599c; }
-    .c-glsl{ background:#5586a4; }
-    .c-js{ background:#f7df1e; color:#323330; }
-    .c-qt{ background:#41cd52; color:#0c3315; }
-    .c-gray{ background:#555; }
-
-    /* 縦に長い連続スクリーンショット（LINEの一連の流れ）用 */
-    .flow-shot{
-      max-width: 320px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      background: var(--imgbg);
-    }
-    .flow-shot img{ width:100%; height:auto; display:block; cursor: zoom-in; }
-    .flow-shot-row{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
-    .flow-shot-row .flow-shot{ flex:0 1 250px; align-self:flex-start; }
-    /* Media */
-    .nowrap{ white-space: nowrap; }
-    .media-box{
-      background: var(--imgbg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px;
-    }
-    /* 帯図（slide リポジトリで作った構成図。media/fig/*.svg、文字はパス化済み）
-       白地の図なので dark/light どちらでも白い帯として置く。幅が狭い画面では横スクロールで文字サイズを保つ */
-    .fig-band{
-      margin: 12px 0 0;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 10px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    .fig-band img{ width:100%; height:auto; display:block; cursor: zoom-in; }
-    /* 帯図の枠は白地なので、キャプションはテーマに関係なく濃いグレー（dark の --muted #b9c7d8 だと白地でコントラスト 1.71） */
-    .fig-band figcaption, .fig-band figcaption.text-muted{ margin-top:6px; color:#4a5a70 !important; }
-    .fig-band .fig-hint{ display:none; }
-    @media (max-width: 767.98px){
-      .fig-band img{ min-width: 760px; }
-      .fig-band .fig-hint{ display:inline; }
-    }
-    .media-hero{
-      aspect-ratio: 16 / 9;
-      overflow: hidden;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--imgbg);
-    }
-    .media-hero img, .media-hero video{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display:block;
-    }
-    .media-grid{
-      display:grid;
-      gap:10px;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 992px){
-      .media-grid{ grid-template-columns: 1fr 1fr; }
-    }
-    .media-thumb{
-      aspect-ratio: 16 / 9;
-      overflow:hidden;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--imgbg);
-    }
-    .media-thumb img, .media-thumb video{
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display:block;
-    }
-    .cfa-compare{
-      display:grid;
-      gap:10px;
-      grid-auto-flow:column;
-      grid-auto-columns:min(88%, 340px);
-      overflow-x:auto;
-      overscroll-behavior-inline:contain;
-      scroll-snap-type:inline mandatory;
-      scrollbar-width:thin;
-      padding-bottom:4px;
-    }
-    @media (min-width: 768px){
-      .cfa-compare{
-        grid-auto-flow:row;
-        grid-auto-columns:auto;
-        grid-template-columns:1fr 1fr;
-        overflow:visible;
-        padding-bottom:0;
-      }
-    }
-    .cfa-compare figure{
-      margin:0;
-      scroll-snap-align:start;
-    }
-    .cfa-swipe-hint{ display:block; }
-    @media (min-width: 768px){
-      .cfa-swipe-hint{ display:none; }
-    }
-    .cfa-shot{
-      aspect-ratio:5 / 6;
-      overflow:hidden;
-      border-radius:10px;
-      border:1px solid var(--border);
-      background:var(--imgbg);
-    }
-    .cfa-shot img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-      display:block;
-    }
-    .cfa-feature-list{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:8px;
-      list-style:none;
-      margin:0;
-      padding:0;
-    }
-    .cfa-feature-list li{
-      padding:8px 11px;
-      border:1px solid var(--border);
-      border-radius:9px;
-      color:var(--muted);
-      font-size:.9rem;
-    }
-    @media (min-width: 768px){
-      .cfa-feature-list{ grid-template-columns:1fr 1fr; }
-    }
-
-    /* 縦長(スマホ)スクショ */
-    .shot-row{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
-    .media-phone{
-      height:440px; aspect-ratio: 9 / 19; overflow:hidden;
-      border-radius:16px; border:1px solid var(--border);
-      background: var(--imgbg); padding:6px;
-    }
-    .media-phone img{
-      width:100%; height:100%; object-fit:contain; display:block;
-      border-radius:11px; cursor: zoom-in;
-    }
-    /* スマホ: スクショ2枚を縦積みにせず横並びで収める（幅基準でスケール） */
-    @media (max-width: 575.98px){
-      .shot-row{ flex-wrap:nowrap; justify-content:center; }
-      .shot-row > div{ flex:1 1 0; min-width:0; max-width:230px; }
-      .media-phone{ height:auto; width:100%; }
-    }
-
-    /* Buttons */
-    .btn-outline-info{
-      --bs-btn-color: var(--accent);
-      --bs-btn-border-color: color-mix(in srgb, var(--accent) 65%, transparent);
-      --bs-btn-hover-bg: color-mix(in srgb, var(--accent) 12%, transparent);
-      --bs-btn-hover-border-color: color-mix(in srgb, var(--accent) 70%, transparent);
-      --bs-btn-hover-color: var(--fg);
-      --bs-btn-active-bg: color-mix(in srgb, var(--accent) 18%, transparent);
-      --bs-btn-active-border-color: color-mix(in srgb, var(--accent) 80%, transparent);
-    }
-    .btn-soft{
-      border: 1px solid var(--border);
-      background: color-mix(in srgb, var(--card) 70%, transparent);
-      /* Bootstrapの--bs-btn-color(黒)を継承するとダークで文字が消えるため明示 */
-      --bs-btn-color: var(--muted);
-      --bs-btn-hover-color: var(--fg);
-      --bs-btn-active-color: var(--fg);
-      --bs-btn-hover-bg: color-mix(in srgb, var(--card) 95%, transparent);
-      --bs-btn-hover-border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-    }
-
-    /* 作品ダイジェスト（採用担当者が最初に読む4行） */
-    .work-digest{
-      list-style:none;
-      margin:0; padding:0;
-      display:grid; gap:.2rem;
-      font-size:.9rem;
-      color:var(--muted);
-    }
-    .work-digest strong{ color:var(--fg); font-weight:600; }
-
-    /* 経歴タイムライン（カード枠なし） */
-    .timeline{
-      display:grid; grid-template-columns:auto 1fr;
-      gap:.25rem 1rem; font-size:.95rem;
-    }
-    .timeline .yr{ color:var(--accent); font-weight:700; white-space:nowrap; }
-    .timeline .ev{ color:var(--muted); }
-    /* 資格のデジタルバッジ（Credly の検証ページへリンク。バッジ画像は加工しない＝AWS のバッジ利用ガイドライン） */
-    .cert-row{ display:flex; gap:12px; align-items:center; }
-    .cert-badge{ flex:0 0 auto; display:block; line-height:0; border-radius:8px; background:#fff; padding:4px; }   /* AWS のルール「白またはごく明るい背景に置く」をダークテーマでも守る */
-    .cert-badge img{ width:76px; height:76px; display:block; }
-    .cert-row a:not(.cert-badge){ color: var(--accent); }
-    .cert-names{ word-break: keep-all; }   /* 狭い画面で「（2026 / 年9月）」のように語中で割れないよう、空白でだけ折り返す */   /* Bootstrap 既定の #0d6efd は背景 #f7f9fc でコントラスト 4.26（AA 未満） */
-    .media-thumb img.fit-contain{ object-fit: contain; }   /* グラフは切らずに全体を見せる */
-    /* 採用向けPDFだけに出す要素（Web・完全版では帯図で代替） */
-    .summary-only{ display:none; }
-
-    /* 技術と作品の対応リスト */
-    .stack-map{
-      list-style:none; margin:0; padding:0;
-      display:grid; gap:.3rem;
-      font-size:.95rem;
-    }
-    .stack-map strong{ color:var(--fg); font-weight:600; }
-    .stack-map span{ color:var(--muted); }
-
-    /* 過去作品アーカイブ */
-    .archive-item{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
-      padding:14px 0;
-      border-bottom:1px solid var(--border);
-    }
-    .archive-item:last-child{ border-bottom:none; }
-    @media (min-width: 768px){
-      .archive-item{ grid-template-columns: 220px 1fr; align-items:start; }
-    }
-    .archive-item .media-thumb{ max-width:320px; }
-    .archive-item h3{ font-size:1rem; margin-bottom:.2rem; }
-
-    /* Lightbox */
-    .lightbox-overlay{
-      position:fixed; inset:0; z-index:9999;
-      background:rgba(0,0,0,.85);
-      display:flex; align-items:center; justify-content:center;
-      opacity:0; pointer-events:none;
-      transition: opacity .25s ease;
-      cursor:zoom-out;
-      padding:24px;
-    }
-    .lightbox-overlay.active{
-      opacity:1; pointer-events:auto;
-    }
-    .lightbox-close{
-      position:absolute; top:12px; right:16px;
-      background:none; border:none; color:#fff;
-      font-size:32px; line-height:1; cursor:pointer;
-      opacity:.7; z-index:10;
-      min-width:44px; min-height:44px;
-    }
-    .lightbox-close:hover,
-    .lightbox-close:focus-visible{ opacity:1; }
-    .lightbox-overlay img,
-    .lightbox-overlay video{
-      max-width:90vw; max-height:90vh;
-      object-fit:contain;
-      border-radius:8px;
-      box-shadow:0 8px 40px rgba(0,0,0,.5);
-      transform:scale(.92);
-      transition: transform .25s ease;
-    }
-    .lightbox-overlay iframe{
-      width: min(90vw, 960px);
-      aspect-ratio: 16 / 9;
-      border:none;
-      border-radius:8px;
-      box-shadow:0 8px 40px rgba(0,0,0,.5);
-      transform:scale(.92);
-      transition: transform .25s ease;
-    }
-    .lightbox-overlay.active img,
-    .lightbox-overlay.active video,
-    .lightbox-overlay.active iframe{
-      transform:scale(1);
-    }
-    .media-hero, .media-thumb, .media-phone, .cfa-shot{
-      position:relative;
-    }
-    .media-hero::after, .media-thumb::after, .media-phone::after, .cfa-shot::after{
-      content:"";
-      position:absolute; bottom:6px; right:6px;
-      width:24px; height:24px;
-      background-color:rgba(0,0,0,.55);
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4'/%3E%3Cpath d='m10 10 4 4M7 5v4M5 7h4'/%3E%3C/svg%3E");
-      background-position:center;
-      background-repeat:no-repeat;
-      border-radius:4px;
-      opacity:.6; pointer-events:none;
-    }
-    .media-hero img, .media-hero video,
-    .media-thumb img, .media-thumb video,
-    .media-phone img, .cfa-shot img{
-      cursor:zoom-in;
-    }
-    .media-hero img[role="button"]:focus-visible,
-    .media-hero video[role="button"]:focus-visible,
-    .media-thumb img[role="button"]:focus-visible,
-    .media-thumb video[role="button"]:focus-visible,
-    .media-phone img[role="button"]:focus-visible,
-    .cfa-shot img[role="button"]:focus-visible{
-      outline:3px solid var(--accent);
-      outline-offset:-3px;
-    }
-
-    html{ scroll-behavior: smooth; }
-
-    @media (prefers-reduced-motion: reduce){
-      html{ scroll-behavior:auto; }
-      *, *::before, *::after{
-        animation-duration:.01ms !important;
-        animation-iteration-count:1 !important;
-        transition-duration:.01ms !important;
-      }
-    }
-
-    /* ============================================
-       Print (PDF)
-       - 通常印刷/完全版PDF: 全セクション（アコーディオンはJSで展開）
-       - 採用向けサマリー: body.pdf-summary で .pdf-full-only を非表示
-    ============================================ */
-    @page{
-      margin: 10mm 12mm;
-      size: A4;
-    }
-    @media print{
-      /* Chromium 印刷フリーズ対策 */
-      html{ scroll-behavior: auto !important; }
-      *, *::before, *::after{
-        transition: none !important;
-        animation: none !important;
-      }
-      nav, .no-print{ display:none !important; }
-      body{
-        background:#fff !important;
-        color:#000 !important;
-        font-size: 11px !important;
-        line-height: 1.5 !important;
-      }
-      .text-muted{ color:#444 !important; }
-      .hero{
-        background:none !important;
-        border-bottom:none !important;
-        padding-top:0 !important;
-        padding-bottom:.15rem !important;
-      }
-      .hero.py-5{ padding-top:0 !important; padding-bottom:.15rem !important; }
-      .hero .display-6{ font-size:18px !important; margin-bottom:2px !important; }
-      .hero .lead{ font-size:11px !important; line-height:1.4 !important; margin-bottom:4px !important; }
-      .hero-lead, .hero-degree{ font-size:10px !important; }
-      .hero-evidence{ font-size:9.5px !important; gap:1px !important; }
-      .cert-row{ gap:8px !important; }
-      /* 紙面ではバッジ画像そのものが Credly へのリンク（テキストの「Credlyで検証」は画面だけ） */
-      .cert-badge img{ width:13mm !important; height:13mm !important; }
-      body.pdf-summary #career .timeline{ margin-bottom:4px !important; }
-      .hero .btn{ font-size:9px !important; padding:1px 5px !important; min-height:auto !important; }
-
-      /* Bootstrapの2カラム維持 */
-      .row{ display:flex !important; flex-wrap:wrap !important; }
-      .col-lg-5{ flex:0 0 auto !important; width:41.6667% !important; }
-      .col-lg-7{ flex:0 0 auto !important; width:58.3333% !important; }
-      .col-lg-6{ flex:0 0 auto !important; width:50% !important; }
-      .col-md-4{ flex:0 0 auto !important; width:33.3333% !important; }
-      .col-md-5{ flex:0 0 auto !important; width:41.6667% !important; }
-      .col-md-6{ flex:0 0 auto !important; width:50% !important; }
-      .col-md-7{ flex:0 0 auto !important; width:58.3333% !important; }
-      .col-md-8{ flex:0 0 auto !important; width:66.6667% !important; }
-      .g-3{ --bs-gutter-x:0.5rem !important; --bs-gutter-y:0.5rem !important; }
-      .g-4{ --bs-gutter-x:0.75rem !important; --bs-gutter-y:0.5rem !important; }
-
-      .card{
-        box-shadow:none !important;
-        border:1px solid #ccc !important;
-        border-radius:8px !important;
-        padding: 6px !important;
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-      /* 長いケーススタディカードは内部分割を許可（受託案件も帯図2枚で長いので完全版では分割可。figure 単位は分割しない） */
-      #works .card,
-      body:not(.pdf-summary) #client .card{
-        break-inside: auto !important;
-        page-break-inside: auto !important;
-      }
-      .card .h5, .card .card-title{ font-size:12px !important; }
-      .card p, .card li{ font-size:10px !important; }
-      .card p{ margin-bottom:2px !important; }
-      .tech-line{ font-size:9px !important; }
-      .badges{ gap:3px !important; }
-      .tbadge{ font-size:7px !important; padding:2px 5px !important; }
-
-      .media-box{
-        border:1px solid #ccc !important;
-        background:#fff !important;
-        padding:4px !important;
-      }
-      .media-hero{
-        aspect-ratio:16/9;
-        max-height:170px;
-        border:1px solid #ccc !important;
-        background:#fff !important;
-      }
-      .media-hero img, .media-hero video{ object-fit:contain; }
-      /* 図枠内で画像を中央寄せ（枠右側に空白が残るのを防ぐ） */
-      /* aspect-ratio×max-heightで要素幅が縮むため、枠内で要素ごと中央へ */
-      .media-box .media-hero{ display:flex; align-items:center; justify-content:center; margin-left:auto; margin-right:auto; }
-      .media-thumb, .media-thumb img{
-        border:1px solid #ccc !important;
-        background:#fff !important;
-      }
-      .media-grid{
-        display:grid !important;
-        grid-template-columns:1fr 1fr !important;
-        gap:4px !important;
-      }
-      .media-thumb{ max-height:110px; }
-      .cfa-compare{
-        grid-template-columns:1fr 1fr !important;
-        grid-auto-flow:row !important;
-        grid-auto-columns:auto !important;
-        overflow:visible !important;
-        padding-bottom:0 !important;
-        gap:4px !important;
-      }
-      .cfa-swipe-hint{ display:none !important; }
-      .cfa-shot{
-        height:200px !important;
-        aspect-ratio:auto !important;
-        background:#fff !important;
-        border:1px solid #ccc !important;
-      }
-      .cfa-shot img{ object-fit:contain !important; }
-      .cfa-shot::after{ display:none !important; }
-      .cfa-feature-list{ grid-template-columns:1fr 1fr !important; gap:3px !important; }
-      .cfa-feature-list li{ padding:3px 5px !important; font-size:8px !important; }
-      .cfa-compare figcaption{ font-size:8px !important; line-height:1.3 !important; }
-      .shot-row{ gap:4px !important; }
-      .media-phone{
-        width:auto !important;
-        height:150px !important;
-        padding:2px !important;
-        border:1px solid #ccc !important;
-        border-radius:8px !important;
-        background:#fff !important;
-      }
-      .media-phone img{ border-radius:5px !important; }
-      .media-phone::after{ display:none !important; }
-      .media-hero::after, .media-thumb::after{ display:none !important; }
-      .flow-shot{ max-width:300px !important; border:1px solid #ccc !important; }
-      .flow-shot-row{ break-inside:avoid; }
-      /* LINE実機フロー2枚は縦長なので印刷では高さを抑え、前のページの残りに入るようにする（2026-09-18） */
-      .flow-shot img{ max-height:110mm !important; width:auto !important; max-width:100%; margin:0 auto; }
-      /* 画像2枚とキャプションを一体で扱う（キャプションだけ次ページへ落ちて1ページ浪費するのを防ぐ） */
-      #trivium-card details .media-box{ break-inside:avoid !important; page-break-inside:avoid !important; }
-
-      /* 見出し */
-      .section-title{
-        font-size:13px !important;
-        margin-bottom:2px !important;
-        border-bottom:1px solid #999 !important;
-      }
-      .d-flex.mb-3{ margin-bottom:0.25rem !important; }
-      section > .d-flex:first-child{
-        break-after: avoid !important;
-        page-break-after: avoid !important;
-      }
-      section > .row, section > .card, section > p{
-        break-before: avoid !important;
-        page-break-before: avoid !important;
-      }
-
-      /* リンク: クリック可能なまま、外部リンクは↗のみ付す（生URLは展開しない） */
-      a{ color:#000 !important; text-decoration:none !important; }
-      a.btn-outline-info{
-        display:inline-block !important;
-        font-size:10px !important;
-        padding:1px 6px !important;
-        border:1px solid #aaa !important;
-        color:#0b66c3 !important;
-        background:#eef4fb !important;
-        text-decoration:none !important;
-      }
-      a.btn-outline-info[target="_blank"]::after{ content:" \2197"; }
-
-      hr.border-subtle{
-        background:#ddd !important;
-        border:none !important;
-        height:1px !important;
-        margin:8px 0 !important;
-        break-after: avoid !important;
-        page-break-after: avoid !important;
-      }
-
-      main.container{ padding-top:0.15rem !important; padding-bottom:0 !important; }
-      .py-2{ padding-top:0.05rem !important; padding-bottom:0.05rem !important; }
-      section{ break-inside: auto; page-break-inside: auto; }
-      .h-100{ height:auto !important; }
-      .skip-link{ display:none !important; }
-
-      /* タイムライン・技術リスト */
-      .timeline{ gap:0 6px !important; font-size:9px !important; }
-      .timeline .yr{ color:#111 !important; }
-      .timeline .ev{ color:#444 !important; }
-      .stack-map{ font-size:9px !important; gap:1px !important; }
-
-      .work-digest{ font-size:10px !important; gap:1px !important; }
-
-      /* 画像とキャプションを同一ページに保つ（レビュー指摘: 分離防止） */
-      .shot-row > div,
-      figure,
-      .print-keep{
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-      }
-      /* 経歴・資格・主要技術はAI委任注記まで一体で扱う */
-      #career .row{
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-      }
-      /* 開発背景は見出し・本文・実機画像を一体で次ページへ送る
-         （見出しだけの取り残しと、画像だけの断片化の両方を防ぐ） */
-      #clagecook-background{
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-      }
-      /* 開発背景の実機画像は補足なので印刷では小さく（ブロックを1ページに収める） */
-      #clagecook-background .media-phone{ height:105px !important; }
-      /* 帯図を入れて各カードが伸びたので（2026-09-18）、Trivium の強制改ページは外して .print-keep（見出し＋帯図＋実機画面）の
-         単位で流し込む。ChromiumforA は外すと前ページ末尾に空枠断片（71mm）が出たので新ページ開始のまま */
-      /* 受託案件は図2枚を含み途中で切れると空枠断片が残るので、完全版では見出しごと新ページから（2026-09-19） */
-      body:not(.pdf-summary) #client{
-        break-before: page !important;
-        page-break-before: always !important;
-      }
-      body:not(.pdf-summary) #chromiumfora-card{
-        break-before: page !important;
-        page-break-before: always !important;
-      }
-      /* ScriptVEditは新ページから開始（前ページ末尾に空の枠線断片が残るのを防ぐ） */
-      body:not(.pdf-summary) #scriptvedit-card{
-        break-before: page !important;
-        page-break-before: always !important;
-      }
-      /* 過去作品は流し込み（帯図で前のセクションが伸びたので、6件目の強制改ページは外した。2026-09-18） */
-      /* カード内の折りたたみ: 印刷では開いた状態で小見出し化 */
-      .card details > summary{
-        font-size:10px !important;
-        font-weight:700;
-        list-style:none;
-        break-after: avoid !important;
-        page-break-after: avoid !important;
-      }
-      .card details > summary::-webkit-details-marker,
-      .card details > summary::marker{ display:none; content:""; }
-
-      /* アコーディオン（過去作品・開発背景）: 印刷では開いて掲載 */
-      details.card > summary, details.archive > summary{
-        font-size:12px !important;
-        font-weight:700;
-        list-style:none;
-        break-after: avoid !important;
-        page-break-after: avoid !important;
-      }
-      details.card > summary::-webkit-details-marker,
-      details.card > summary::marker,
-      details.archive > summary::-webkit-details-marker,
-      details.archive > summary::marker{ display:none; content:""; }
-      #archive details.archive{
-        break-inside: auto !important;
-        page-break-inside: auto !important;
-      }
-      .archive-item{
-        border-bottom:1px solid #ddd !important;
-        padding:6px 0 !important;
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-        grid-template-columns: 160px 1fr !important;
-      }
-      .archive-item h3{ font-size:11px !important; }
-      .archive-item p{ font-size:9px !important; margin:0 !important; }
-      .archive-item .media-thumb{ max-height:90px; }
-
-      #contact{ margin-bottom:0 !important; padding-top:0 !important; padding-bottom:0 !important; }
-      #contact .mt-3{ margin-top:3px !important; } /* ©行がページ末尾で溢れて空ページを作るのを防ぐ */
-
-      /* ── 採用向けサマリーPDF: 完全版のみの要素を隠す ── */
-      body.pdf-summary .pdf-full-only{ display:none !important; }
-      body.pdf-summary{ font-size:10.5px !important; }
-      body.pdf-summary .media-phone{ height:120px !important; }
-      body.pdf-summary .card p, body.pdf-summary .card li{ font-size:9.5px !important; }
-      body.pdf-summary hr.border-subtle{ margin:3px 0 !important; }
-      body.pdf-summary .shot-row .media-phone{ height:150px !important; }
-      body.pdf-summary .media-hero{ max-height:90px; }
-      body.pdf-summary #clagecook-card .media-hero{ max-height:120px; }
-      body.pdf-summary .cfa-shot{ height:100px !important; }
-      body.pdf-summary .media-thumb{ max-height:85px; }
-      body.pdf-summary .card .h5{ margin-bottom:6px !important; }
-      body.pdf-summary .card p{ line-height:1.35 !important; }
-      body.pdf-summary .work-digest li{ line-height:1.28 !important; }
-      body.pdf-summary h2.h4{ margin-bottom:4px !important; }
-      body.pdf-summary section hr{ margin:2px 0 !important; }
-      body.pdf-summary .card p.mb-2{ margin-bottom:4px !important; }
-      body.pdf-summary #contact .mt-3{ margin-top:4px !important; }
-      body.pdf-summary .card{ padding:4px !important; }
-      body.pdf-summary .media-box{ padding:2px !important; }
-      /* 採用向け2ページも帯図を載せる。帯図が説明を担うので、重複する実機画面（Clage Cook / ScriptVEdit のヒーロー画像、
-         Trivium の実機2枚、研究の図2枚）は省き、ChromiumforA の比較画面は残す */
-      body.pdf-summary .fig-band{ padding:2px 4px !important; margin-top:4px !important; }
-      body.pdf-summary .fig-band img{ width:85% !important; margin:0 auto; }
-      body.pdf-summary .fig-band figcaption{ display:none !important; }
-      body.pdf-summary #works .media-box{ display:none !important; }
-      body.pdf-summary #trivium-card .shot-row{ display:none !important; }
-      body.pdf-summary #research .card > .row > .col-md-5{ display:none !important; }
-      body.pdf-summary #research .card > .row > .col-md-7{ flex:0 0 100% !important; width:100% !important; max-width:100% !important; }
-      body.pdf-summary .g-3{ --bs-gutter-y:0.25rem !important; }
-      body.pdf-summary .work-digest{ margin-top:8px !important; }
-      body.pdf-summary .small.text-muted.mt-2, body.pdf-summary figcaption{ margin-top:3px !important; }
-      /* サマリーでは補足要素を省く（フル版には残る） */
-      body.pdf-summary .summary-hide{ display:none !important; }
-      /* サマリーだけに出す要素（Webと完全版では帯図が代わりに出る） */
-      body.pdf-summary .summary-only{ display:grid !important; }
-      /* サマリーはカードが小さいので、分割せず丸ごと次ページへ送る（空枠断片も防げる） */
-      body.pdf-summary #works .card{
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-      }
-      body.pdf-summary .work-digest{ gap:0 !important; }
-      /* サマリーではダイジェスト4行で代表させ、詳細折りたたみは完全版のみ収録 */
-      body.pdf-summary #works details{ display:none !important; }
+    /* 印刷は閲覧テーマに依存させず，本文と同じ順序で出力する */
+    @page { size:A4; margin:10mm 12mm; }
+    @media print {
+      :root, html[data-theme] { --bg:#fff; --fg:#172635; --muted:#3e4e60; --card:#fff; --border:#c6d0da; --accent:#145d95; --self:#14665d; --shadow:transparent; --imgbg:#f1f4f7; color-scheme:light; }
+      html { scroll-behavior:auto !important; }
+      *, *::before, *::after { animation:none !important; transition:none !important; }
+      body { font-size:10.5px !important; line-height:1.5 !important; background:#fff !important; color:var(--fg) !important; }
+      nav, .no-print, .skip-link, .lightbox-overlay, .proof-links { display:none !important; }
+      .container { max-width:none; width:100%; padding:0 !important; }
+      .hero { padding:0 0 9px !important; background:none; }
+      .hero-grid { grid-template-columns:1.3fr 1fr; gap:15px; }
+      .hero h1, .hero .display-6 { font-size:22px !important; margin:0 0 5px !important; }
+      .hero .lead { font-size:12px !important; margin-bottom:5px !important; }
+      .hero-lead, .hero-degree { font-size:10px; margin-bottom:4px !important; }
+      .hero-actions { margin-top:6px; }
+      .hero-actions .btn { min-height:0; font-size:9px; padding:2px 5px; }
+      .profile-facts { padding:7px 9px; font-size:9px; border-left-width:2px; }
+      .profile-facts p { margin-bottom:5px; }
+      .profile-facts dl { grid-template-columns:34px minmax(0,1fr); gap:5px 7px; margin:4px 0; }
+      .profile-facts dt { font-size:9px; margin-top:0; }
+      .profile-facts > a { display:none; }
+      .profile-facts .d-block { display:block !important; }
+      main > section { padding:8px 0 !important; }
+      .section-heading { margin-bottom:7px; gap:4px; break-after:avoid; }
+      .section-kicker { font-size:8px; margin-bottom:2px; }
+      .section-title { font-size:15px !important; }
+      .section-intro { font-size:10px; margin-bottom:8px; }
+      .case-card, .project-card, .cg-card, .card { box-shadow:none; padding:10px !important; border-radius:6px; }
+      .case-grid { grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:12px; break-inside:avoid; }
+      .case-card h3, .project-card h3 { font-size:12px; }
+      .case-copy p { margin-bottom:6px; }
+      .case-points { font-size:10px; gap:4px; margin-bottom:7px; }
+      .case-visual { width:100%; max-width:none; }
+      .case-visual figcaption, figcaption, .small { font-size:9px; }
+      .case-visual .media-thumb, .case-visual .media-hero { max-height:170px; }
+      .metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; margin:10px 0; }
+      .metric { padding:7px; break-inside:avoid; }
+      .metric strong { font-size:15px; }
+      .metric p { font-size:9.5px; }
+      .project-grid { gap:10px; }
+      .project-details { margin-top:8px; padding-top:4px; }
+      .project-details > :not(summary), details > summary { font-size:10px; }
+      details > summary { padding:3px 0; font-weight:700; break-after:avoid; list-style:none; }
+      details > summary::marker { content:""; }
+      details[open] > summary { margin-bottom:5px; }
+      .cg-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; }
+      .cg-card { break-inside:avoid; }
+      .cg-card h3 { font-size:11px; margin:8px 0 4px; }
+      .cg-card p { font-size:10px; margin-bottom:6px; }
+      .cg-card .tech-line { font-size:9px; }
+      .cg-media { aspect-ratio:16/10; }
+      .fig-band { margin-top:8px; padding:5px; overflow:visible; break-inside:avoid; }
+      .fig-band img { min-width:0 !important; width:100%; height:auto; }
+      .fig-band figcaption { margin-top:4px; font-size:9px; }
+      .fig-hint { display:none; }
+      .media-grid { gap:6px; }
+      .shot-row { gap:8px; }
+      .shot-row > div, .shot-row > figure { flex:0 1 110px; }
+      .media-phone { max-height:220px; }
+      .flow-shot { flex-basis:190px; }
+      .flow-shot img { max-height:100mm; object-fit:contain; }
+      .cfa-shot { height:190px; }
+      .media-hero::after, .media-thumb::after, .media-phone::after, .cfa-shot::after { display:none; }
+      figure, .print-keep, .shot-row > div { break-inside:avoid; }
+      figure { margin:0 0 6px; }
+      #research .details-content .media-thumb { max-height:250px; margin-inline:auto; }
+      #research .case-visual .media-grid { grid-template-columns:1fr; }
+      #research .case-visual .media-thumb { max-height:100px; }
+      .section-heading, .archive-item, .details-content > p { break-inside:avoid; }
+      .cg-media-label { font-size:8px; padding:2px 5px; }
+      .cg-copy { padding-top:7px; }
+      p, li { orphans:3; widows:3; }
+      h2, h3, h4 { break-after:avoid; }
+      .btn, .btn-sm { min-height:0; padding:2px 5px; font-size:9px; color:var(--accent) !important; }
+      .tbadge, .tech-line { font-size:8px; }
+      .cert-badge img { width:42px; height:42px; }
+      .timeline { grid-template-columns:auto 1fr; font-size:10px; gap:5px 12px; }
+      .timeline .ev { margin:0; }
+      .stack-map { font-size:10px; gap:3px; }
+      .archive-item { grid-template-columns:135px minmax(0,1fr); gap:10px; padding:9px 0; break-inside:avoid; }
+      .archive-title { font-size:11px; }
+      .archive-item p { font-size:10px; line-height:1.45; margin:0 0 4px; }
+      #contact { margin-top:8px; padding-top:8px !important; }
+      hr.border-subtle { margin:8px 0; }
+      body:not(.pdf-summary) #client, body:not(.pdf-summary) #craft { break-before:page; }
+      body:not(.pdf-summary) #archive .archive-item { padding:6px 0; }
+      body:not(.pdf-summary) #archive .media-thumb { max-height:60px; }
+      body:not(.pdf-summary) #contact { break-inside:avoid; }
+      body.pdf-summary .pdf-full-only, body.pdf-summary .summary-hide { display:none !important; }
+      body.pdf-summary .summary-only { display:block !important; }
+      body.pdf-summary #craft { break-before:page; }
+      body.pdf-summary .case-card, body.pdf-summary .project-card { break-inside:avoid; }
+      body.pdf-summary .project-details { display:none !important; }
+      body.pdf-summary .project-card .case-visual { display:none; }
+      body.pdf-summary .project-card .case-grid { grid-template-columns:1fr; }
+      body.pdf-summary .project-card { padding:8px !important; }
+      body.pdf-summary .project-grid { gap:8px; }
+      body.pdf-summary .project-card .case-points { gap:2px; margin-bottom:5px; }
+      body.pdf-summary .section-intro { margin-bottom:6px; }
+      body.pdf-summary #contact .section-heading { display:none; }
+      /* サマリーは研究の根拠を本文，CGは3画像で伝え，詳細版と役割を分ける． */
+      body.pdf-summary #research .case-grid { display:block; }
+      body.pdf-summary #research .case-visual { display:none; }
+      body.pdf-summary .hero-grid { grid-template-columns:1.35fr 1fr; }
+      body.pdf-summary .profile-facts { font-size:8.5px; }
+      body.pdf-summary .profile-facts dl { gap:3px 6px; }
+      body.pdf-summary .section-heading { margin-bottom:5px; break-inside:avoid; }
+      body.pdf-summary .section-kicker { font-size:7px; margin-bottom:2px; }
+      body.pdf-summary .section-title { font-size:13px !important; }
+      body.pdf-summary .section-intro { font-size:9px; margin-top:5px; }
+      body.pdf-summary .case-copy h3 { margin-bottom:4px; }
+      body.pdf-summary .case-copy p { font-size:9.5px; line-height:1.45; margin-bottom:4px; }
+      body.pdf-summary .case-points { font-size:9.5px; line-height:1.45; }
+      body.pdf-summary .cg-media { aspect-ratio:auto; height:100px; }
+      body.pdf-summary .cg-card p { font-size:9.5px; line-height:1.45; }
+      body.pdf-summary .cg-card { padding:7px !important; }
+      body.pdf-summary .project-grid { gap:6px; }
+      body.pdf-summary .project-card { padding:7px !important; }
+      body.pdf-summary #contact { font-size:9px; margin-top:5px; }
+      body.pdf-summary #contact > p { display:none; }
+      body.pdf-summary #contact .mb-3 { margin-bottom:0 !important; }
     }
   </style>
 </head>
@@ -883,855 +434,483 @@
 <body data-bs-spy="scroll" data-bs-target="#nav">
   <a class="skip-link" href="#main-content">本文へ移動</a>
 
-  <!-- Top bar -->
+  <!-- メインナビゲーション -->
   <nav class="navbar navbar-expand-lg sticky-top" data-bs-theme="dark" aria-label="メインナビゲーション">
     <div class="container">
       <a class="navbar-brand fw-semibold" href="#">
         <span class="brand-full">小嶋 明 (Akira Kojima) / Portfolio</span>
         <span class="brand-short">Akira Kojima / Portfolio</span>
       </a>
-
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
               aria-controls="nav" aria-expanded="false" aria-label="メニューを開閉">
         <span class="navbar-toggler-icon"></span>
       </button>
-
       <div id="nav" class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto gap-lg-2 align-items-lg-center">
-          <li class="nav-item"><a class="nav-link" href="#works">代表作品</a></li>
           <li class="nav-item"><a class="nav-link" href="#research">研究</a></li>
+          <li class="nav-item"><a class="nav-link" href="#client">受託案件</a></li>
+          <li class="nav-item"><a class="nav-link" href="#craft">自力実装・CG</a></li>
+          <li class="nav-item"><a class="nav-link" href="#works">AI活用開発</a></li>
           <li class="nav-item"><a class="nav-link" href="#career">経歴</a></li>
-          <li class="nav-item"><a class="nav-link" href="#archive">過去作品</a></li>
           <li class="nav-item"><a class="nav-link" href="#contact">連絡先</a></li>
-
-          <!-- Theme toggle -->
           <li class="nav-item ms-lg-2 no-print">
-            <button id="themeToggle" class="btn btn-soft btn-sm text-muted" type="button" aria-label="現在ダークテーマ。ライトテーマに切り替え">
-              🌙 Dark
-            </button>
-          </li>
-
-          <li class="nav-item ms-lg-2 no-print">
-            <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>
-              採用向けPDF
-            </a>
+            <button id="themeToggle" class="btn btn-soft btn-sm text-muted" type="button" aria-label="現在ダークテーマ．ライトテーマに切り替え">🌙 Dark</button>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <header class="hero py-5">
-    <div class="container">
-      <h1 class="display-6 fw-bold mb-2">小嶋 明 (Akira Kojima)</h1>
-      <p class="lead fw-semibold mb-3">AIアプリケーションエンジニア</p>
-
-      <p class="text-muted hero-lead mb-2">
-        複数のLLMを一つの画面で扱うFlutterアプリ「<a href="#works">Clage Cook</a>」、
-        LINEで1日3問の学習サービス「<a href="#works">Trivium</a>」（Next.js・LINE連携・稼働中）、
-        Android ChromiumへのAI機能統合「<a href="#works">ChromiumforA</a>」、
-        PythonとFFmpegによる動画編集DSL「<a href="#works">ScriptVEdit</a>」を開発しています。
-        実装にはAIエージェントを利用し、私は要件・仕様・設計上の判断、生成物のレビュー（主に仕様・画面・動作の確認。必要に応じてコードも確認）、実機確認、採否の判断を担っています。
-        具体的な分担は各作品に記載しています。
-      </p>
-      <p class="hero-degree mb-3">
-        東京大学 工学部 精密工学科卒・同大学院 修士課程修了（博士課程でEIT触覚センサを研究、2026年3月退学）。基本情報技術者・AWS Certified AI Practitioner。
-      </p>
-
-      <ul class="hero-evidence text-muted mb-3">
-        <li>公開OSS: <a href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">Clage Cook</a>（CI・Windows/Android実機）・<a href="https://github.com/kojima8924/ScriptVEdit" target="_blank" rel="noopener noreferrer">ScriptVEdit</a>（コード・テスト・出力動画・性能計測）</li>
-        <li>稼働中のWebサービス: <a href="https://trivium.153.126.213.251.sslip.io" target="_blank" rel="noopener noreferrer">Trivium</a>（<a href="https://github.com/kojima8924/trivium-ai" target="_blank" rel="noopener noreferrer">公開リポジトリ</a>・テスト226件・LINE公式アカウント）</li>
-        <li>Android実機開発: ChromiumforA（比較画像・操作動画、非公開）／受託開発: LINE応答AI（開発中・匿名掲載）</li>
-        <li>査読論文: <a href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">Frontiers in Robotics and AI</a>（筆頭著者）</li>
-        <li>資格: <a href="https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url" target="_blank" rel="noopener noreferrer">AWS Certified AI Practitioner</a>（Credlyのデジタルバッジで検証可）・基本情報技術者</li>
-      </ul>
-
-      <div class="d-flex flex-wrap gap-2 hero-actions no-print">
-        <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（2ページ）</a>
-        <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio.pdf" download>完全版PDF</a>
-        <a class="btn btn-outline-info" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a class="btn btn-outline-info" href="mailto:a.kojima8924@gmail.com">メール</a>
+  <!-- プロフィールと主要な確認先 -->
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <p class="section-kicker">AIアプリケーションエンジニア</p>
+        <h1 class="display-6 fw-bold mb-3">小嶋 明 <span class="hero-name-en">Akira Kojima</span></h1>
+        <p class="hero-lead fw-semibold">研究・CGの自力実装から，<br class="no-print">AI活用アプリの設計・検証まで．</p>
+        <p class="text-muted hero-description">研究・CGは生成AIを使わず自力実装．現在の受託・OSSでは要件・設計判断と評価・検証を担当し，実装はAIエージェントへ委任しています．</p>
+        <div class="d-flex flex-wrap gap-2 hero-actions no-print">
+          <a class="btn btn-outline-info" href="media/Akira_Kojima_Portfolio_Summary.pdf" aria-label="採用向けPDF（2ページ）" download>採用向けPDF</a>
+          <a class="btn btn-outline-info" href="mailto:a.kojima8924@gmail.com">メール</a>
+          <a class="btn btn-outline-info" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        </div>
+        <div class="proof-links">
+          <a href="#research">査読付き筆頭論文</a>
+          <a href="#craft">自力実装のCG 3作品</a>
+          <a href="#trivium-card">Trivium</a>
+          <a href="#scriptvedit-card">ScriptVEdit</a>
+          <a href="#clagecook-card">Clage Cook</a>
+        </div>
       </div>
+      <aside class="profile-facts" aria-label="経歴と実績の要約">
+        <h2 class="h6">プロフィール</h2>
+        <dl>
+          <dt>学歴</dt>
+          <dd>東京大学 工学部卒<br>同大学院 修士課程修了</dd>
+          <dt>現在</dt>
+          <dd>フリーランス（2026年4月〜）</dd>
+          <dt>資格</dt>
+          <dd>基本情報技術者<br><a href="https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url" target="_blank" rel="noopener noreferrer">AWS Certified AI Practitioner ↗</a></dd>
+          <dt>AtCoder</dt>
+          <dd>水色・最高1440／<strong>上位6.27%</strong><span class="small text-muted d-block">2026年9月時点，レーティング1348</span></dd>
+        </dl>
+        <a class="small" href="#career">経歴・担当技術の詳細へ ↓</a>
+      </aside>
     </div>
   </header>
 
   <main id="main-content" class="container py-4" tabindex="-1">
 
-    <!-- ============================================================
-         代表作品
-    ============================================================ -->
-    <section id="works" class="anchor py-2">
-      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">代表作品</h2>
-      </div>
-
-      <div class="row g-3">
-
-        <!-- Clage Cook -->
-        <div class="col-12">
-          <article class="card p-3">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">Clage Cook — 4つのAIを、1つの会議へ（OSS）</h3>
-              <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">GitHub</a>
-              </div>
-            </div>
-            <div class="badges mt-2" role="group" aria-label="Clage Cookの使用技術">
-              <span class="tbadge c-mit">MIT License</span>
-              <span class="tbadge c-flutter">Flutter</span>
-              <span class="tbadge c-dart">Dart</span>
-              <span class="tbadge c-gray">Direct BYOK</span>
-              <span class="tbadge c-gray">Secure Storage</span>
-              <span class="tbadge c-python">Python</span>
-              <span class="tbadge c-fastapi">FastAPI</span>
-            </div>
-
-            <p class="text-muted mt-2 mb-2">
-              Claude・Gemini・ChatGPT・Grokへ同じ質問を並列に送り、回答の比較・相互批評・統合までを1画面で行うアプリです。
-              APIキーは利用者自身のもの（BYOK）を使います。
-            </p>
-
-            <figure class="fig-band">
-              <img src="media/fig/clagecook-flow.svg" alt="Clage Cookの会議フロー図。質問を1回入力すると4社（Claude・Gemini・ChatGPT・Grok）へ並列送信し、比較、相互批評（DEBATE）、統合回答（1画面）の順に進む。補足: API差の吸収（4社で異なるエンドポイント・認証・応答形式を共通の要求／回答形式に正規化）、耐障害（一部のAIが失敗しても完了した回答だけで統合し、途中で切れた回答は表示・保存するが統合に混ぜない）、BYOK（APIキーはOSのセキュアストレージに保存し通常設定と保存先を分離、Direct接続は履歴を端末内だけに置く）、進行配信（統一イベント形式でUIへ配信、サーバ経由時はHTTP SSE）。Flutter製・公開ベータ。実装はAIへ委任し、仕様・アーキテクチャの決定、生成物への修正指示、Windows / Android実機での確認を担当" loading="lazy">
-              <figcaption class="small text-muted">会議の流れと設計のポイント<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
-            </figure>
-
-            <div class="media-box">
-              <div class="media-hero">
-                <img src="media/clagecook-oss-windows.png" alt="Clage Cook デスクトップ版で4つのAIの回答と統合回答を表示した画面" loading="lazy">
-              </div>
-              <div class="small text-muted mt-2">
-                Windows版の実画面。「DIRECT · LOCAL」は中継サーバーを使わず、端末から各社APIへ直接接続して履歴を端末内に保存するモード
-              </div>
-            </div>
-
-            <ul class="work-digest mt-3">
-              <li><strong>難所:</strong> 4社で異なるAPI仕様（エンドポイント・認証ヘッダ・応答形式）の吸収と、一部のAIが失敗しても完了した回答だけで統合へ進むフロー（途中で切れた回答は統合に混ぜない）</li>
-              <li><strong>役割:</strong> 仕様・アーキテクチャの決定、生成物への修正指示、Windows / Android実機での確認（Flutter/DartのUI、開発用FastAPIサーバーとテストを含む実装はAIエージェントへ委任）</li>
-              <li><strong>確認先:</strong> 公開リポジトリ（CI）・Windows / Android実機画面</li>
-              <li class="summary-hide"><strong>公開状況:</strong> 公開ベータ。本番運用向けサポート・後方互換性は未保証</li>
-            </ul>
-
-            <details class="mt-2">
-              <summary class="small fw-semibold">設計と検証の詳細・Android実機画面</summary>
-              <div class="mt-2">
-                <p class="text-muted small mb-1">
-                  <strong>設計判断:</strong>
-                  プロバイダごとに異なるAPI仕様を共通の要求／回答形式に正規化し、
-                  一部のAIが失敗しても完了した回答だけで統合まで進め、途中で切れた回答は表示・保存しても統合には混ぜない流れにしました。進行状況は統一イベント形式でUIへ配信します（サーバ経由時はSSE）。
-                  APIキーはOSのsecure storageへ保存し、会話履歴を端末内だけに置くDirect接続と、開発用のreference serverを分離しています。
-                </p>
-                <p class="text-muted small mb-2">
-                  <strong>実装・検証:</strong>
-                  生成されたアプリをレビューして画面仕様・挙動・エラー処理の修正方針を指示し、
-                  WindowsとAndroid実機で動作を確認しました。
-                </p>
-                <div class="shot-row" role="group" aria-label="Clage CookのAndroid実機画面">
-                  <div>
-                    <div class="media-phone">
-                      <img src="media/clagecook-oss-android-overview.jpg" alt="Android版で4つのAIの回答状況と統合回答を一覧表示した画面" loading="lazy">
-                    </div>
-                    <div class="small text-muted mt-2 text-center">一覧：各AIの回答と統合回答</div>
-                  </div>
-                  <div>
-                    <div class="media-phone">
-                      <img src="media/clagecook-oss-android.png" alt="Android版で相互批評（DEBATE)後もClaudeの初回回答を保持して表示した画面" loading="lazy">
-                    </div>
-                    <div class="small text-muted mt-2 text-center">詳細：相互批評後も初回回答を保持</div>
-                  </div>
-                </div>
-              </div>
-            </details>
-
-            <details id="clagecook-background" class="mt-2 pdf-full-only">
-              <summary class="small fw-semibold">開発背景 — 非公開版を日常的に運用し、公式APIで再実装</summary>
-              <div class="mt-2">
-                <div class="badges mb-2" role="group" aria-label="非公開版の使用技術">
-                  <span class="tbadge c-kotlin">Kotlin / Jetpack Compose</span>
-                  <span class="tbadge c-python">Python</span>
-                  <span class="tbadge c-fastapi">FastAPI</span>
-                  <span class="tbadge c-gray">Glance widget</span>
-                </div>
-                <div class="row g-3 align-items-start">
-                  <div class="col-12 col-md-6">
-                    <p class="text-muted small mb-2">
-                      各社AIの回答比較・統合をAndroidから日常的に使える常駐システムとして非公開で運用してきました。
-                      生成の継続、再接続後の復帰、使用量ウィジェットを設計し、この会議フローを公式APIベースで再実装したものが公開版です。
-                    </p>
-                    <p class="text-muted small mb-0">
-                      <code>!</code>コマンドによる会議操作、失敗時も完了済み回答を残す流れ、JSON / ZIPで他のAIへ渡せる連携を実装しています。
-                    </p>
-                  </div>
-                  <div class="col-12 col-md-6">
-                    <div class="shot-row">
-                      <div>
-                        <div class="media-phone">
-                          <img src="media/clagecook-chat.png" alt="非公開版のチャット画面。各AIの回答カードを表示" loading="lazy">
-                        </div>
-                        <div class="small text-muted mt-2 text-center">回答カード（実機）</div>
-                      </div>
-                      <div>
-                        <div class="media-phone">
-                          <img src="media/clagecook-widget-home.png" alt="ホーム画面の使用量ウィジェット" loading="lazy">
-                        </div>
-                        <div class="small text-muted mt-2 text-center">使用量ウィジェット</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </details>
-          </article>
-        </div>
-
-        <!-- Trivium -->
-        <div class="col-12">
-          <article id="trivium-card" class="card p-3">
-            <div class="print-keep">
-              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                <h3 class="h5 mb-0 card-title">Trivium — LINEで1日3問の学習サービス（OSS・稼働中）</h3>
-                <div class="d-flex gap-2 flex-wrap">
-                  <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/trivium-ai" target="_blank" rel="noopener noreferrer">GitHub</a>
-                  <a class="btn btn-outline-info btn-sm" href="https://trivium.153.126.213.251.sslip.io" target="_blank" rel="noopener noreferrer">サイトを開く</a>
-                </div>
-              </div>
-              <div class="badges mt-2" role="group" aria-label="Triviumの使用技術">
-                <span class="tbadge c-mit">MIT License</span>
-                <span class="tbadge c-gray">Next.js 16</span>
-                <span class="tbadge c-gray">React 19</span>
-                <span class="tbadge c-gray">TypeScript</span>
-                <span class="tbadge c-gray">Prisma / PostgreSQL</span>
-                <span class="tbadge c-gray">LINE Messaging API</span>
-                <span class="tbadge c-gray">OpenAI API</span>
-                <span class="tbadge c-dify">Dify</span>
-                <span class="tbadge c-gray">Docker / GitHub Actions</span>
-              </div>
-
-              <p class="text-muted mt-2 mb-2">
-                READ（読む）・WRITE（書く）・LOGIC（論理）の3分野を、LINEで1日3問ずつ続ける学習サービスです。
-                リッチメニューから課題が届き、詰まったときは担当のAIキャラが段階的にヒントを出し、決着すると解説と講評が返ります。
-                解いた記録は能力プロフィール（3分野の到達レベル）として蓄積され、XP・実績・連続日数で継続を後押しし、
-                到達レベルに応じた教材も提案します。Webのダッシュボードでは推移のグラフや設定を扱えます。
-                面談デモ用に着手し、初回コミットから約21時間（105コミット）でLINE・Web・本番デプロイまで完成させたプロトタイプで、現在も稼働しています。
-              </p>
-              <p class="text-muted small mb-2 summary-hide">
-                Googleログイン、課題309問（難易度1〜10。うちAI作問246問）、学習実績バッジ61種、教材カタログ145件、
-                未達成の日のリマインド通知まで備え、VPS上で稼働しています。
-              </p>
-
-              <figure class="fig-band">
-                <img src="media/fig/trivium-flow.svg" alt="Triviumの構成とAI作問の検証を示す図。利用者はLINEとWebから使い、Next.js / TypeScript / Prisma / PostgreSQL（Docker・GitHub Actions → GHCR → VPSで本番稼働）を経てOpenAI API（Dify経由も選択可）へつながる。LINEの応答期限には、先に短い返信を返し、裏で生成して、プッシュ配信する。設計方針は、学習指標の集計は決定論、LLMは解釈・生成に限定。AI作問（計画250スロット）は、Python問題はコードを実行して答えを照合し、選択式は正解を伏せた別のAIが解き直して一致を確認し、採用246／250（1スロット最大3回で通らなかった4スロットは不採用）。初回コミットから約21時間・105コミットで、LINE・Web・本番デプロイまで完成。課題309問（手書き63＋AI作問246、難易度1〜10）、単体テスト226件（DB・APIキー不要）。CIは型検査・lint・テスト・ビルド。別のDockerワークフローで本番と同じDockerfileを実ビルドし、PostgreSQLにマイグレーションしてヘルスチェックする" loading="lazy">
-                <figcaption class="small text-muted">構成と、AIが作った問題を採用するまでの検証<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
-              </figure>
-
-              <div class="shot-row mt-3" role="group" aria-label="TriviumのWeb画面とLINE画面">
-                <div>
-                  <div class="media-phone">
-                    <img src="media/trivium-web-dashboard.jpg" alt="Triviumのダッシュボード。READ/WRITE/LOGICの到達レベルを三角形で表示し、XPとAIの寸評を並べた画面" loading="lazy">
-                  </div>
-                  <div class="small text-muted mt-2 text-center">Webのダッシュボード（スマホ表示）</div>
-                </div>
-                <div>
-                  <div class="media-phone">
-                    <img src="media/trivium-line-hint.jpg" alt="LINEで出題された問題に「ヒント」と送ると、担当AIのフミが問い返しの形で手がかりを1つ返している画面" loading="lazy">
-                  </div>
-                  <div class="small text-muted mt-2 text-center">LINE: 段階的なヒント（最大3回）</div>
-                </div>
-              </div>
-            </div>
-
-            <ul class="work-digest mt-3">
-              <li class="summary-hide"><strong>作ったもの:</strong> 出題・採点・ヒント・能力プロフィール・教材推薦・通知までを、LINEとWebの2つの入口から同じ学習ループで動かすサービス一式（認証・DB・デプロイまで通しで構築）</li>
-              <li><strong>難所:</strong> LINEの応答期限内に生成が終わらない／能力の数値が1問ごとに揺れる／AIが作った問題の品質が担保できない、の3つ</li>
-              <li><strong>役割:</strong> サービスの企画と仕様、学習の測り方（到達レベルの決め方・出題難易度の上げ方）などの中核アイデアを考案。実装はAIエージェントへ委任し、検証基準の策定・統合レビュー・本番検証を担当</li>
-              <li><strong>確認先:</strong> 公開リポジトリ（CI）・稼働中のサイト・LINE公式アカウント</li>
-              <li class="summary-hide"><strong>公開状況:</strong> MIT Licenseで公開。個人開発のプロトタイプ</li>
-            </ul>
-
-            <details class="mt-2">
-              <summary class="small fw-semibold">サービスの中身・LINEの実機画面</summary>
-              <div class="mt-2">
-                <p class="text-muted small mb-1">
-                  <strong>学習の流れ:</strong>
-                  リッチメニューかトーク（「LOGICで難易度8」など自由文でも可）から出題し、選択式はボタン、記述式は自由入力で回答します。
-                  詰まったらヒントを最大3回まで段階的に出し、決着すると解説・講評とXPが返ります。3分野を1問ずつ解くと今日のミッション達成。
-                  記録は3分野の到達レベル（Lv.0〜10）と観点別の内訳として蓄積され、推移はグラフで振り返れます。
-                  未達成の日には設定した時刻にリマインドを送ります。
-                </p>
-                <p class="text-muted small mb-1">
-                  <strong>4人格のAI:</strong>
-                  分野ごとに担当キャラ（READ・WRITE・LOGIC）と全体を見る案内役の4人がいて、名前を呼ぶとその人格が答えます。
-                  担当は自分の分野の観察メモを持ち、案内役はそれらを読んで「次の一歩」を提案します。
-                  教材の相談には、到達レベルと直近のつまずきをもとに、実在の書籍・公式サイトのカタログ（145件）から理由つきで提案します。
-                </p>
-                <p class="text-muted small mb-1">
-                  <strong>技術的な工夫:</strong>
-                  LINEは応答期限が短いため、先に短い返信を返してから裏で生成し、あとからプッシュする構成にしました。
-                  能力の数値は学習記録から毎回計算し直す方式にして、1問ごとに上下しないようレベルの昇格・降格にしきい値差を持たせています。
-                  事前生成した課題は「作ったら採用」にせず、Python問題は実際にコードを実行して答えを照合、
-                  選択式は正解を伏せた別のAIが同じ答えに到達するかを確認し、計画250スロットのうち<strong>検証を通った246問だけを採用</strong>しました。
-                </p>
-                <p class="text-muted small mb-2">
-                  <strong>実装・検証:</strong>
-                  判断ロジックを純粋関数へ切り出したことで、<strong>DBもAPIキーも無しで単体テスト226件が全件通ります</strong>（テスト本体は約0.5秒）。
-                  CIは本番と同じDockerfileでイメージを実際にビルドして起動し、PostgreSQLへのマイグレーション適用とヘルスチェックまで確認します。
-                </p>
-
-                <div class="shot-row" role="group" aria-label="TriviumのLINE実機画面">
-                  <div>
-                    <div class="media-phone">
-                      <img src="media/trivium-line-task.jpg" alt="LINEの出題画面。選択肢とヒント・パス・Webで解くのボタン、下部にREAD/WRITE/LOGICのリッチメニューが並ぶ" loading="lazy">
-                    </div>
-                    <div class="small text-muted mt-2 text-center">リッチメニューからその場で1問</div>
-                  </div>
-                  <div>
-                    <div class="media-phone">
-                      <img src="media/trivium-line-persona.jpg" alt="LINEでロゴスに能力分析を頼み、担当系統の観点で回答している画面。下部に4人格へ切り替えるボタンが並ぶ" loading="lazy">
-                    </div>
-                    <div class="small text-muted mt-2 text-center">4人格が担当系統で応答</div>
-                  </div>
-                </div>
-
-                <div class="media-grid mt-2 pdf-full-only">
-                  <div>
-                    <div class="media-thumb">
-                      <img src="media/trivium-web-logic.jpg" alt="TriviumのWeb版でLOGICの課題に取り組んでいる画面" loading="lazy">
-                    </div>
-                    <div class="small text-muted mt-2">Webでも課題・ヒント・採点が動く</div>
-                  </div>
-                  <div>
-                    <div class="media-thumb">
-                      <img src="media/trivium-line-material.jpg" alt="LINEで教材を尋ねると、案内役のミチが到達レベルを根拠に書籍3冊を理由つきで提案している画面" loading="lazy">
-                    </div>
-                    <div class="small text-muted mt-2">到達レベルを根拠に教材を提案</div>
-                  </div>
-                </div>
-              </div>
-            </details>
-
-            <details class="mt-2 pdf-full-only">
-              <summary class="small fw-semibold">1問を解くと何が起きるか（実機の流れ）</summary>
-              <div class="mt-2">
-                <div class="media-box">
-                  <div class="flow-shot-row">
-                    <div class="flow-shot">
-                      <img src="media/trivium-line-flow-1.jpg" alt="LINEに届いた難易度9の論理課題の問題文と、選択肢から回答を送るまで" loading="lazy">
-                    </div>
-                    <div class="flow-shot">
-                      <img src="media/trivium-line-flow-2.jpg" alt="正解判定と解説に続き、実績解除・レベルアップ（Lv.7→Lv.8）・XP加算・担当AIと案内役の寸評が届く" loading="lazy">
-                    </div>
-                  </div>
-                  <div class="small text-muted mt-2">
-                    出題 → 回答 → 解説 → 実績解除 → レベルアップ（Lv.7→Lv.8）→ XP加算 → 担当AIと案内役の寸評まで、1問解くと一連の反応が返る
-                  </div>
-                </div>
-              </div>
-            </details>
-          </article>
-        </div>
-
-        <!-- ChromiumforA -->
-        <div class="col-12">
-          <article id="chromiumfora-card" class="card p-3">
-            <div class="print-keep">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0 card-title">ChromiumforA — Google検索をAIで再評価</h3>
-              <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46619744" href="https://www.nicovideo.jp/watch/sm46619744" target="_blank" rel="noopener noreferrer">&#9654; デモ動画（2倍速）</a>
-                <span class="badge rounded-pill text-bg-secondary">非公開</span>
-              </div>
-            </div>
-            <div class="badges mt-2" role="group" aria-label="ChromiumforAの使用技術">
-              <span class="tbadge c-android">Android</span>
-              <span class="tbadge c-chromium">Chromium改造</span>
-              <span class="tbadge c-gray">検索結果の再評価</span>
-              <span class="tbadge c-gray">ページ要約</span>
-            </div>
-
-            <p class="text-muted mt-2 mb-2">
-              Android版Chromiumを改造し、Google検索の結果ページへAIの評価コメントを挿入して、評価後の並び順を提示します。
-              ページ要約と選択文へのAI処理も統合しました。
-            </p>
-
-            <div class="cfa-compare mt-2 summary-hide" role="group" aria-label="同じ『人工知能』のGoogle検索に対する通常表示とAI評価後の比較">
-              <figure>
-                <div class="cfa-shot">
-                  <img src="media/cfa-serp-before.png" alt="AI評価前の「人工知能」Google検索結果。人工知能学会、FPTソフトウェア、IBMの順に表示" loading="lazy">
-                </div>
-                <figcaption class="small text-muted mt-2">
-                  <strong>通常表示</strong> — 「人工知能」の検索結果
-                </figcaption>
-              </figure>
-              <figure>
-                <div class="cfa-shot">
-                  <img src="media/cfa-serp-after.png" alt="AI評価後の「人工知能」Google検索結果。IBM、Wikipedia、人工知能学会の順になり、緑色の評価コメントが挿入されている" loading="lazy">
-                </div>
-                <figcaption class="small text-muted mt-2">
-                  <strong>AI評価後</strong> — 根拠コメントの挿入と順位変更
-                </figcaption>
-              </figure>
-            </div>
-            <p class="cfa-swipe-hint text-muted small text-center mt-1 mb-0" aria-hidden="true">横にスワイプして比較 →</p>
-            </div>
-
-            <p class="text-muted small mt-3 mb-1">
-              <strong>担当:</strong> 機能のアイデア（検索結果の再評価・ページ要約など）を考え、Chromium本体への組み込みを含む実装はほぼAIエージェントへ委任しています。
-            </p>
-            <p class="text-muted small mb-1 summary-hide">
-              <strong>技術的な難所:</strong>
-              開発中に認証情報の扱いに関する問題が再現テストで見つかり、構造を変更して同条件で再検証しています。
-            </p>
-
-            <ul class="cfa-feature-list mt-2 summary-hide" aria-label="ChromiumforAの主な閲覧支援機能">
-              <li>Wikipedia要約・専用検索・関連項目</li>
-              <li>ページ要約・選択文AI</li>
-              <li>サイト別UI・動画再生補助</li>
-            </ul>
-
-            <div class="shot-row mt-3 pdf-full-only" role="group" aria-label="ChromiumforAのAndroid実機画面">
-              <div>
-                <div class="media-phone">
-                  <img src="media/cfa-fab-menu.png" alt="Wikipedia表示中にFABメニューを開いた実機画面。ページ要約・翻訳・サイトパッチなどの項目" loading="lazy">
-                </div>
-                <div class="small text-muted mt-2 text-center">FABメニュー</div>
-              </div>
-              <div>
-                <div class="media-phone">
-                  <img src="media/cfa-page-summary.png" alt="Wikipediaの人工知能ページをAIで要約した実機画面" loading="lazy">
-                </div>
-                <div class="small text-muted mt-2 text-center">ページ要約</div>
-              </div>
-            </div>
-
-            <details class="mt-2 pdf-full-only">
-              <summary class="small fw-semibold">実機画面をもう1枚（AI評価・並び替え完了）</summary>
-              <div class="shot-row mt-2">
-                <div>
-                  <div class="media-phone">
-                    <img src="media/cfa-ai-search-japanese.png" alt="「人工知能」のGoogle検索でAIコメント取得後に再評価を完了した実機画面" loading="lazy">
-                  </div>
-                  <div class="small text-muted mt-2 text-center">AI評価・並び替え完了</div>
-                </div>
-              </div>
-            </details>
-
-            <p class="text-muted small mt-2 mb-0 summary-hide">
-              <strong>確認できるもの:</strong> 同一検索語の通常表示／AI評価後の比較、Android実機画面、操作動画。
-              個人検証用のため非公開で、画面・動画・設計のみ公開しています。
-            </p>
-          </article>
-        </div>
-
-        <!-- ScriptVEdit -->
-        <div class="col-12">
-          <article id="scriptvedit-card" class="card p-3">
-            <div class="print-keep">
-              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                <h3 class="h5 mb-0 card-title">ScriptVEdit — Pythonで動画を記述する編集DSL（OSS）</h3>
-                <div class="d-flex gap-2 flex-wrap">
-                  <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ScriptVEdit" target="_blank" rel="noopener noreferrer">GitHub</a>
-                  <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46610886" href="https://www.nicovideo.jp/watch/sm46610886" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
-                </div>
-              </div>
-              <div class="badges mt-2" role="group" aria-label="ScriptVEditの使用技術">
-                <span class="tbadge c-mit">MIT License</span>
-                <span class="tbadge c-python">Python</span>
-                <span class="tbadge c-ffmpeg">FFmpeg</span>
-                <span class="tbadge c-gray">pytest</span>
-              </div>
-
-              <p class="text-muted mt-2 mb-2">
-                動画のタイムラインをPythonコードで記述し、FFmpegコマンドへ変換して映像を生成するDSLです。
-                コードだけで動画を組み立てられるため、AIエージェントによる動画制作にも使えます。
-                解説動画自体もScriptVEditで制作しました。
-              </p>
-
-              <figure class="fig-band">
-                <img src="media/fig/scriptvedit-flow.svg" alt="ScriptVEditのパイプラインと計測結果の図。Pythonで書くDSL（演算子でタイムラインを記述）→タイムライン解決（アンカー解決・素材キャッシュ）→区間に分割して並列レンダリング（8分割）→FFmpegで結合して動画。レンダリング時間（2分56秒・87オブジェクトの実プロジェクト、20論理コアPC、2026年7月）は当時の逐次経路1012秒→8分割並列106秒で、比較元には後に修正した非効率を含む。逐次経路のO(N²)を解消（2026年8月、別の合成ベンチ、N=40）して約68秒→約5秒。AIエージェントを併用した全体監査で特定し、可視区間trimで解消、回帰テスト10件で固定。DSLの記法と各機構の仕組みはAIと相談しながら本人がほぼ決定し、実装全般・テスト生成・スクリーンショットでの出力確認はAIエージェントへ委任、エフェクトの品質と生成動画の出来は本人が目視で評価" loading="lazy">
-                <figcaption class="small text-muted">処理の流れと並列化の実測<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
-              </figure>
-
-              <div class="media-box">
-                <div class="media-hero">
-                  <img src="media/scriptvedit-code-video.jpg" alt="左のPythonコードから右の映像が生成されている解説動画の一場面" loading="lazy">
-                </div>
-                <div class="small text-muted mt-2">
-                  左に使用したPythonコード、右にその実行結果を示す解説動画の一場面
-                </div>
-              </div>
-            </div>
-
-            <p class="text-muted small mt-3 mb-1 summary-hide">
-              <strong>考案したもの:</strong> DSLの記法、素材キャッシュ、要素配置のアンカー解決、区間ごとの並列レンダリング。
-            </p>
-            <p class="text-muted small mb-1 summary-hide">
-              <strong>AI利用の範囲:</strong>
-              上記の仕組みを含む実装全般と、テストケースの生成、スクリーンショットによる出力確認はAIエージェントへ任せました。
-              DSLの仕様と各仕組みのアイデアはAIと相談しながらほぼ自分で決め、
-              エフェクトの品質と、テーマだけ与えてAIに作らせた動画の出来は自分の目で評価しています。
-            </p>
-            <p class="text-muted small mb-0 summary-hide">
-              <strong>計測条件:</strong> 2分56秒・87オブジェクトの実プロジェクトを20論理コアPCで計測 — 当時の逐次経路1012秒、並列8で106秒（2026年7月。比較元の逐次経路には後に修正した非効率を含みます）。
-              2026年8月には、AIエージェントを併用した全体監査で逐次経路のO(N²)処理を特定し、可視区間trimで解消しました（別の合成ベンチで約68秒→約5秒、回帰テスト10件で固定）。
-              公開リポジトリ、テスト、コードと出力動画で確認できます。
-            </p>
-
-            <div class="media-grid mt-2 pdf-full-only">
-              <div>
-                <div class="media-thumb">
-                  <img src="media/scriptvedit-perf.jpg" alt="解説動画内でレンダリング時間の実測値（1012秒から106秒）を示す場面" loading="lazy">
-                </div>
-                <div class="small text-muted mt-2">この動画自身のレンダリング時間を計測</div>
-              </div>
-              <div>
-                <div class="media-thumb">
-                  <img src="media/scriptvedit.png" alt="演算子でタイムラインを記述するDSL構文の解説場面" loading="lazy">
-                </div>
-                <div class="small text-muted mt-2">演算子で記述するDSL構文</div>
-              </div>
-            </div>
-          </article>
-        </div>
-
-      </div>
-    </section>
-
-    <hr class="border-subtle">
-
     <!-- 研究 -->
-    <section id="research" class="anchor py-2">
-      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">研究 — 機械学習×触覚計測</h2>
+    <section id="research" class="anchor">
+      <div class="section-heading">
+        <p class="section-kicker">01 / RESEARCH</p>
+        <h2 class="h4 section-title">研究 — 触覚を測り，分布を再構成する</h2>
+        <p class="section-intro text-muted">EIT（電気インピーダンストモグラフィ）触覚センサの計測・再構成．解析・シミュレーションのコードは，生成AIを使わず本人が実装しました．</p>
       </div>
-
-      <div class="card p-3">
-        <div class="row g-3 align-items-center">
-          <div class="col-12 col-md-5">
+      <article class="card case-card">
+        <div class="case-grid">
+          <div class="case-copy">
+            <h3 class="h5 card-title">CNNによる触覚分布の再構成</h3>
+            <p class="text-muted">電極で測った信号から接触分布を推定する逆問題に，シミュレーションデータで学習したCNN（Keras）を適用．1点接触シミュレーションで，空間分解能指標・位置誤差を<strong>従来法の約21%まで低減</strong>しました．</p>
+            <p class="small text-muted">160mm角モデルでの比較．IROS 2022ワークショップ・SI2022でポスター発表．</p>
+            <h3 class="h5 card-title">電極配置の最適化 — 査読付き筆頭論文</h3>
+            <p class="text-muted">16電極のシミュレーションで，最悪領域の空間分解能指標（HWHM）を等間隔配置比で<strong>19.2%低減</strong>．構想・設計・実験は共同で行い，結果の解析と論文初稿の執筆を担当しました．</p>
+            <a class="btn btn-outline-info btn-sm" href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">筆頭論文を読む ↗</a>
+            <p class="small text-muted mt-2 mb-0">A. Kojima et al.，Frontiers in Robotics and AI（2023）</p>
+          </div>
+          <div class="case-visual">
             <div class="media-grid">
-              <div>
-                <div class="media-thumb">
-                  <img class="fit-contain" src="media/research-eval.webp" alt="空間分解能と位置誤差の棒グラフ。CNNが線形手法に対して両指標を約21%まで低減" loading="lazy">
-                </div>
-                <div class="small text-muted mt-1">空間分解能・位置誤差（線形手法 vs CNN）</div>
-              </div>
-              <div>
-                <div class="media-thumb">
-                  <img src="media/research-recon.webp" alt="2点接触の再構成比較。線形手法ではにじむ接触点がCNNでは明瞭に分離される" loading="lazy">
-                </div>
-                <div class="small text-muted mt-1">2点接触の再構成（線形手法 vs CNN）</div>
-              </div>
+              <figure>
+                <div class="media-thumb"><img class="fit-contain" src="media/research-eval.webp" alt="CNNによる再構成で，空間分解能指標と位置誤差が線形手法の約21%まで低減した比較グラフ" width="1068" height="644" decoding="async"></div>
+                <figcaption class="small text-muted">1点接触：空間分解能指標・位置誤差</figcaption>
+              </figure>
+              <figure>
+                <div class="media-thumb"><img class="fit-contain" src="media/research-recon.webp" alt="2点接触の再構成比較．線形手法ではにじむ接触点がCNNでは分離されている" loading="lazy" width="640" height="340" decoding="async"></div>
+                <figcaption class="small text-muted">2点接触：再構成画像の比較</figcaption>
+              </figure>
             </div>
-            <div class="mt-2 pdf-full-only">
-              <div class="media-thumb">
-                <img src="media/SI2022_poster-web.webp" alt="EIT触覚センサのCNN再構成をまとめたSI2022ポスター全体" loading="lazy">
-              </div>
-              <div class="small text-muted mt-1">ポスター全体（SI2022）<span class="no-print">— クリックで拡大</span></div>
-            </div>
-          </div>
-          <div class="col-12 col-md-7">
-            <p class="text-muted mb-2 summary-hide">
-              EIT（電気インピーダンストモグラフィ）触覚センサの逆問題にCNNを適用し、
-              1点接触のシミュレーションで空間分解能指標と位置誤差を従来法の約21%まで低減しました
-              （SI2022・IROS 2022ワークショップでポスター発表）。
-            </p>
-            <p class="text-muted mb-2 summary-hide">
-              電極配置の最適化では、最悪領域の空間分解能指標（HWHM、小さいほど良い）を等間隔配置に対して19.2%低減し
-              （16電極のシミュレーション。64電極の試作基板では中央領域で19.5%）、
-              筆頭著者としてFrontiers in Robotics and AIに掲載されました（構想・設計・実験は共同で行い、結果の解析と論文初稿の執筆を担当）。
-            </p>
-            <div class="badges mb-2" role="group" aria-label="研究の使用技術">
-              <span class="tbadge c-keras">CNN (Keras)</span>
-              <span class="tbadge c-gray">シミュレーション訓練データ</span>
-              <span class="tbadge c-gray">電極配置最適化</span>
-            </div>
-            <a class="btn btn-outline-info btn-sm" href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1157911/full" target="_blank" rel="noopener noreferrer">査読論文（電極配置最適化）</a>
+            <p class="small text-muted no-print">画像をクリックして拡大</p>
           </div>
         </div>
-        <figure class="fig-band">
-          <img src="media/fig/research-flow.svg" alt="2つの研究を分けて示す図。研究1 CNNによる触覚分布の再構成（IROS 2022ワークショップ・SI2022のポスター）: EIT触覚センサ→CNN（Keras）で再構成（シミュレーションで訓練）→接触分布。空間分解能指標RES 48.1%→10.2%、位置誤差13.0mm→2.8mm（1点接触シミュレーション、160mm角モデル）で、いずれも従来法の約21%まで低減。研究2 電極配置の最適化（査読付き筆頭論文・Frontiers 2023）: 最悪領域のHWHMを19.2%低減（16電極・シミュレーション、等間隔配置比。64電極の試作基板では中央領域19.5%低減）。共同での実験、結果の解析と論文初稿の執筆を担当（共同研究）。A. Kojima et al., Frontiers in Robotics and AI, Vol. 10, 1157911, 2023" loading="lazy">
-          <figcaption class="small text-muted">2つの研究（学会ポスター／査読付き論文）の手法と結果<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <hr class="border-subtle pdf-full-only">
-
-    <!-- 受託案件 -->
-    <section id="client" class="anchor py-2">
-      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">受託案件</h2>
-      </div>
-
-      <article class="card p-3">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-          <h3 class="h5 mb-0 card-title">美容クリニック向けLINE応答AI</h3>
-          <span class="badge rounded-pill text-bg-secondary">受託開発・開発中・匿名掲載</span>
-        </div>
-        <div class="badges mt-2" role="group" aria-label="LINE応答AIの使用技術">
-          <span class="tbadge c-python">Python</span>
-          <span class="tbadge c-fastapi">FastAPI</span>
-          <span class="tbadge c-dify">Dify</span>
-          <span class="tbadge c-gray">RAG</span>
-          <span class="tbadge c-gray">LINE Messaging API</span>
-          <span class="tbadge c-gray">OpenAI Responses API</span>
-          <span class="tbadge c-gray">pytest</span>
-        </div>
-        <p class="text-muted mt-2 mb-1">
-          LINE公式アカウントの問い合わせ一次対応を支援するAIです。FAQ回答、予約フォームへの案内、必要なときのスタッフへの引き継ぎを扱います。
-          2026年4月に受注し、開発担当は本人1名です。実装はAIエージェントへ委任し、要件整理、設計と検証方針の決定、生成物のレビュー、
-          定例ミーティングでの進捗報告と次期開発の提案（提案3件のうち2件を実装・納品）を担当しています。
-          現在は開発者PC上の試作環境で稼働・検証中の段階（本番導入前）です。
-        </p>
-        <p class="text-muted small mb-1 summary-hide">
-          医療機関向けの安全設計として、予約確定・診断など誤案内や個人情報のリスクが高い4項目を「実装しない」と仕様化して顧客に説明し、有人対応中はAIが返信しない設計（状態を判定できない場合も見送る）、障害時は料金等を含まない定型文で電話窓口のみ案内、運用ログの利用者IDのハッシュ化、Webhook署名検証（既定で有効）を実装して、関連動作をpytestで確認しています（テストは全体で395件）。
-          施設を特定しない範囲で掲載許可を得ています。顧客名・画面・利用者データは非公開で、技術的な改善の数値のみ掲載しています。
-        </p>
-        <figure class="fig-band">
-          <img src="media/fig/clinic-flow.svg" alt="LINE応答AIのシステム構成図。利用者（LINE公式アカウント）→受信サーバ（FastAPI・Webhook署名検証、状態管理・有人対応への切替）→応答AI（Dify・RAGでナレッジ検索、必要時は公式サイト検索へ切替）→LLM（OpenAI Responses API、公式サイト限定検索）。回答はFAQ回答／予約フォーム案内／スタッフへ引き継ぎの3分岐。スタッフへ引き継ぐと有人対応になり、対応中はAIが返信しない" loading="lazy">
-          <figcaption class="small text-muted">システム構成と回答の3分岐<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
-        </figure>
-        <figure class="fig-band summary-hide">
-          <img src="media/fig/clinic-results.svg" alt="LINE応答AIの改善実績の図。過去のLINE応対14,051件を、正規表現、ローカルLLM検査、ローカルLLMでの回収の3段階で匿名化し、検査を通過した会話は12,853件。②でNGになった会話も、ローカルLLMで残った個人情報を特定・補修して再検査し、2,788件を回収。見つかった置換漏れを型分類し、8種の正規表現ルールとして前処理に追加。回答網羅率（7設問・確認項目26点）は50%→81%（検索設定（Top-K）の見直し後、同じ7設問で再計測）。平均応答時間（同じ7設問）は12.4秒→6.5秒、最大28.8秒→9.0秒で、公式サイト検索への切替が3設問から0設問に減少。公式サイト全64ページと照合し、プラン名の取り違えなどの誤りを修正。pytest 395件で保護し、別途、応答テストは延べ約200回（設問74種）。予約確定・診断・登録外情報の推測回答・LINE上での個人情報収集の4項目は仕様として『実装しない』と明記し、顧客向け資料で説明" loading="lazy">
-          <figcaption class="small text-muted">匿名化パイプラインと改善の数値<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
-        </figure>
+        <details class="project-details pdf-full-only">
+          <summary>研究の測定条件・発表資料</summary>
+          <div class="details-content">
+            <p class="text-muted">CNN再構成の1点接触シミュレーションでは，空間分解能指標RESは48.1% → 10.2%，位置誤差は13.0mm → 2.8mm．電極配置の研究では，16電極シミュレーションの最悪領域19.2%低減とは別に，64電極の試作基板の中央領域でHWHMを19.5%低減しました．</p>
+            <div class="media-thumb"><img class="fit-contain" src="media/SI2022_poster-web.webp" alt="EIT触覚センサのCNN再構成をまとめたSI2022ポスター全体" loading="lazy" width="2400" height="1697" decoding="async"></div>
+            <p class="small text-muted mt-2 mb-0">SI2022ポスター．画像をクリックして拡大できます．</p>
+          </div>
+        </details>
       </article>
     </section>
 
-    <hr class="border-subtle">
-
-    <!-- 経歴・資格・主要技術 -->
-    <section id="career" class="anchor py-2">
-      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">経歴・資格・主要技術</h2>
+    <!-- 受託案件 -->
+    <section id="client" class="anchor">
+      <div class="section-heading">
+        <p class="section-kicker">02 / CLIENT WORK</p>
+        <h2 class="h4 section-title">受託案件 — 要件整理から評価・改善まで</h2>
       </div>
-
-      <figure class="fig-band summary-hide mt-0 mb-3">
-        <img src="media/fig/career-timeline.svg" alt="経歴のタイムライン図。2018年4月〜2022年3月 東京大学 工学部 精密工学科 卒業→2022年4月〜2024年9月 東京大学大学院 修士課程（人間環境学専攻）修了→2024年10月〜2026年3月 同 博士後期課程（EIT触覚センサ×機械学習。退学）→2026年4月〜現在 フリーランス（AIアプリケーション開発）。IROS 2022ワークショップ・SI2022でポスター発表、2023年に査読論文（筆頭）、TA（有限要素法）を2023年11月〜2024年1月と2024年11月〜2025年1月に担当、2026年8月 基本情報技術者 取得、2026年9月 AWS Certified AI Practitioner 取得" loading="lazy">
-        <figcaption class="small text-muted">学歴・職歴と発表・資格<span class="fig-hint">（横にスクロール／タップで拡大）</span></figcaption>
-      </figure>
-      <div class="row g-4">
-        <div class="col-12 col-lg-5">
-          <div class="timeline mb-3 summary-only">
-            <span class="yr">2018–22</span><span class="ev">東京大学 工学部 精密工学科</span>
-            <span class="yr">2022–24</span><span class="ev">東京大学大学院 修士課程 修了</span>
-            <span class="yr">2024–26</span><span class="ev">同博士課程でEIT触覚センサを研究（2026年3月退学）</span>
-            <span class="yr">2026–</span><span class="ev">フリーランスのAIアプリケーションエンジニア</span>
-          </div>
-          <div class="cert-row">
-            <a class="cert-badge" href="https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url" target="_blank" rel="noopener noreferrer">
-              <img src="media/badge-aws-ai-practitioner.png" width="76" height="76" alt="AWS Certified AI Practitioner のデジタルバッジ（Credlyで検証）">
-            </a>
-            <div>
-              <p class="text-muted small mb-1 cert-names"><strong>資格:</strong> 基本情報技術者 取得（2026年8月）／ AWS Certified AI Practitioner 取得（2026年9月）<a class="ms-1 nowrap no-print" href="https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url" target="_blank" rel="noopener noreferrer">Credlyで検証</a></p>
-              <p class="text-muted small mb-0"><strong>プログラミング実績:</strong> AtCoder 水色（最高レーティング1440。2026年9月時点で上位6.27%）/ <span class="nowrap">paizaスキルチェック Sランク</span>（最高レーティング1920）</p>
-            </div>
-          </div>
+      <article class="card case-card">
+        <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-2">
+          <h3 class="h5 card-title mb-0">美容クリニック向けLINE応答AI</h3>
+          <span class="badge rounded-pill text-bg-secondary">受託開発・本番導入前</span>
         </div>
-        <div class="col-12 col-lg-7">
-          <p class="text-muted small mb-1">技術と作品の対応（本人が実装したのは主に Python・C++。ほかは実装をAIへ委任した作品の構成技術を含む）</p>
-          <ul class="stack-map">
-            <li><strong>Python</strong> — <span>EIT触覚センサ研究、過去作品の画像処理・CGの実装</span></li>
-            <li><strong>DSL・ツール設計</strong> — <span>ScriptVEditの記法、素材キャッシュ、アンカー解決、並列化</span></li>
-            <li><strong>Android / Chromium改造</strong> — <span>ChromiumforA</span></li>
-            <li><strong>FFmpeg</strong> — <span>ScriptVEditの映像生成</span></li>
-            <li><strong>Dify / RAG</strong> — <span>受託のLINE応答AI（Triviumでも任意経路として選択可）</span></li>
-            <li><strong>LINE Messaging API</strong> — <span>Triviumの出題・会話、受託のLINE応答AI</span></li>
-            <li><strong>CNN (Keras)</strong> — <span>EIT触覚センサ研究の再構成モデル</span></li>
-            <li><strong>C++ / GLSL</strong> — <span>過去作品の制御・CG（倒立振子、レイトレーシング）</span></li>
-          </ul>
-          <p class="text-muted small mt-2 mb-0 summary-hide">
-            Flutter/Dart（Clage CookのUI）は実装をAIエージェントへ委任し、UI仕様・生成物のレビュー・
-            修正方針の決定とWindows/Android実機検証を担当。
-            FastAPI（Clage Cookの開発用reference server）とNext.js/TypeScript/Prisma（Trivium）も実装は委任しました。
-            Clage CookではAPI差の共通化などアーキテクチャの決定を、Triviumでは検証基準の策定・統合レビュー・本番検証を担当しています。
-          </p>
+        <p class="text-muted">LINE公式アカウントの問い合わせを，FAQ回答・予約フォーム案内・スタッフへの引き継ぎに分岐するシステムです．</p>
+        <ul class="case-points">
+          <li><strong>本人の担当：</strong>2026年4月から本人1名の開発体制で，要件整理・設計と検証方針・レビュー・定例会での報告と提案を担当．実装はAIエージェントへ委任しています．提案3件のうち2件を実装に反映しました．</li>
+          <li><strong>安全設計：</strong>予約確定・診断などは対象外として顧客に説明．有人対応中・状態不明時はAI返信を見送り，障害時は料金等を含まない定型文で電話窓口のみ案内します．</li>
+          <li><strong>検証状況：</strong>開発者PC上の試作環境で稼働・検証中．応答検証は全体で74種類・延べ約200回，pytestはプロジェクト全体で395件です．</li>
+        </ul>
+        <figure class="fig-band">
+          <img src="media/fig/clinic-flow.svg" width="960" height="132" alt="LINE応答AIの構成．LINEからFastAPIへ届いた問い合わせを，Dify・RAGとOpenAI Responses APIで処理．FAQ回答・予約フォーム案内・スタッフ引き継ぎに分岐し，有人対応中はAIが返信しない．受信時にWebhook署名を検証し，必要時は公式サイト検索へ切り替える" loading="lazy">
+          <figcaption class="small text-muted">システム構成と回答の3分岐<span class="fig-hint"> — 横にスクロール／クリックして拡大</span></figcaption>
+        </figure>
+        <div class="metric-grid" aria-label="検索設定の変更前後の評価結果">
+          <div class="metric"><span>回答網羅率</span><strong>50% → 81%</strong></div>
+          <div class="metric"><span>平均応答時間</span><strong>12.4秒 → 6.5秒</strong></div>
         </div>
-      </div>
+        <p class="small text-muted mt-2">同じ7設問・26確認項目を，検索設定（Top-K）の変更前後で各1回比較．2026年8月2日，開発段階の計測です．</p>
+        <details class="project-details pdf-full-only">
+          <summary>匿名化処理・安全設計・検証の詳細</summary>
+          <div class="details-content">
+            <p class="text-muted"><strong>個人情報の扱い：</strong>過去の応対14,051会話に対し，開発者PC上で正規表現とローカルLLMの多段検査による匿名化処理を実施．12,853件が機械検査を通過しました．見つかった置換漏れを型分類し，前処理ルールへ反映しています．</p>
+            <p class="text-muted"><strong>処理の改善：</strong>初回検査でNGとなった会話も，ローカルLLMで残った個人情報を特定・補修して再検査し，2,788件を回収．置換漏れの型を8種の正規表現ルールとして前処理に追加しました．機械検査の通過件数であり，完全な匿名化を保証する数値ではありません．</p>
+            <p class="text-muted"><strong>評価の補足：</strong>上記7設問の比較では，最大応答時間は28.8秒 → 9.0秒，公式サイト検索への切り替えは3設問 → 0設問．この比較を含む応答検証全体が74種類・延べ約200回です．公式サイト全64ページとの照合では，プラン名の取り違え等を修正しました．</p>
+            <p class="text-muted"><strong>対応範囲：</strong>予約確定・診断・登録外情報の推測回答・LINE上での個人情報収集は実装しないと仕様化．運用ログの利用者IDをハッシュ化し，Webhook署名検証を既定で有効にしています．関連動作をpytestで確認しています（395件はプロジェクト全体）．</p>
+            <p class="text-muted mb-0"><strong>構成技術：</strong>Python / FastAPI / Dify / RAG / LINE Messaging API / OpenAI Responses API．クリニック側にデモ用アカウントでの試用・確認を依頼中です．</p>
+          </div>
+        </details>
+        <p class="small text-muted mt-3 mb-0">施設を特定しない範囲で掲載許可を取得．顧客名・画面・利用者データは公開していません．</p>
+      </article>
     </section>
 
-    <hr class="border-subtle pdf-full-only">
+    <!-- 生成AI不使用の自力実装 -->
+    <section id="craft" class="anchor">
+      <div class="section-heading">
+        <p class="section-kicker">03 / HAND-CODED GRAPHICS</p>
+        <h2 class="h4 section-title">自力実装 — コンピュータグラフィクス</h2>
+        <p class="section-intro text-muted">生成AIを使わず，描画の仕組みから実装した3作品です．Python版2作品はCGライブラリを使わずフルスクラッチで実装．GLSL版はC++／OpenGL上でフラグメントシェーダを記述しました．</p>
+      </div>
+      <div class="cg-grid">
+        <article id="raytrace-python-card" class="card cg-card">
+          <a class="cg-media btn-video" data-nico="sm45922410" href="https://www.nicovideo.jp/watch/sm45922410" target="_blank" rel="noopener noreferrer" aria-label="Pythonレイトレーシングの動画を見る">
+            <img src="media/raytrace-python.png" alt="Pythonで自力実装したレイトレーシングの出力．球面への反射・屈折を表現" loading="lazy" width="919" height="917" decoding="async">
+            <span class="cg-media-label">▶ 動画を見る</span>
+          </a>
+          <div class="cg-copy">
+            <p class="tech-line">Python / 生成AI不使用</p>
+            <h3 class="h5 card-title">レイトレーシング</h3>
+            <p class="text-muted">光線を追跡して画像を生成する方式．レイと球の交差判定，材質，反射・屈折の再帰計算を自力実装しました．</p>
+          </div>
+        </article>
+        <article id="shadowmap-card" class="card cg-card">
+          <a class="cg-media" href="media/shadowmap.jpg" target="_blank" rel="noopener noreferrer" aria-label="シャドウマッピングの出力画像を開く">
+            <img src="media/shadowmap.jpg" alt="Pythonで自力実装したシャドウマッピングの出力．光源と物体の位置に応じた影を描画" loading="lazy" width="1200" height="1200" decoding="async">
+            <span class="cg-media-label">画像を開く ↗</span>
+          </a>
+          <div class="cg-copy">
+            <p class="tech-line">Python / 生成AI不使用</p>
+            <h3 class="h5 card-title">シャドウマッピング</h3>
+            <p class="text-muted">光源から見た深さを比較して影を判定する方式．深度マップによる描画と，影の縞模様や浮きを抑えるバイアス調整を実装しました．</p>
+          </div>
+        </article>
+        <article id="raytrace-csg-card" class="card cg-card">
+          <a class="cg-media btn-video" data-nico="sm45922403" href="https://www.nicovideo.jp/watch/sm45922403" target="_blank" rel="noopener noreferrer" aria-label="GLSLレイトレーシングとCSGの動画を見る">
+            <img src="media/raytrace-csg.png" alt="GLSLのフラグメントシェーダで，CSGで組み合わせた形状をレイトレーシング描画した画面" loading="lazy" width="919" height="917" decoding="async">
+            <span class="cg-media-label">▶ 動画を見る</span>
+          </a>
+          <div class="cg-copy">
+            <p class="tech-line">C++ / OpenGL / GLSL / 生成AI不使用</p>
+            <h3 class="h5 card-title">レイトレーシング＋CSG</h3>
+            <p class="text-muted">光線追跡に，CSG（立体の和・差・積で形状を構成）を組み合わせ，反射・屈折・透過を含む描画をフラグメントシェーダで実装しました．</p>
+          </div>
+        </article>
+      </div>
+      <p class="small text-muted mt-3 pdf-full-only">このほか，制御・画像処理などの自力実装作品も<a href="#archive">その他の作品</a>に掲載しています．</p>
+    </section>
 
-    <!-- 過去作品 -->
-    <section id="archive" class="anchor py-2 pdf-full-only">
-      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">過去作品</h2>
+    <!-- AIエージェントと進めた開発 -->
+    <section id="works" class="anchor">
+      <div class="section-heading">
+        <p class="section-kicker">04 / AI-ASSISTED DEVELOPMENT</p>
+        <h2 class="h4 section-title">AIエージェントを活用した個人開発・OSS</h2>
+        <p class="section-intro text-muted">本人は企画・仕様・設計判断，レビューと実環境での検証・採否判断を担当．実装はAIエージェントへ委任しています．レビューは主に仕様・画面・動作を対象とし，必要に応じ一部のコード・ファイルを確認しています．</p>
+      </div>
+      <div class="project-grid">
+        <article id="trivium-card" class="card case-card project-card anchor">
+          <div class="case-grid">
+            <div class="case-copy">
+              <p class="section-kicker">LINE × WEB / 公開プロトタイプ</p>
+              <h3 class="h4 card-title">Trivium</h3>
+              <p class="text-muted">読む・書く・論理の3分野から各1問，1日3問をLINEで学ぶサービス．出題・ヒント・講評と学習記録を，LINEとWebで共有します．</p>
+              <ul class="case-points">
+                <li><strong>本人の担当：</strong>企画・到達レベルと出題難易度の仕様・検証基準を決定し，統合レビューと本番検証を担当．実装はAIエージェントへ委任．</li>
+                <li><strong>設計判断：</strong>学習指標の集計は決定論，LLMは解釈・生成に限定．生成問題はコード実行や別AIによる解き直しで検証し，基準を満たしたものだけ採用．</li>
+                <li><strong>検証と公開：</strong>初回コミットから約21時間でLINE・Web・本番デプロイまで完成．単体テスト226件とCIを備え，VPSで稼働しています．</li>
+              </ul>
+              <p class="tech-line">Next.js / TypeScript / PostgreSQL / LINE / Docker</p>
+              <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-outline-info btn-sm" href="https://trivium.153.126.213.251.sslip.io" target="_blank" rel="noopener noreferrer">サービスを開く ↗</a>
+                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/trivium-ai" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+              </div>
+            </div>
+            <div class="case-visual">
+              <div class="shot-row" role="group" aria-label="TriviumのWebとLINE画面">
+                <figure>
+                  <div class="media-phone"><img src="media/trivium-web-dashboard.jpg" alt="TriviumのWeb画面．READ・WRITE・LOGICの到達レベルとAIの寸評を表示" loading="lazy" width="420" height="887" decoding="async"></div>
+                  <figcaption class="small text-muted">Web：学習の到達レベル</figcaption>
+                </figure>
+                <figure>
+                  <div class="media-phone"><img src="media/trivium-line-hint.jpg" alt="TriviumのLINE画面．担当AIが段階的なヒントを返している" loading="lazy" width="720" height="1560" decoding="async"></div>
+                  <figcaption class="small text-muted">LINE：段階的なヒント</figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+          <details class="project-details pdf-full-only">
+            <summary>検証基準・サービス構成・追加画面</summary>
+            <div class="details-content">
+              <p class="text-muted"><strong>生成問題の採否：</strong>Python問題はコード実行で解答を照合．選択式は正解を伏せた別のAIが解き直して一致を確認しました．計画250スロットのうち246問を採用し，最大3回で基準を満たさなかった4スロットは不採用．課題は手書き63問を含む計309問です．</p>
+              <p class="text-muted"><strong>品質確認：</strong>DB・APIキー不要の単体テスト226件．CIで型検査・lint・テスト・ビルドを実行し，Dockerワークフローでは本番と同じDockerfileのビルド，PostgreSQLへのマイグレーション，ヘルスチェックを確認します．</p>
+              <p class="text-muted"><strong>設計：</strong>LINEには先に短い返信を返し，生成後にプッシュ配信．学習レベルの昇格・降格にはしきい値差を設けています．4人格の担当AI，Googleログイン，教材カタログ145件，実績バッジ61種，設定時刻のリマインドを備えます．初回デプロイまで105コミット，MIT Licenseで公開．</p>
+              <p class="tech-line">React / Prisma / OpenAI API（Dify経由も選択可）/ GitHub Actions</p>
+              <div class="media-grid">
+                <figure><div class="media-thumb"><img src="media/trivium-web-logic.jpg" alt="TriviumのWeb版でLOGICの課題に取り組む画面" loading="lazy" width="420" height="887" decoding="async"></div><figcaption class="small text-muted">Trivium：Webでの出題・ヒント・採点</figcaption></figure>
+                <figure><div class="media-thumb"><img src="media/trivium-line-material.jpg" alt="到達レベルを根拠に，LINEの案内役AIが書籍を理由付きで提案する画面" loading="lazy" width="720" height="1560" decoding="async"></div><figcaption class="small text-muted">Trivium：学習記録に基づく教材提案</figcaption></figure>
+              </div>
+            </div>
+          </details>
+        </article>
+
+        <article id="scriptvedit-card" class="card case-card project-card anchor">
+          <div class="case-grid">
+            <div class="case-copy">
+              <p class="section-kicker">PYTHON × FFMPEG / OSS</p>
+              <h3 class="h4 card-title">ScriptVEdit</h3>
+              <p class="text-muted">Pythonコードでタイムラインを記述し，FFmpegコマンドへ変換して映像を生成する動画編集DSL．掲載している解説動画も，このDSLで制作しました．</p>
+              <ul class="case-points">
+                <li><strong>本人の担当：</strong>記法・素材キャッシュ・アンカー解決・区間並列レンダリングの仕様をAIと相談して決定．実装はAIエージェントへ委任し，映像の品質は本人が目視で評価．</li>
+                <li><strong>レンダリング時間：</strong>自作解説動画（2分56秒）で，当時の非効率を含む逐次経路1012秒 → 8分割並列106秒．</li>
+              </ul>
+              <p class="small text-muted">2026年7月，87オブジェクト・20論理コアPCでの計測．純粋な並列化だけの効果を示す比較ではありません．</p>
+              <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46610886" href="https://www.nicovideo.jp/watch/sm46610886" target="_blank" rel="noopener noreferrer">▶ 解説動画を見る</a>
+                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ScriptVEdit" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+              </div>
+            </div>
+            <figure class="case-visual">
+              <div class="media-hero"><img src="media/scriptvedit-code-video.jpg" alt="ScriptVEditの解説動画．左のPythonコードと，右の生成映像を対応させて表示" loading="lazy" width="1920" height="1080" decoding="async"></div>
+              <figcaption class="small text-muted">左：Pythonコード／右：そのコードから生成した映像</figcaption>
+            </figure>
+          </div>
+          <details class="project-details pdf-full-only">
+            <summary>実装分担・別条件の性能改善</summary>
+            <div class="details-content">
+              <p class="text-muted"><strong>実装分担：</strong>上記の仕組みを含む実装全般，テスト生成，スクリーンショットでの出力確認はAIエージェントへ委任．本人は仕様と各機構の仕組みをほぼ決定し，映像の品質を目視で評価しています．</p>
+              <p class="text-muted"><strong>別ベンチでの改善：</strong>2026年8月，AIエージェントを併用した全体監査で逐次経路のO(N²)処理を特定．可視区間trimで解消し，合成ベンチ（N=40）で約68秒 → 約5秒，回帰テスト10件で固定しました．上記の解説動画とは異なる条件の計測です．</p>
+              <div class="media-grid">
+                <figure><div class="media-thumb"><img src="media/scriptvedit-perf.jpg" alt="自作解説動画のレンダリング時間1012秒と106秒を比較する場面" loading="lazy" width="1920" height="1080" decoding="async"></div><figcaption class="small text-muted">解説動画自体のレンダリング時間</figcaption></figure>
+                <figure><div class="media-thumb"><img src="media/scriptvedit.png" alt="演算子でタイムラインを記述するScriptVEditの構文解説" loading="lazy" width="1920" height="1080" decoding="async"></div><figcaption class="small text-muted">演算子によるタイムラインの記述</figcaption></figure>
+              </div>
+            </div>
+          </details>
+        </article>
+
+        <article id="clagecook-card" class="card case-card project-card anchor">
+          <div class="case-grid">
+            <div class="case-copy">
+              <p class="section-kicker">MULTI-LLM × FLUTTER / 公開ベータ</p>
+              <h3 class="h4 card-title">Clage Cook</h3>
+              <p class="text-muted">Claude・Gemini・ChatGPT・Grokへ同じ質問を送り，回答の比較・相互批評・統合までを1画面で行うアプリ．利用者自身のAPIキーを使います（BYOK）．</p>
+              <ul class="case-points">
+                <li><strong>本人の担当：</strong>仕様・アーキテクチャの決定，生成物への修正指示，Windows／Android実機での確認．実装はAIエージェントへ委任．</li>
+                <li><strong>設計判断：</strong>4社で異なるAPIを共通化．一部が失敗しても完了した回答で統合へ進み，途中で切れた回答は統合に含めません．</li>
+                <li><strong>保存：</strong>APIキーはOSのセキュアストレージへ．Direct接続時は履歴を端末内だけに保存．</li>
+              </ul>
+              <p class="tech-line">Flutter / Dart / 各社公式API / FastAPI（開発用）</p>
+              <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">GitHub・CIを確認 ↗</a>
+            </div>
+            <figure class="case-visual">
+              <div class="media-hero"><img src="media/clagecook-oss-windows.png" alt="Clage CookのWindows画面．4社AIの回答と統合回答を一覧表示" loading="lazy" width="1920" height="1032" decoding="async"></div>
+              <figcaption class="small text-muted">Windows実画面．DIRECT · LOCALは各社APIへの直接接続</figcaption>
+            </figure>
+          </div>
+          <details class="project-details pdf-full-only">
+            <summary>設計・実装分担・Android実機画面</summary>
+            <div class="details-content">
+              <p class="text-muted">Flutter／DartのUI，開発用FastAPIサーバー，テストを含む実装はAIエージェントへ委任しました．進行状況は共通イベントでUIへ配信し，サーバー経由時はSSEを使用．途中で切れた回答は表示・保存しつつ統合の材料からは除外します．Direct接続と開発用reference serverは分離しています．</p>
+              <p class="text-muted">生成物をレビューし，画面仕様・挙動・エラー処理の修正方針を指示．WindowsとAndroid実機で確認しています．MIT Licenseの公開ベータで，本番運用向けサポート・後方互換性は未保証です．</p>
+              <div class="shot-row" role="group" aria-label="Clage CookのAndroid実機画面">
+                <figure><div class="media-phone"><img src="media/clagecook-oss-android-overview.jpg" alt="Clage CookのAndroid版．各AIの回答状況と統合回答を一覧表示" loading="lazy" width="591" height="1280" decoding="async"></div><figcaption class="small text-muted">各AIの回答と統合回答</figcaption></figure>
+                <figure><div class="media-phone"><img src="media/clagecook-oss-android.png" alt="相互批評の後も初回回答を保持して表示するAndroid画面" loading="lazy" width="1080" height="2340" decoding="async"></div><figcaption class="small text-muted">初回回答の保持</figcaption></figure>
+              </div>
+            </div>
+          </details>
+          <details id="clagecook-background" class="project-details pdf-full-only">
+            <summary>開発背景：非公開版の日常運用から公式API版へ</summary>
+            <div class="details-content">
+              <p class="text-muted">各社AIの比較・統合をAndroidから日常的に使う非公開システムを運用し，生成の継続・再接続後の復帰・使用量ウィジェットを設計してきました．その会議フローを各社公式APIで再実装したものが公開版です．</p>
+              <p class="text-muted">非公開版はKotlin／Jetpack Compose・Python／FastAPI・Glance widgetで構成．会議操作コマンド，失敗時も完了済み回答を残す流れ，JSON／ZIPでほかのAIへ引き継ぐ連携を備えています．</p>
+              <div class="shot-row">
+                <figure><div class="media-phone"><img src="media/clagecook-chat.png" alt="非公開版で各AIの回答カードを表示するチャット画面" loading="lazy" width="1080" height="2340" decoding="async"></div><figcaption class="small text-muted">非公開版の回答カード</figcaption></figure>
+                <figure><div class="media-phone"><img src="media/clagecook-widget-home.png" alt="Androidのホーム画面に置いた使用量ウィジェット" loading="lazy" width="1080" height="2340" decoding="async"></div><figcaption class="small text-muted">使用量ウィジェット</figcaption></figure>
+              </div>
+            </div>
+          </details>
+        </article>
       </div>
 
-      <p class="text-muted mb-3">
-        現在の代表作品より前に作ったものです。AIクライアント、制御、CG・画像処理の実装を実画面と動画で確認できます。
-      </p>
-
-      <details class="archive">
-        <summary class="fw-semibold">過去作品一覧（10件）</summary>
-        <div class="mt-3">
-
-          <div class="archive-item">
-            <div class="media-thumb">
-              <img src="media/chatgpt-windows.png" alt="ChatGPT-Windowsで会話とストリーミング回答を表示した画面" loading="lazy">
-            </div>
-            <div>
-              <h3 class="h6 archive-title">ChatGPT-Windows</h3>
-              <p class="tech-line mb-1">Python · PySide6 (Qt6) · MIT</p>
-              <p class="text-muted small mb-2">翻訳・補完・要約をホットキーとクリップボードから呼び出せるWindows常駐クライアント。ストリーミング表示と、Windows資格情報マネージャーへのAPIキー保存を実装。</p>
-              <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Windows" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922374" href="https://www.nicovideo.jp/watch/sm45922374" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
-              </div>
-            </div>
+      <details id="chromiumfora-card" class="project-details pdf-full-only anchor">
+        <summary>補足作品：ChromiumforA — AndroidブラウザーへのAI機能統合</summary>
+        <div class="details-content">
+          <p class="text-muted">Android版Chromiumを改造し，Google検索の結果へAIの評価コメントと再評価後の並び順を提示．ページ要約・選択文へのAI処理・Wikipediaの閲覧補助も統合した，非公開の個人検証用プロトタイプです．</p>
+          <p class="text-muted"><strong>本人の担当：</strong>機能のアイデアを考案．Chromium本体への組み込みを含む実装はほぼAIエージェントへ委任しています．開発中に認証情報の扱いの問題が再現テストで見つかり，構造を変更して同条件で再検証しました．</p>
+          <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46619744" href="https://www.nicovideo.jp/watch/sm46619744" target="_blank" rel="noopener noreferrer">▶ 操作動画を見る（2倍速）</a>
+          <div class="cfa-compare mt-3" role="group" aria-label="同じ検索語に対する通常表示とAI評価後の比較">
+            <figure><div class="cfa-shot"><img src="media/cfa-serp-before.png" alt="通常の「人工知能」Google検索結果．人工知能学会・FPTソフトウェア・IBMの順に表示" loading="lazy" width="1080" height="1300" decoding="async"></div><figcaption class="small text-muted">通常の検索結果</figcaption></figure>
+            <figure><div class="cfa-shot"><img src="media/cfa-serp-after.png" alt="AI評価後の検索結果．IBM・Wikipedia・人工知能学会の順になり，緑色の評価コメントを挿入" loading="lazy" width="1080" height="1300" decoding="async"></div><figcaption class="small text-muted">AIによる評価コメントと順位変更</figcaption></figure>
           </div>
-
-          <div class="archive-item">
-            <div class="media-thumb">
-              <img src="media/chatgpt-web.png" alt="ChatGPT-Webで入力文の続きをゴーストテキスト表示した画面" loading="lazy">
-            </div>
-            <div>
-              <h3 class="h6 archive-title">ChatGPT-Web</h3>
-              <p class="tech-line mb-1">JavaScript · 単一HTML · MIT</p>
-              <p class="text-muted small mb-2">入力の続きをゴーストテキストで提案するプロトタイプ。Tabと矢印キーで全体・1文字単位を確定。ローカル検証用。</p>
-              <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Web" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922369" href="https://www.nicovideo.jp/watch/sm45922369" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
-              </div>
-            </div>
+          <p class="cfa-swipe-hint small text-muted" aria-hidden="true">横にスワイプして比較 →</p>
+          <div class="shot-row">
+            <figure><div class="media-phone"><img src="media/cfa-fab-menu.png" alt="Wikipedia上でページ要約・翻訳などのメニューを開いたAndroid画面" loading="lazy" width="1080" height="2340" decoding="async"></div><figcaption class="small text-muted">操作メニュー</figcaption></figure>
+            <figure><div class="media-phone"><img src="media/cfa-page-summary.png" alt="Wikipediaの人工知能ページを要約したAndroid画面" loading="lazy" width="1080" height="2340" decoding="async"></div><figcaption class="small text-muted">ページの要約</figcaption></figure>
           </div>
-
-          <div class="archive-item">
-            <div class="media-thumb">
-              <img src="media/calcpy-repl.png" alt="CalcpyのREPL画面。数式入力と結果、フリック入力用の関数パレット" loading="lazy">
-            </div>
-            <div>
-              <h3 class="h6 archive-title">Calcpy</h3>
-              <p class="tech-line mb-1">Android · Kotlin/Compose · オンデバイスCPython 3.13/SymPy · 非公開プロトタイプ</p>
-              <p class="text-muted small mb-2">電卓の操作感にSymPyの厳密計算とPython REPLを統合したAndroid試作。4方向フリック入力と、Python実行の別プロセス隔離を設計。</p>
-            </div>
-          </div>
-
-          <div class="archive-item">
-            <div class="media-thumb">
-              <img src="media/handdrive.png" alt="手の傾きと開閉で赤い車を運転する3Dデモの画面" loading="lazy">
-            </div>
-            <div>
-              <h3 class="h6 archive-title">ハンドドライブ</h3>
-              <p class="tech-line mb-1">JavaScript · Three.js</p>
-              <p class="text-muted small mb-2">Webカメラで捉えた手の傾きと開閉を、ステアリング・アクセル・ブレーキへ変換する3D運転デモ。</p>
-              <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922395" href="https://www.nicovideo.jp/watch/sm45922395" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="archive-item">
-            <div class="media-thumb">
-              <img src="media/invpend.png" alt="倒立振子が障害物を避けて移動するシミュレーション画面" loading="lazy">
-            </div>
-            <div>
-              <h3 class="h6 archive-title">倒立振子</h3>
-              <p class="tech-line mb-1">C++ · ODE</p>
-              <p class="text-muted small mb-2">PID制御で倒立姿勢を保ちながら、障害物を避けてゴールへ移動するシミュレーション。</p>
-              <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922355" href="https://www.nicovideo.jp/watch/sm45922355" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="archive-item">
-            <div class="media-thumb">
-              <img src="media/raytrace-csg.png" alt="CSGで組み合わせた形状をリアルタイムにレイトレーシング描画した画面" loading="lazy">
-            </div>
-            <div>
-              <h3 class="h6 archive-title">レイトレーシング（GLSL + CSG）</h3>
-              <p class="tech-line mb-1">C++ · OpenGL/GLSL</p>
-              <p class="text-muted small mb-2">CSGの和・差・積で形状を組み替え、反射・屈折・透過までリアルタイム描画。</p>
-              <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922403" href="https://www.nicovideo.jp/watch/sm45922403" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="archive-item">
-            <div class="media-thumb">
-              <img src="media/raytrace-python.png" alt="Pythonでフルスクラッチ実装したレイトレーシングの出力画像" loading="lazy">
-            </div>
-            <div>
-              <h3 class="h6 archive-title">レイトレーシング（Python）</h3>
-              <p class="tech-line mb-1">Python</p>
-              <p class="text-muted small mb-2">レイと球の交差、材質、反射・屈折の再帰計算をフルスクラッチ実装。</p>
-              <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922410" href="https://www.nicovideo.jp/watch/sm45922410" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="archive-item">
-            <div class="media-thumb">
-              <img src="media/shadowmap.jpg" alt="シャドウマッピングで影を描画したCGの画面" loading="lazy">
-            </div>
-            <div>
-              <h3 class="h6 archive-title">シャドウマッピング</h3>
-              <p class="tech-line mb-1">Python</p>
-              <p class="text-muted small mb-2">デプスマップで影を生成し、バイアス調整でシャドウアクネとピーターパン現象を抑制。</p>
-            </div>
-          </div>
-
-          <div class="archive-item">
-            <div class="media-thumb">
-              <img src="media/wave-paraboloid.png" alt="伝播する波と放物面の変形をワイヤーフレームで描画したアニメーション画面" loading="lazy">
-            </div>
-            <div>
-              <h3 class="h6 archive-title">波と放物面のアニメーション</h3>
-              <p class="tech-line mb-1">Python</p>
-              <p class="text-muted small mb-2">既存の描画基盤を再利用し、伝播する波と放物面の変形をワイヤーフレームで可視化。</p>
-              <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922419" href="https://www.nicovideo.jp/watch/sm45922419" target="_blank" rel="noopener noreferrer">&#9654; デモ動画</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="archive-item">
-            <div class="media-grid" style="max-width:460px;">
-              <div class="media-thumb">
-                <img src="media/canny-original.png" alt="Canny法の入力画像（自習室の掲示）" loading="lazy">
-              </div>
-              <div class="media-thumb">
-                <img src="media/canny-edge.png" alt="Canny法で抽出したエッジ画像" loading="lazy">
-              </div>
-            </div>
-            <div>
-              <h3 class="h6 archive-title">Canny法（エッジ抽出）</h3>
-              <p class="tech-line mb-1">Python</p>
-              <p class="summary-hide text-muted small mb-2">ライブラリに頼らず、Canny法のエッジ抽出処理を一から実装。左が入力、右が出力。</p>
-            </div>
-          </div>
-
         </div>
       </details>
     </section>
 
-    <hr class="border-subtle">
+    <!-- 詳細経歴・担当技術 -->
+    <section id="career" class="anchor pdf-full-only">
+      <div class="section-heading">
+        <p class="section-kicker">05 / BACKGROUND</p>
+        <h2 class="h4 section-title">経歴・資格・担当技術</h2>
+      </div>
+      <div class="row g-4">
+        <div class="col-12 col-lg-6">
+          <h3 class="h6">学歴・職歴</h3>
+          <div class="timeline">
+            <span class="yr">2018.04–2022.03</span><span class="ev">東京大学 工学部 精密工学科 卒業</span>
+            <span class="yr">2022.04–2024.09</span><span class="ev">東京大学大学院 新領域創成科学研究科 人間環境学専攻 修士課程 修了</span>
+            <span class="yr">2024.10–2026.03</span><span class="ev">同博士後期課程でEIT触覚センサを研究（退学）</span>
+            <span class="yr">2026.04–現在</span><span class="ev">フリーランス・AIアプリケーション開発</span>
+          </div>
+          <p class="small text-muted mt-3"><strong>TA：</strong>東京大学大学院の有限要素法・物理シミュレーションの演習指導（2023年11月〜2024年1月，2024年11月〜2025年1月）．</p>
+          <div class="cert-row">
+            <a class="cert-badge" href="https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url" target="_blank" rel="noopener noreferrer"><img src="media/badge-aws-ai-practitioner.png" width="76" height="76" alt="AWS Certified AI Practitionerの認定バッジ．Credlyで検証" loading="lazy"></a>
+            <div>
+              <p class="small text-muted mb-1"><strong>資格：</strong>基本情報技術者 取得（2026年8月），AWS Certified AI Practitioner 取得（2026年9月）．</p>
+              <p class="small text-muted mb-0"><strong>プログラミング実績：</strong>AtCoder 水色（最高レーティング1440．2026年9月時点1348，上位6.27%）．paizaスキルチェック Sランク（最高レーティング1920）．</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6">
+          <h3 class="h6">技術と担当範囲</h3>
+          <ul class="stack-map">
+            <li><strong>Python / C++</strong><span>本人の実装経験：研究の解析・シミュレーション，CG，制御，競技プログラミング</span></li>
+            <li><strong>Keras / GLSL</strong><span>本人の実装経験：CNN再構成，フラグメントシェーダでのレイトレーシング・CSG</span></li>
+            <li><strong>設計・評価</strong><span>現在の受託・OSS：要件・仕様・設計判断，生成物のレビュー，実環境での検証と採否判断</span></li>
+            <li><strong>製品の構成技術</strong><span>FastAPI / Dify / Next.js / PostgreSQL / Flutter / FFmpegなど．実装はAIへ委任しており，本人の習得技術とは区別しています</span></li>
+          </ul>
+          <p class="small text-muted mt-3 mb-0 no-print">研究・自力実装と，現在のAIエージェントを活用する開発を区別して掲載しています．生成物をそのまま採用せず，検証できる仕様・評価基準を定めることを重視しています．</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- その他の作品：CG3作品を上段へ移し，残り7作品を保持 -->
+    <section id="archive" class="anchor pdf-full-only">
+      <div class="section-heading">
+        <h2 class="h4 section-title">その他の作品</h2>
+        <p class="section-intro text-muted">上に掲載したCG3作品以外の，制御・画像処理・AIクライアントなどの制作記録です．</p>
+      </div>
+      <details class="archive project-details">
+        <summary>その他の作品を開く（7件）</summary>
+        <div class="details-content">
+          <h3 class="h6 mb-3">生成AI不使用の自力実装（4作品）</h3>
+          <div class="archive-item">
+            <div class="media-thumb"><img src="media/handdrive.png" alt="手の傾きと開閉で赤い車を運転する3Dデモ" loading="lazy" width="1632" height="916" decoding="async"></div>
+            <div>
+              <h4 class="h6 archive-title">ハンドドライブ</h4>
+              <p class="tech-line mb-1">JavaScript / Three.js</p>
+              <p class="text-muted small mb-2">Webカメラで捉えた手の傾きと開閉を，ステアリング・アクセル・ブレーキへ変換する3D運転デモ．</p>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922395" href="https://www.nicovideo.jp/watch/sm45922395" target="_blank" rel="noopener noreferrer">▶ 動画を見る</a>
+            </div>
+          </div>
+          <div class="archive-item">
+            <div class="media-thumb"><img src="media/invpend.png" alt="倒立振子が障害物を避けて移動するシミュレーション" loading="lazy" width="1579" height="916" decoding="async"></div>
+            <div>
+              <h4 class="h6 archive-title">倒立振子</h4>
+              <p class="tech-line mb-1">C++ / ODE</p>
+              <p class="text-muted small mb-2">PID制御で倒立姿勢を保ちながら，障害物を避けてゴールへ移動するシミュレーション．</p>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922355" href="https://www.nicovideo.jp/watch/sm45922355" target="_blank" rel="noopener noreferrer">▶ 動画を見る</a>
+            </div>
+          </div>
+          <div class="archive-item">
+            <div class="media-thumb"><img src="media/wave-paraboloid.png" alt="伝播する波と放物面の変形をワイヤーフレームで可視化した画面" loading="lazy" width="1377" height="768" decoding="async"></div>
+            <div>
+              <h4 class="h6 archive-title">波と放物面のアニメーション</h4>
+              <p class="tech-line mb-1">Python</p>
+              <p class="text-muted small mb-2">既存の描画基盤を再利用し，伝播する波と放物面の変形をワイヤーフレームで可視化．</p>
+              <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922419" href="https://www.nicovideo.jp/watch/sm45922419" target="_blank" rel="noopener noreferrer">▶ 動画を見る</a>
+            </div>
+          </div>
+          <div class="archive-item">
+            <div class="media-grid">
+              <div class="media-thumb"><img src="media/canny-original.png" alt="Canny法へ入力した自習室の掲示画像" loading="lazy" width="1458" height="928" decoding="async"></div>
+              <div class="media-thumb"><img src="media/canny-edge.png" alt="自力実装したCanny法によるエッジ抽出結果" loading="lazy" width="1462" height="932" decoding="async"></div>
+            </div>
+            <div>
+              <h4 class="h6 archive-title">Canny法（エッジ抽出）</h4>
+              <p class="tech-line mb-1">Python</p>
+              <p class="text-muted small mb-0">ライブラリに頼らず，Canny法のエッジ抽出処理を一から実装．左が入力，右が出力です．</p>
+            </div>
+          </div>
+          <h3 class="h6 mt-4 mb-3">その他のアプリ・ツール（3作品）</h3>
+          <div class="archive-item">
+            <div class="media-thumb"><img src="media/chatgpt-windows.png" alt="ChatGPT-Windowsで会話とストリーミング回答を表示する画面" loading="lazy" width="2560" height="1504" decoding="async"></div>
+            <div>
+              <h4 class="h6 archive-title">ChatGPT-Windows</h4>
+              <p class="tech-line mb-1">Python / PySide6（Qt6）/ MIT</p>
+              <p class="text-muted small mb-2">翻訳・補完・要約をホットキーとクリップボードから呼び出すWindows常駐クライアント．ストリーミング表示とWindows資格情報マネージャーへのAPIキー保存に対応．</p>
+              <div class="d-flex flex-wrap gap-2"><a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Windows" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922374" href="https://www.nicovideo.jp/watch/sm45922374" target="_blank" rel="noopener noreferrer">▶ 動画を見る</a></div>
+            </div>
+          </div>
+          <div class="archive-item">
+            <div class="media-thumb"><img src="media/chatgpt-web.png" alt="ChatGPT-Webで入力文の続きをゴーストテキストとして表示" loading="lazy" width="1024" height="823" decoding="async"></div>
+            <div>
+              <h4 class="h6 archive-title">ChatGPT-Web</h4>
+              <p class="tech-line mb-1">JavaScript / 単一HTML / MIT</p>
+              <p class="text-muted small mb-2">入力の続きをゴーストテキストで提案するプロトタイプ．Tabと矢印キーで全体・1文字単位を確定します．ローカル検証用．</p>
+              <div class="d-flex flex-wrap gap-2"><a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ChatGPT-Web" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a class="btn btn-outline-info btn-sm btn-video" data-nico="sm45922369" href="https://www.nicovideo.jp/watch/sm45922369" target="_blank" rel="noopener noreferrer">▶ 動画を見る</a></div>
+            </div>
+          </div>
+          <div class="archive-item">
+            <div class="media-thumb"><img src="media/calcpy-repl.png" alt="CalcpyのREPL画面．数式入力と結果，フリック入力用の関数パレット" loading="lazy" width="1080" height="2340" decoding="async"></div>
+            <div>
+              <h4 class="h6 archive-title">Calcpy</h4>
+              <p class="tech-line mb-1">Android / Kotlin・Compose / CPython・SymPy / 非公開</p>
+              <p class="text-muted small mb-0">電卓の操作感にSymPyの厳密計算とPython REPLを統合したAndroid試作．4方向フリック入力と，Python実行の別プロセス隔離を設計しました．</p>
+            </div>
+          </div>
+        </div>
+      </details>
+    </section>
 
     <!-- 連絡先 -->
-    <section id="contact" class="anchor py-2 mb-4">
-      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-        <h2 class="h4 section-title mb-0">連絡先</h2>
+    <section id="contact" class="anchor">
+      <div class="section-heading">
+        <p class="section-kicker">CONTACT</p>
+        <h2 class="h4 section-title">連絡先・資料</h2>
       </div>
-
-      <div class="d-flex flex-wrap gap-2 mb-2">
-        <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com">Mail: a.kojima8924@gmail.com</a>
-        <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub: kojima8924</a>
+      <p class="text-muted">研究・自力実装の経験と，AI活用アプリの設計・検証に取り組んでいます．ご連絡はメールへお願いします．</p>
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        <a class="btn btn-outline-info btn-sm" href="mailto:a.kojima8924@gmail.com">メール：a.kojima8924@gmail.com</a>
+        <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924" target="_blank" rel="noopener noreferrer">GitHub：kojima8924 ↗</a>
       </div>
-      <div class="text-muted small mb-3">
-        主な領域：AIを活用・統合したアプリ開発 / Python / C++
-      </div>
-
       <div class="d-flex flex-wrap gap-2 no-print">
         <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio_Summary.pdf" download>採用向けPDF（2ページ）</a>
         <a class="btn btn-outline-info btn-sm" href="media/Akira_Kojima_Portfolio.pdf" download>完全版PDF</a>
       </div>
-
-      <div class="text-muted small mt-3">
-        © <span id="y">2026</span> Akira Kojima. All rights reserved.
-      </div>
+      <p class="text-muted small mt-4 mb-0">© <span id="y">2026</span> Akira Kojima. All rights reserved.</p>
     </section>
   </main>
 
@@ -1739,144 +918,218 @@
   <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="拡大表示" aria-hidden="true" inert></div>
 
   <script>
-    // lightbox
+    // 図は読み取れる幅で開き，拡大・縮小・全体表示を独立した操作にする．
     (function(){
       const overlay = document.getElementById("lightbox");
       const backgroundElements = [...document.body.children].filter(el => el !== overlay && el.tagName !== "SCRIPT");
       let lastTrigger = null;
+      let previousInert = [];
+      let previousOverflow = "";
+      let resizeImage = null;
 
-      function openLightbox(trigger){
+      function control(label, text, action){
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = text;
+        button.setAttribute("aria-label", label);
+        button.addEventListener("click", action);
+        return button;
+      }
+
+      function openLightbox(trigger, toolbar){
         lastTrigger = trigger;
-        const closeBtn = document.createElement("button");
+        const closeBtn = control("拡大表示を閉じる", "×", close);
         closeBtn.className = "lightbox-close";
-        closeBtn.type = "button";
-        closeBtn.setAttribute("aria-label", "拡大表示を閉じる");
-        closeBtn.textContent = "×";
-        closeBtn.addEventListener("click", e => { e.stopPropagation(); close(); });
-        overlay.prepend(closeBtn);
-        backgroundElements.forEach(el => { el.setAttribute("inert", ""); });
+        toolbar.append(closeBtn);
+        toolbar.className = "lightbox-toolbar";
+        overlay.prepend(toolbar);
+        previousInert = backgroundElements.map(el => el.hasAttribute("inert"));
+        backgroundElements.forEach(el => el.setAttribute("inert", ""));
         overlay.removeAttribute("inert");
         overlay.classList.add("active");
         overlay.setAttribute("aria-hidden", "false");
+        previousOverflow = document.body.style.overflow;
         document.body.style.overflow = "hidden";
-        requestAnimationFrame(() => closeBtn.focus());
+        closeBtn.focus();
       }
 
-      function showMedia(el){
-          let clone;
-          if(el.tagName === "VIDEO"){
-            clone = document.createElement("video");
-            clone.src = el.src;
-            clone.controls = true;
-            clone.autoplay = true;
-            clone.loop = true;
-          } else {
-            clone = document.createElement("img");
-            clone.src = el.src;
-            clone.alt = el.alt || "";
+      function externalLink(url, label){
+        const link = document.createElement("a");
+        link.href = url;
+        link.textContent = label;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        return link;
+      }
+
+      function showMedia(el, trigger = el){
+        overlay.replaceChildren();
+        const toolbar = document.createElement("div");
+        if(el.tagName === "VIDEO"){
+          const video = document.createElement("video");
+          video.src = el.src;
+          video.controls = true;
+          overlay.append(video);
+          openLightbox(trigger, toolbar);
+          return;
+        }
+        const image = document.createElement("img");
+        image.src = el.dataset.fullSrc || el.currentSrc || el.src;
+        image.alt = el.alt || "";
+        const viewport = document.createElement("div");
+        viewport.className = "lightbox-viewport";
+        viewport.tabIndex = 0;
+        viewport.setAttribute("role", "region");
+        viewport.setAttribute("aria-label", "画像表示領域．拡大時は上下左右にスクロールできます");
+        const stage = document.createElement("div");
+        stage.className = "lightbox-stage";
+        stage.append(image);
+        viewport.append(stage);
+        overlay.append(viewport);
+        const help = document.createElement("p");
+        help.className = "lightbox-help";
+        help.textContent = "拡大後はスワイプ・スクロール・矢印キーで移動";
+        overlay.append(help);
+        let width = 0;
+        let fitWidth = 0;
+        let maximum = 0;
+        let fitMode = false;
+        const zoomOut = control("画像を縮小", "−", () => setWidth(width / 1.5));
+        const zoomIn = control("画像を拡大", "＋", () => setWidth(width * 1.5));
+        const fit = control("画像全体を表示", "全体", () => { setWidth(fitWidth); fitMode = true; });
+        toolbar.append(zoomOut, zoomIn, fit, externalLink(image.src, "原画像 ↗"));
+        function setWidth(next, centered = true){
+          const before = width || next;
+          const x = (viewport.scrollLeft + viewport.clientWidth / 2) / before;
+          const y = (viewport.scrollTop + viewport.clientHeight / 2) / before;
+          width = Math.max(fitWidth, Math.min(maximum, next));
+          stage.style.width = width + "px";
+          fitMode = Math.abs(width - fitWidth) < 1;
+          zoomOut.disabled = fitMode;
+          zoomIn.disabled = width >= maximum - 1;
+          if(centered){
+            viewport.scrollLeft = x * width - viewport.clientWidth / 2;
+            viewport.scrollTop = y * width - viewport.clientHeight / 2;
           }
-          overlay.innerHTML = "";
-          clone.addEventListener("click", e => e.stopPropagation());
-          overlay.appendChild(clone);
-          openLightbox(el);
+        }
+        function measure(initial = false){
+          const naturalWidth = image.naturalWidth || el.naturalWidth || Number(el.getAttribute("width")) || 1280;
+          const naturalHeight = image.naturalHeight || el.naturalHeight || Number(el.getAttribute("height")) || 720;
+          fitWidth = Math.min(naturalWidth, viewport.clientWidth, viewport.clientHeight * naturalWidth / naturalHeight);
+          maximum = Math.max(naturalWidth * 3, viewport.clientWidth * 4);
+          // 細かな帯図はスマホでも900px相当から開始し，横スクロールで読めるようにする．
+          const readable = el.closest(".fig-band") ? Math.max(fitWidth, Math.min(900, naturalWidth)) : fitWidth;
+          setWidth(initial ? readable : (fitMode ? fitWidth : width), false);
+        }
+        openLightbox(trigger, toolbar);
+        if(image.complete && image.naturalWidth) measure(true);
+        else image.addEventListener("load", () => measure(true), { once:true });
+        resizeImage = () => measure(false);
       }
 
-      // 画像・動画をマウス・タッチ・キーボードで拡大表示
       document.querySelectorAll(".media-hero img, .media-hero video, .media-thumb img, .media-thumb video, .media-phone img, .cfa-shot img, .flow-shot img, .fig-band img").forEach(el => {
-        const label = el.getAttribute("alt") || el.getAttribute("aria-label") || "メディア";
+        if(el.closest("a")) return;
+        const label = el.dataset.zoomLabel || el.getAttribute("alt") || "画像";
         el.tabIndex = 0;
         el.setAttribute("role", "button");
         el.setAttribute("aria-haspopup", "dialog");
         el.setAttribute("aria-label", label + "を拡大表示");
-        el.addEventListener("click", e => {
-          e.stopPropagation();
-          showMedia(el);
-        });
-        el.addEventListener("keydown", e => {
-          if(e.key === "Enter" || e.key === " "){
-            e.preventDefault();
+        el.addEventListener("click", () => showMedia(el));
+        el.addEventListener("keydown", event => {
+          if(event.key === "Enter" || event.key === " "){
+            event.preventDefault();
             showMedia(el);
           }
         });
       });
 
-      // デモ動画ボタン → ニコニコ埋め込み
-      document.querySelectorAll(".btn-video[data-nico]").forEach(btn => {
-        btn.addEventListener("click", e => {
-          e.preventDefault();
-          e.stopPropagation();
-          const id = btn.dataset.nico;
+      // 通常リンクの修飾キー操作を維持し，JavaScriptなしでも原画像・動画へ到達できる．
+      document.querySelectorAll("a[data-lightbox]").forEach(link => {
+        link.addEventListener("click", event => {
+          if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+          const image = link.querySelector("img");
+          if(!image) return;
+          event.preventDefault();
+          showMedia(image, link);
+        });
+      });
+      document.querySelectorAll(".btn-video[data-nico]").forEach(link => {
+        link.addEventListener("click", event => {
+          if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+          event.preventDefault();
+          const id = link.dataset.nico;
+          if(!/^sm[0-9]+$/.test(id)) return;
           const iframe = document.createElement("iframe");
-          iframe.src = "https://embed.nicovideo.jp/watch/" + id + "?autoplay=1";
-          iframe.title = "ニコニコ動画 " + id;
+          iframe.src = "https://embed.nicovideo.jp/watch/" + id;
+          iframe.title = (link.closest("article, .archive-item")?.querySelector("h3, h4")?.textContent || "作品") + "のデモ動画";
           iframe.allow = "autoplay; fullscreen";
           iframe.allowFullscreen = true;
-          overlay.innerHTML = "";
-          overlay.appendChild(iframe);
-          openLightbox(btn);
+          overlay.replaceChildren(iframe);
+          overlay.classList.add("is-video");
+          // 子フレーム内のキーは親へ届かないため，その後ろにも閉じる操作を置く．
+          const videoClose = control("動画を閉じる", "動画を閉じる", close);
+          videoClose.className = "lightbox-video-close";
+          overlay.append(videoClose);
+          const toolbar = document.createElement("div");
+          toolbar.append(externalLink(link.href, "動画ページで見る ↗"));
+          openLightbox(link, toolbar);
         });
       });
 
-      // オーバーレイクリックで閉じる
-      overlay.addEventListener("click", e => { if(e.target === overlay) close(); });
-      document.addEventListener("keydown", e => {
-        if(e.key === "Escape"){
-          close();
-          return;
-        }
-        if(e.key !== "Tab" || !overlay.classList.contains("active")) return;
-
-        const focusable = [...overlay.querySelectorAll("button, iframe, video[controls], [tabindex]:not([tabindex='-1'])")]
+      overlay.addEventListener("click", event => { if(event.target === overlay) close(); });
+      window.addEventListener("resize", () => { if(resizeImage) resizeImage(); });
+      document.addEventListener("keydown", event => {
+        if(!overlay.classList.contains("active")) return;
+        if(event.key === "Escape"){ close(); return; }
+        if(event.key !== "Tab") return;
+        const focusable = [...overlay.querySelectorAll("button, a[href], iframe, video[controls], [tabindex]:not([tabindex='-1'])")]
           .filter(el => !el.disabled);
-        if(!focusable.length){
-          e.preventDefault();
-          return;
-        }
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if(e.shiftKey && document.activeElement === first){
-          e.preventDefault();
-          last.focus();
-        } else if(!e.shiftKey && document.activeElement === last){
-          e.preventDefault();
-          first.focus();
-        }
+        const first = focusable[0], last = focusable[focusable.length - 1];
+        if(event.shiftKey && document.activeElement === first){ event.preventDefault(); last.focus(); }
+        else if(!event.shiftKey && document.activeElement === last){ event.preventDefault(); first.focus(); }
       });
 
       function close(){
         if(!overlay.classList.contains("active")) return;
         overlay.classList.remove("active");
+        overlay.classList.remove("is-video");
         overlay.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
-        // 動画・iframe停止
-        const v = overlay.querySelector("video");
-        if(v) v.pause();
-        const f = overlay.querySelector("iframe");
-        if(f) f.src = "";
-        const triggerToRestore = lastTrigger;
+        document.body.style.overflow = previousOverflow;
+        overlay.querySelector("video")?.pause();
         overlay.replaceChildren();
         overlay.setAttribute("inert", "");
-        backgroundElements.forEach(el => { el.removeAttribute("inert"); });
-        if(triggerToRestore) triggerToRestore.focus();
+        backgroundElements.forEach((el,index) => { if(!previousInert[index]) el.removeAttribute("inert"); });
+        const trigger = lastTrigger;
         lastTrigger = null;
+        resizeImage = null;
+        trigger?.focus({ preventScroll:true });
       }
     })();
 
-    // モバイルナビ: 閉じるアニメーション完了後に移動し、見出し位置のずれを防ぐ
+    // 章へ移動した後，キーボードの読み進める位置も移動先へ揃える．
     const navEl = document.getElementById("nav");
-    document.querySelectorAll("#nav .nav-link[href^='#']").forEach(link => {
+    document.querySelectorAll("a[href^='#']").forEach(link => {
       link.addEventListener("click", event => {
-        if(!navEl.classList.contains("show")) return;
-
-        const target = document.querySelector(link.hash);
+        if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || !link.hash) return;
+        const target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
         if(!target) return;
-
         event.preventDefault();
-        navEl.addEventListener("hidden.bs.collapse", () => {
-          target.scrollIntoView({ block: "start" });
-          history.pushState(null, "", link.hash);
-        }, { once: true });
-        bootstrap.Collapse.getOrCreateInstance(navEl).hide();
+        const move = () => {
+          target.scrollIntoView({ block:"start" });
+          target.setAttribute("tabindex", "-1");
+          target.focus({ preventScroll:true });
+          if(location.hash !== link.hash) history.pushState(null, "", link.hash);
+        };
+        if(link.closest("#nav") && window.bootstrap && (navEl.classList.contains("show") || navEl.classList.contains("collapsing"))){
+          navEl.addEventListener("hidden.bs.collapse", move, { once:true });
+          const collapse = bootstrap.Collapse.getOrCreateInstance(navEl, { toggle:false });
+          if(navEl.classList.contains("collapsing")){
+            // 開き途中で選んだ場合も，アニメーション完了後に閉じてから移動する．
+            if(document.querySelector(".navbar-toggler").getAttribute("aria-expanded") === "true"){
+              navEl.addEventListener("shown.bs.collapse", () => collapse.hide(), { once:true });
+            }
+          } else { collapse.hide(); }
+        } else { move(); }
       });
     });
 
@@ -1933,7 +1186,7 @@
     // アコーディオンをすべて開いて過去作品も印刷に含める（終了後に元へ戻す）
     let detailsOpenStateBeforePrint = null;
     window.addEventListener("beforeprint", () => {
-      const spy = bootstrap.ScrollSpy.getInstance(document.body);
+      const spy = window.bootstrap?.ScrollSpy.getInstance(document.body);
       if(spy) spy.dispose();
       const all = [...document.querySelectorAll("details")];
       detailsOpenStateBeforePrint = all.map(d => d.open);
@@ -1946,7 +1199,7 @@
         });
         detailsOpenStateBeforePrint = null;
       }
-      new bootstrap.ScrollSpy(document.body, { target: "#nav" });
+      if(window.bootstrap) new bootstrap.ScrollSpy(document.body, { target: "#nav" });
     });
   </script>
 </body>

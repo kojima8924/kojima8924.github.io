@@ -13,13 +13,14 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Iterator
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit, urlunsplit
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_SOURCE = PROJECT_ROOT / "index.html"
 DEFAULT_OUTPUT = PROJECT_ROOT / "media" / "Akira_Kojima_Portfolio.pdf"
 DEFAULT_SUMMARY_OUTPUT = PROJECT_ROOT / "media" / "Akira_Kojima_Portfolio_Summary.pdf"
+PUBLIC_SITE_URL = "https://kojima8924.github.io/"
 
 
 class _QuietRequestHandler(SimpleHTTPRequestHandler):
@@ -142,12 +143,12 @@ PDF_METADATA = {
     "summary": {
         "title": "Akira Kojima Portfolio Summary",
         "author": "Akira Kojima",
-        "subject": "AI Application Engineering Portfolio Summary",
+        "subject": "Research, Hand-Coded Graphics and AI-Assisted Development Summary",
     },
     "full": {
         "title": "Akira Kojima Portfolio",
         "author": "Akira Kojima",
-        "subject": "AI Application Engineering and Research Portfolio",
+        "subject": "Research, Hand-Coded Graphics and AI-Assisted Development Portfolio",
     },
 }
 
@@ -212,10 +213,44 @@ def _restore_small_images(document, small: list) -> None:
                 break
 
 
-def _compress_pdf_images(output: Path, mode: str = "full") -> int:
+def _public_pdf_uri(uri: str, local_origin: str) -> str:
+    """今回の生成用サーバーに向くURIだけを公開URLへ移す．"""
+    try:
+        source = urlsplit(local_origin)
+        target = urlsplit(uri)
+    except ValueError:
+        return uri
+
+    # 同じlocalhostでも別サービスのリンクは変更しない．完全なorigin一致が必要．
+    if source.scheme != "http" or source.hostname not in {"127.0.0.1", "localhost", "::1"}:
+        return uri
+    if (target.scheme, target.netloc) != (source.scheme, source.netloc):
+        return uri
+
+    public = urlsplit(PUBLIC_SITE_URL)
+    return urlunsplit((public.scheme, public.netloc, target.path or "/", target.query, target.fragment))
+
+
+def _rewrite_local_pdf_links(document, local_origin: str) -> int:
+    """画像・資料へのローカルHTTPリンクを直し，内部ページ移動や外部リンクは保持する．"""
+    import pymupdf
+
+    updated = 0
+    for page in document:
+        for link in page.get_links():
+            if link.get("kind") != pymupdf.LINK_URI or not link.get("uri"):
+                continue
+            public_uri = _public_pdf_uri(link["uri"], local_origin)
+            if public_uri != link["uri"]:
+                page.update_link({**link, "uri": public_uri})
+                updated += 1
+    return updated
+
+
+def _compress_pdf_images(output: Path, mode: str = "full", *, local_origin: str | None = None) -> int:
     """埋め込み画像を印刷十分な解像度へ再圧縮し、配布しやすいサイズに抑える。
 
-    あわせて PDF viewer 上で識別できるようメタデータ（title/author/subject）を設定する。
+    あわせてメタデータを設定し，生成用サーバーのURIを公開サイトへ向ける．
     """
 
     try:
@@ -251,6 +286,8 @@ def _compress_pdf_images(output: Path, mode: str = "full") -> int:
             for page_number, xref, path in keep:
                 document[page_number].replace_image(xref, filename=str(path))
             _restore_small_images(document, small)
+            if local_origin is not None:
+                _rewrite_local_pdf_links(document, local_origin)
             document.ez_save(str(temporary_path))
 
         size = temporary_path.stat().st_size
@@ -365,7 +402,7 @@ def make_pdf(source: Path, output: Path, timeout_seconds: float, mode: str = "fu
                         )
 
                     _write_pdf_atomically(page, output)
-                    size = _compress_pdf_images(output, mode)
+                    size = _compress_pdf_images(output, mode, local_origin=base_url)
                     context.close()
                 finally:
                     browser.close()

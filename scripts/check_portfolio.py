@@ -12,6 +12,7 @@ import re
 import sys
 import urllib.request
 from collections import Counter
+from dataclasses import dataclass, field
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -45,10 +46,12 @@ TEXT_FORBIDDEN_PATTERNS = [
     (r"Paiza|PAIZA", "paiza表記の揺れ（小文字「paiza」に統一）"),
     # 「paizaスキルチェック Sランク」以外の書き方（paiza S / paiza S Rank / paiza Sランク等）を検出
     (r"paiza\s+S(?:\s*(?:Rank|ランク))?\b", "paizaランク表記の揺れ（「paizaスキルチェック Sランク」に統一）"),
-    (r"(?:AtCoder[^。]{0,12}|paiza[^。]{0,20})を?取得", "AtCoder/paizaを資格のように「取得」と表現している"),
+    (r"(?:AtCoder[^。．.!！?？\n]{0,12}|paiza[^。．.!！?？\n]{0,20})を?取得", "AtCoder/paizaを資格のように「取得」と表現している"),
 ]
 TEXT_REQUIRED_STRINGS = [
-    ("AtCoder 水色（最高レーティング1440。2026年9月時点で上位6.27%）", "AtCoder実績（6.27%は現在レーティングでの順位）"),
+    ("AtCoder 水色", "AtCoder実績"),
+    ("最高レーティング1440", "AtCoder最高レーティング"),
+    ("上位6.27%", "AtCoder順位（現在レーティングでの順位）"),
     ("paizaスキルチェック Sランク", "paiza実績"),
     ("最高レーティング1920", "paiza最高レーティング"),
     ("従来法の約21%まで低減", "研究の21%表現"),
@@ -80,6 +83,31 @@ REQUIRED_STRINGS = [
     ("frobt.2023.1157911", "論文リンク"),
 ]
 
+# 作品名を押したときは総覧ではなく、その作品へ直接移動する。
+# 「AI活用の作品」などの総覧リンクや外部GitHubリンクは対象外。
+WORK_ANCHORS = {
+    "Clage Cook": "clagecook-card",
+    "Trivium": "trivium-card",
+    "ChromiumforA": "chromiumfora-card",
+    "ScriptVEdit": "scriptvedit-card",
+}
+EXPECTED_CREDLY = "https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url"
+VOID_ELEMENTS = {
+    "area", "base", "br", "col", "embed", "hr", "img", "input", "link",
+    "meta", "param", "source", "track", "wbr",
+}
+
+
+@dataclass
+class _Element:
+    tag: str
+    attrs: dict[str, str | None]
+    ancestors: tuple[_Element, ...]
+    text_parts: list[str] = field(default_factory=list)
+
+    def has_class(self, name: str) -> bool:
+        return name in (self.attrs.get("class") or "").split()
+
 
 class _Parser(HTMLParser):
     def __init__(self) -> None:
@@ -92,20 +120,33 @@ class _Parser(HTMLParser):
         self.empty_hrefs = 0
         self.external_links: list[str] = []
         self.text_parts: list[str] = []       # 表示テキスト（script/style除く）
+        self.elements: list[_Element] = []
+        self._stack: list[_Element] = []
         self._ignored_depth = 0
 
     def handle_data(self, data: str) -> None:
+        for element in self._stack:
+            element.text_parts.append(data)
         if not self._ignored_depth:
             self.text_parts.append(data)
 
     def handle_endtag(self, tag: str) -> None:
         if tag in {"script", "style"} and self._ignored_depth:
             self._ignored_depth -= 1
+        # void要素はスタックへ積まない。親をたどって明示された終了タグを閉じる。
+        for index in range(len(self._stack) - 1, -1, -1):
+            if self._stack[index].tag == tag:
+                del self._stack[index:]
+                break
 
     def handle_starttag(self, tag: str, attrs: list) -> None:
         if tag in {"script", "style"}:
             self._ignored_depth += 1
         a = dict(attrs)
+        element = _Element(tag, a, tuple(self._stack))
+        self.elements.append(element)
+        if tag not in VOID_ELEMENTS:
+            self._stack.append(element)
         if "id" in a:
             self.ids.append(a["id"])
         if tag == "a":
@@ -127,11 +168,88 @@ class _Parser(HTMLParser):
             src = a.get("src") or ""
             if not src.startswith(("http", "data:")):
                 self.local_refs.append(src)
-            self.imgs.append({"src": src, "alt": a.get("alt")})
+            self.imgs.append({"src": src, "alt": a.get("alt"), "element": element})
         if tag in ("link",):
             href = a.get("href") or ""
             if href and not href.startswith(("http", "data:")):
                 self.local_refs.append(href)
+
+
+def check_structure(parser: _Parser) -> list[str]:
+    """導線とCGの常時表示を検査する。本文の文章やCSSの寸法値は固定しない。"""
+    errors: list[str] = []
+    for id_, count in Counter(parser.ids).items():
+        if count > 1:
+            errors.append(f"重複ID: #{id_} ×{count}")
+
+    id_set = set(parser.ids)
+    for anchor in parser.anchors:
+        if anchor not in id_set:
+            errors.append(f"存在しない内部anchor: #{anchor}")
+
+    nav_targets = set()
+    for element in parser.elements:
+        if element.tag != "a":
+            continue
+        href = (element.attrs.get("href") or "").strip()
+        if any(parent.tag == "nav" for parent in element.ancestors):
+            nav_targets.add(href)
+        label = " ".join("".join(element.text_parts).split())
+        expected = WORK_ANCHORS.get(label)
+        if expected and href.startswith("#") and href != f"#{expected}":
+            errors.append(f"作品名の内部リンクが作品へ直接移動しない: {label} → {href}（#{expected}を期待）")
+
+    for anchor in ("client", "craft"):
+        if f"#{anchor}" not in nav_targets:
+            errors.append(f"ナビゲーションからの導線がない: #{anchor}")
+
+    for img in parser.imgs:
+        element = img["element"]
+        if not any(parent.has_class("fig-band") for parent in element.ancestors):
+            continue
+        for dimension in ("width", "height"):
+            value = element.attrs.get(dimension) or ""
+            if not re.fullmatch(r"[0-9]+", value) or int(value) <= 0:
+                errors.append(f"帯図の領域予約に正の{dimension}属性が必要: {img['src']}")
+
+    craft_cards = [
+        element for element in parser.elements
+        if element.has_class("cg-card")
+        and any(parent.attrs.get("id") == "craft" for parent in element.ancestors)
+    ]
+    if len(craft_cards) != 3:
+        errors.append(f"#craftのCG作品カードは3件を期待: {len(craft_cards)}件")
+    for card in craft_cards:
+        label = card.attrs.get("id") or "（IDなし）"
+        for element in (*card.ancestors, card):
+            if element.tag == "details":
+                errors.append(f"CG作品が折りたたみ内にある: {label}")
+                break
+            if any(element.has_class(name) for name in ("pdf-full-only", "summary-hide")):
+                errors.append(f"CG作品が採用向けサマリーの除外対象になっている: {label}")
+                break
+            if "hidden" in element.attrs:
+                errors.append(f"CG作品がhidden属性で非表示になっている: {label}")
+                break
+    return errors
+
+
+def check_credential_links(parser: _Parser, html: str) -> list[str]:
+    """同じ証明URLを表示リンクと構造化データに保ち、重複掲載の数は問わない。"""
+    errors: list[str] = []
+    credly_urls = re.findall(r"https?://(?:www\.)?credly\.com/[^\s\"'<>]+", html)
+    if set(credly_urls) != {EXPECTED_CREDLY}:
+        errors.append(f"Credlyの検証URLが不一致: {sorted(set(credly_urls))}")
+    if EXPECTED_CREDLY not in parser.external_links:
+        errors.append("Credlyの検証URLへの表示リンクがない")
+    if not any(
+        element.tag == "script"
+        and element.attrs.get("type") == "application/ld+json"
+        and EXPECTED_CREDLY in "".join(element.text_parts)
+        for element in parser.elements
+    ):
+        errors.append("JSON-LDにCredlyの検証URLがない")
+    return errors
 
 
 def main() -> int:
@@ -143,19 +261,8 @@ def main() -> int:
     parser = _Parser()
     parser.feed(html)
 
-    errors: list[str] = []
+    errors = check_structure(parser)
     warnings: list[str] = []
-
-    # 1) 重複ID
-    for id_, count in Counter(parser.ids).items():
-        if count > 1:
-            errors.append(f"重複ID: #{id_} ×{count}")
-
-    # 2) 存在しない内部anchor
-    id_set = set(parser.ids)
-    for anchor in parser.anchors:
-        if anchor not in id_set:
-            errors.append(f"存在しない内部anchor: #{anchor}")
 
     # 3) ローカル参照の実在
     for ref in parser.local_refs:
@@ -198,11 +305,8 @@ def main() -> int:
         if "まで" not in context and "に低減" not in context:
             errors.append(f"『22%低減』型の誤解表現: …{context}…")
 
-    # 7c) 資格の検証URL（Credly）は JSON-LD・Hero・バッジ・検証リンクの4箇所で完全一致させる
-    credly_urls = re.findall(r"https?://(?:www\.)?credly\.com/[^\s\"'<>]+", html)
-    expected_credly = "https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url"
-    if set(credly_urls) != {expected_credly} or len(credly_urls) != 4:
-        errors.append(f"Credly の検証URLが不一致または箇所数が違う（4箇所の完全一致を期待）: {sorted(set(credly_urls))} ×{len(credly_urls)}")
+    # 7c) 資格の検証URLは構造化データと表示リンクで一致させる。
+    errors.extend(check_credential_links(parser, html))
 
     # 8) 必須文字列
     for needle, reason in REQUIRED_STRINGS:

@@ -58,6 +58,7 @@ TEXT_REQUIRED_STRINGS = [
     ("19.2%低減", "HWHMの表現"),
     ("ScriptVEdit", "公式プロジェクト名"),
     ("基本情報技術者 取得（2026年8月）", "資格表記"),
+    ("G検定 取得（2026年9月）", "資格表記"),
     ("AWS Certified AI Practitioner 取得（2026年9月）", "資格表記"),
 ]
 

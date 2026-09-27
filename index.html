@@ -3,6 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- 公開APIの検証完了後にHTTPSのベースURLを設定する．空欄では通信しない． -->
+  <meta name="portfolio-assistant-endpoint" content="" />
+  <link rel="stylesheet" href="assets/assistant.css" />
+  <link rel="stylesheet" href="assets/assistant-site.css" />
+  <script src="assets/assistant.js" defer></script>
+  <script src="assets/assistant-site.js" defer></script>
   <title>小嶋 明 | 研究・CG・AIアプリ開発 Portfolio</title>
   <meta name="description" content="小嶋明のポートフォリオ．触覚センサ研究とCGの自力実装，受託LINE応答AI，Trivium・ScriptVEdit・Clage Cook．本人の実装経験とAIエージェントを活用した設計・検証を分けて紹介します．" />
 
@@ -908,6 +914,19 @@
           </div>
         </div>
       </details>
+    </section>
+
+    <!-- 接続先が未設定の間は，入力欄を作らず準備中と表示する． -->
+    <section id="assistant" class="anchor no-print" aria-labelledby="assistant-title">
+      <div class="assistant-card">
+        <div>
+          <p class="section-kicker">ASK ABOUT MY WORK</p>
+          <h2 id="assistant-title" class="h4 section-title">作品・経歴について質問する</h2>
+          <p class="text-muted mb-2">公開している研究・作品・担当範囲を，参照元付きで確認できるAI質問対応を準備しています．</p>
+          <p id="assistant-availability" class="assistant-availability" role="status">準備中です．現在は質問を送信できません．作品の詳細は各項目のリンクからご覧いただけます．</p>
+        </div>
+        <div id="assistant-mount" class="assistant-mount"></div>
+      </div>
     </section>
 
     <!-- 連絡先 -->

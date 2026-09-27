@@ -1,0 +1,42 @@
+/* 作品の画像・動画を同じ位置と操作で開く．バッジや装飾画像には適用しない． */
+.media-trigger { position:relative; display:block; min-width:44px; min-height:44px; color:inherit; text-decoration:none; }
+.media-trigger[data-media-kind="image"] { cursor:zoom-in; }
+.media-trigger[data-media-kind="video"], .media-trigger[data-media-kind="video"] img { cursor:pointer; }
+.media-label { position:absolute; right:6px; bottom:6px; z-index:1; display:flex; align-items:center; min-height:30px; max-width:calc(100% - 12px); padding:4px 9px; border:1px solid #7693b0; border-radius:5px; background:rgba(14,32,50,.96); color:#fff; font-size:.8rem; line-height:1.35; font-weight:600; white-space:nowrap; pointer-events:none; }
+.media-trigger:hover .media-label, .media-trigger:focus-visible .media-label { background:#135b93; }
+.media-trigger:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+.media-diagram { padding-bottom:34px; }
+.btn-video { min-height:44px; }
+
+/* 上部操作・閲覧領域・説明を分け，狭い画面でも重ならないようにする． */
+.lightbox-overlay { position:fixed; inset:0; z-index:9999; height:100%; height:100dvh; padding:12px 16px; display:flex; flex-direction:column; align-items:center; gap:10px; background:rgba(5,10,17,.97); color:#fff; visibility:hidden; opacity:0; pointer-events:none; }
+.lightbox-overlay.active { visibility:visible; opacity:1; pointer-events:auto; }
+.lightbox-toolbar { display:flex; flex-wrap:wrap; gap:6px; align-items:center; width:100%; max-width:1280px; flex:0 0 auto; }
+.lightbox-toolbar button, .lightbox-toolbar a, .lightbox-video-close { display:inline-flex; align-items:center; justify-content:center; min-width:44px; min-height:44px; padding:8px 10px; background:#1d2c3d; color:#fff; border:1px solid #7e96b0; border-radius:6px; text-align:center; text-decoration:none; font-size:14px; line-height:1.3; cursor:pointer; }
+.lightbox-toolbar button:disabled { opacity:.4; cursor:default; }
+.lightbox-toolbar .lightbox-close { margin-left:auto; font-size:24px; line-height:1; }
+.lightbox-viewport { max-width:1280px; width:100%; flex:1 1 0; min-height:0; overflow:auto; overscroll-behavior:contain; touch-action:pan-x pan-y pinch-zoom; border-radius:8px; }
+.lightbox-stage { margin:0 auto; }
+.lightbox-stage img { display:block; width:100%; max-width:none; max-height:none; height:auto; }
+.lightbox-meta { flex:0 0 auto; max-width:960px; width:100%; text-align:center; }
+.lightbox-caption { margin:0; font-size:14px; line-height:1.5; overflow-wrap:anywhere; }
+.lightbox-position { display:block; margin-bottom:3px; font-size:12px; color:#cbd9e7; }
+.lightbox-help { margin:4px 0 0; font-size:12px; line-height:1.4; color:#cbd9e7; }
+.lightbox-error { margin:10px; color:#fff; }
+.lightbox-overlay.is-video .lightbox-viewport { display:flex; align-items:center; justify-content:center; }
+.lightbox-overlay iframe, .lightbox-overlay video { display:block; max-width:100%; max-height:100%; width:100%; aspect-ratio:16/9; border:0; border-radius:8px; background:#000; }
+.lightbox-video-close { margin-top:7px; }
+.lightbox-overlay :focus-visible { outline:3px solid #8acaff; outline-offset:2px; }
+@media (max-width:767.98px) {
+  .lightbox-overlay { padding:10px; gap:8px; }
+  .lightbox-toolbar { gap:5px; }
+  .lightbox-toolbar button, .lightbox-toolbar a { padding-inline:8px; }
+  .lightbox-caption { font-size:13px; }
+  .media-label { font-size:.75rem; padding-inline:7px; }
+}
+@media print {
+  .media-label, .lightbox-overlay { display:none !important; }
+  .media-diagram { padding-bottom:0; }
+  .media-trigger, .btn-video { min-width:0; min-height:0; }
+}
+body.pdf-summary .media-label, body.pdf-full .media-label { display:none !important; }

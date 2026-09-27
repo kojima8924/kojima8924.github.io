@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="assets/assistant-site.css" />
   <script src="assets/assistant.js" defer></script>
   <script src="assets/assistant-site.js" defer></script>
+  <script src="assets/media-viewer.js" defer></script>
   <title>小嶋 明 | 研究・CG・AIアプリ開発 Portfolio</title>
   <meta name="description" content="小嶋明のポートフォリオ．触覚センサ研究とCGの自力実装，受託LINE応答AI，Trivium・ScriptVEdit・Clage Cook．本人の実装経験とAIエージェントを活用した設計・検証を分けて紹介します．" />
 
@@ -188,8 +189,6 @@
     .cg-card > .btn, .cg-card > .d-flex:last-child { margin-top:auto; align-self:start; }
     .cg-media { position:relative; display:block; aspect-ratio:1; border-radius:8px; overflow:hidden; background:var(--imgbg); }
     .cg-media img { display:block; width:100%; height:100%; object-fit:contain; }
-    .cg-media-label { position:absolute; bottom:0; right:0; background:#152638; color:#fff; padding:5px 10px; font-size:.8rem; border-top-left-radius:6px; }
-    .cg-media:hover .cg-media-label { background:#1267ac; }
     .cg-copy { padding-top:14px; }
     .cg-copy .tech-line { margin:0 0 5px; }
     .cg-copy h3 { margin-top:0; }
@@ -227,10 +226,6 @@
     .cfa-shot img { width:100%; height:100%; object-fit:contain; cursor:zoom-in; }
     .cfa-swipe-hint { display:none; }
     .cfa-feature-list { padding-left:1.2em; color:var(--muted); }
-    .media-hero::after, .media-thumb::after, .media-phone::after, .cfa-shot::after {
-      content:"＋"; position:absolute; bottom:6px; right:6px; color:#fff; background:#233548;
-      width:26px; height:26px; line-height:24px; text-align:center; border-radius:5px; pointer-events:none; font-size:20px;
-    }
     img[role="button"]:focus-visible { outline:3px solid var(--accent); outline-offset:-3px; }
     .fig-band { margin:18px 0 0; background:#fff; border:1px solid var(--border); border-radius:10px; padding:10px; overflow-x:auto; }
     .fig-band img { width:100%; height:auto; display:block; cursor:zoom-in; }
@@ -256,22 +251,6 @@
     .summary-only { display:none; }
     #contact { border-top:1px solid var(--border); margin-top:24px; padding-top:30px; }
     #contact a { overflow-wrap:anywhere; }
-    /* 原図を実際に拡大し，タッチ・キーボードで画像内を移動できるビューア */
-    .lightbox-overlay { position:fixed; inset:0; z-index:9999; background:rgba(5,10,17,.95); display:flex; align-items:center; justify-content:center; padding:78px 16px 20px; visibility:hidden; opacity:0; pointer-events:none; }
-    .lightbox-overlay.active { visibility:visible; opacity:1; pointer-events:auto; }
-    .lightbox-toolbar { position:absolute; top:12px; left:16px; right:16px; display:flex; gap:6px; align-items:center; }
-    .lightbox-toolbar button, .lightbox-toolbar a { min-width:44px; min-height:44px; padding:8px; background:#1d2c3d; color:#fff; border:1px solid #7e96b0; border-radius:6px; text-align:center; text-decoration:none; font-size:14px; cursor:pointer; }
-    .lightbox-toolbar button:disabled { opacity:.4; cursor:default; }
-    .lightbox-toolbar .lightbox-close { margin-left:auto; font-size:24px; line-height:1; }
-    .lightbox-viewport { max-width:1280px; width:100%; height:100%; overflow:auto; overscroll-behavior:contain; touch-action:pan-x pan-y pinch-zoom; border-radius:8px; }
-    .lightbox-stage { margin:0 auto; }
-    .lightbox-stage img { display:block; width:100%; max-width:none; max-height:none; height:auto; }
-    .lightbox-help { position:absolute; bottom:0; margin:0; font-size:11px; color:#d2dfed; pointer-events:none; }
-    .lightbox-overlay.is-video { padding-bottom:76px; }
-    .lightbox-overlay iframe { width:min(100%,960px,calc((100dvh - 160px) * 1.7778)); aspect-ratio:16/9; border:0; border-radius:8px; background:#000; }
-    .lightbox-video-close { position:absolute; bottom:16px; min-height:44px; padding:8px 18px; background:#1d2c3d; border:1px solid #7e96b0; border-radius:6px; color:#fff; }
-    .lightbox-overlay video { max-width:100%; max-height:100%; }
-    .lightbox-overlay :focus-visible { outline:3px solid #8acaff; outline-offset:2px; }
     @media (max-width:1199.98px) {
       .navbar-brand { font-size:.95rem; }
       .navbar .nav-link { padding-left:6px; padding-right:6px; font-size:.86rem; }
@@ -389,7 +368,6 @@
       #research .case-visual .media-grid { grid-template-columns:1fr; }
       #research .case-visual .media-thumb { max-height:100px; }
       .section-heading, .archive-item, .details-content > p { break-inside:avoid; }
-      .cg-media-label { font-size:8px; padding:2px 5px; }
       .cg-copy { padding-top:7px; }
       p, li { orphans:3; widows:3; }
       h2, h3, h4 { break-after:avoid; }
@@ -448,6 +426,7 @@
       body.pdf-summary #contact .mb-3 { margin-bottom:0 !important; }
     }
   </style>
+  <link rel="stylesheet" href="assets/media-viewer.css" />
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#nav">
@@ -541,11 +520,11 @@
           <div class="case-visual">
             <div class="media-grid">
               <figure>
-                <div class="media-thumb"><img class="fit-contain" src="media/research-eval.webp" alt="CNNによる再構成で，空間分解能指標と位置誤差が線形手法の約21%まで低減した比較グラフ" width="1068" height="644" decoding="async"></div>
+                <a class="media-thumb media-trigger" data-media-kind="image" href="media/research-eval.webp" aria-label="画像を拡大：CNNによる再構成で，空間分解能指標と位置誤差が線形手法の約21%まで低減した比較グラフ" target="_blank" rel="noopener noreferrer"><img class="fit-contain" src="media/research-eval.webp" alt="CNNによる再構成で，空間分解能指標と位置誤差が線形手法の約21%まで低減した比較グラフ" width="1068" height="644" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
                 <figcaption class="small text-muted">1点接触：空間分解能指標・位置誤差</figcaption>
               </figure>
               <figure>
-                <div class="media-thumb"><img class="fit-contain" src="media/research-recon.webp?v=contact-legend" alt="2点接触の再構成比較．接触点の注記と導電率カラーバー付き．線形手法ではにじむ接触点がCNNでは分離されている" loading="lazy" width="1112" height="584" decoding="async"></div>
+                <a class="media-thumb media-trigger" data-media-kind="image" href="media/research-recon.webp?v=contact-legend" aria-label="画像を拡大：2点接触の再構成比較．接触点の注記と導電率カラーバー付き．線形手法ではにじむ接触点がCNNでは分離されている" target="_blank" rel="noopener noreferrer"><img class="fit-contain" src="media/research-recon.webp?v=contact-legend" alt="2点接触の再構成比較．接触点の注記と導電率カラーバー付き．線形手法ではにじむ接触点がCNNでは分離されている" loading="lazy" width="1112" height="584" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
                 <figcaption class="small text-muted">2点接触：再構成画像の比較</figcaption>
               </figure>
             </div>
@@ -556,7 +535,7 @@
           <summary>研究の測定条件・発表資料</summary>
           <div class="details-content">
             <p class="text-muted">CNN再構成の1点接触シミュレーションでは，空間分解能指標RESは48.1% → 10.2%，位置誤差は13.0mm → 2.8mm．電極配置の研究では，16電極シミュレーションの最悪領域19.2%低減とは別に，64電極の試作基板の中央領域でHWHMを19.5%低減しました．</p>
-            <div class="media-thumb"><img class="fit-contain" src="media/SI2022_poster-web.webp" alt="EIT触覚センサのCNN再構成をまとめたSI2022ポスター全体" loading="lazy" width="2400" height="1697" decoding="async"></div>
+            <a class="media-thumb media-trigger" data-media-kind="image" href="media/SI2022_poster-web.webp" aria-label="画像を拡大：EIT触覚センサのCNN再構成をまとめたSI2022ポスター全体" target="_blank" rel="noopener noreferrer"><img class="fit-contain" src="media/SI2022_poster-web.webp" alt="EIT触覚センサのCNN再構成をまとめたSI2022ポスター全体" loading="lazy" width="2400" height="1697" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
             <p class="small text-muted mt-2 mb-0">SI2022ポスター．画像をクリックして拡大できます．</p>
           </div>
         </details>
@@ -581,7 +560,7 @@
           <li><strong>検証状況：</strong>開発者PC上の試作環境で稼働・検証中．応答検証は全体で74種類・延べ約200回，pytestはプロジェクト全体で395件です．</li>
         </ul>
         <figure class="fig-band">
-          <img src="media/fig/clinic-flow.svg" width="960" height="132" alt="LINE応答AIの構成．LINEからFastAPIへ届いた問い合わせを，Dify・RAGとOpenAI Responses APIで処理．FAQ回答・予約フォーム案内・スタッフ引き継ぎに分岐し，有人対応中はAIが返信しない．受信時にWebhook署名を検証し，必要時は公式サイト検索へ切り替える" loading="lazy">
+          <a class="media-trigger media-diagram" data-media-kind="image" href="media/fig/clinic-flow.svg" target="_blank" rel="noopener noreferrer" aria-label="画像を拡大：LINE応答AIの構成．LINEからFastAPIへ届いた問い合わせを，Dify・RAGとOpenAI Responses APIで処理．FAQ回答・予約フォーム案内・スタッフ引き継ぎに分岐し，有人対応中はAIが返信しない．受信時にWebhook署名を検証し，必要時は公式サイト検索へ切り替える"><img src="media/fig/clinic-flow.svg" width="960" height="132" alt="LINE応答AIの構成．LINEからFastAPIへ届いた問い合わせを，Dify・RAGとOpenAI Responses APIで処理．FAQ回答・予約フォーム案内・スタッフ引き継ぎに分岐し，有人対応中はAIが返信しない．受信時にWebhook署名を検証し，必要時は公式サイト検索へ切り替える" loading="lazy"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
           <figcaption class="small text-muted">システム構成と回答の3分岐<span class="fig-hint"> — 横にスクロール／クリックして拡大</span></figcaption>
         </figure>
         <p class="small text-muted mt-2 mb-0"><b>改善手法：</b>FAQ検索で回答生成に渡す検索結果の上限（Top-K）を4件 → 10件へ増加．FAQ自体と，公式サイト検索への切替条件は変更していません．</p>
@@ -613,9 +592,9 @@
       </div>
       <div class="cg-grid">
         <article id="raytrace-python-card" class="card cg-card">
-          <a class="cg-media btn-video" data-nico="sm45922410" href="https://www.nicovideo.jp/watch/sm45922410" target="_blank" rel="noopener noreferrer" aria-label="Pythonレイトレーシングの動画を見る">
+          <a class="cg-media media-trigger btn-video" data-media-kind="video" data-nico="sm45922410" href="https://www.nicovideo.jp/watch/sm45922410" target="_blank" rel="noopener noreferrer" aria-label="Pythonレイトレーシングの動画を見る">
             <img src="media/raytrace-python.png" alt="Pythonで自力実装したレイトレーシングの出力．球面への反射・屈折を表現" loading="lazy" width="919" height="917" decoding="async">
-            <span class="cg-media-label">▶ 動画を見る</span>
+            <span class="media-label" aria-hidden="true">▶ 動画を見る</span>
           </a>
           <div class="cg-copy">
             <p class="tech-line">Python / 生成AI不使用</p>
@@ -624,9 +603,9 @@
           </div>
         </article>
         <article id="shadowmap-card" class="card cg-card">
-          <a class="cg-media" href="media/shadowmap.jpg" target="_blank" rel="noopener noreferrer" aria-label="シャドウマッピングの出力画像を開く">
+          <a class="cg-media media-trigger" data-media-kind="image" href="media/shadowmap.jpg" target="_blank" rel="noopener noreferrer" aria-label="シャドウマッピングの出力画像を拡大">
             <img src="media/shadowmap.jpg" alt="Pythonで自力実装したシャドウマッピングの出力．光源と物体の位置に応じた影を描画" loading="lazy" width="1200" height="1200" decoding="async">
-            <span class="cg-media-label">画像を開く ↗</span>
+            <span class="media-label" aria-hidden="true">⤢ 画像を拡大</span>
           </a>
           <div class="cg-copy">
             <p class="tech-line">Python / 生成AI不使用</p>
@@ -635,9 +614,9 @@
           </div>
         </article>
         <article id="raytrace-csg-card" class="card cg-card">
-          <a class="cg-media btn-video" data-nico="sm45922403" href="https://www.nicovideo.jp/watch/sm45922403" target="_blank" rel="noopener noreferrer" aria-label="GLSLレイトレーシングとCSGの動画を見る">
+          <a class="cg-media media-trigger btn-video" data-media-kind="video" data-nico="sm45922403" href="https://www.nicovideo.jp/watch/sm45922403" target="_blank" rel="noopener noreferrer" aria-label="GLSLレイトレーシングとCSGの動画を見る">
             <img src="media/raytrace-csg.png" alt="GLSLのフラグメントシェーダで，CSGで組み合わせた形状をレイトレーシング描画した画面" loading="lazy" width="919" height="917" decoding="async">
-            <span class="cg-media-label">▶ 動画を見る</span>
+            <span class="media-label" aria-hidden="true">▶ 動画を見る</span>
           </a>
           <div class="cg-copy">
             <p class="tech-line">C++ / OpenGL / GLSL / 生成AI不使用</p>
@@ -677,11 +656,11 @@
             <div class="case-visual">
               <div class="shot-row" role="group" aria-label="TriviumのLINE操作とヒントの画面例">
                 <figure>
-                  <div class="media-phone"><img src="media/trivium-line-profile.jpg" alt="TriviumのLINE画面例．3分野の到達レベル，Webへの導線，6項目の操作メニュー" loading="lazy" width="591" height="1280" decoding="async"></div>
+                  <a class="media-phone media-trigger" data-media-kind="image" href="media/trivium-line-profile.jpg" aria-label="画像を拡大：TriviumのLINE画面例．3分野の到達レベル，Webへの導線，6項目の操作メニュー" target="_blank" rel="noopener noreferrer"><img src="media/trivium-line-profile.jpg" alt="TriviumのLINE画面例．3分野の到達レベル，Webへの導線，6項目の操作メニュー" loading="lazy" width="591" height="1280" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
                   <figcaption class="small text-muted">LINE：到達レベルと操作メニュー</figcaption>
                 </figure>
                 <figure>
-                  <div class="media-phone"><img src="media/trivium-line-hint.jpg" alt="TriviumのLINE画面．担当AIが段階的なヒントを返している" loading="lazy" width="720" height="1560" decoding="async"></div>
+                  <a class="media-phone media-trigger" data-media-kind="image" href="media/trivium-line-hint.jpg" aria-label="画像を拡大：TriviumのLINE画面．担当AIが段階的なヒントを返している" target="_blank" rel="noopener noreferrer"><img src="media/trivium-line-hint.jpg" alt="TriviumのLINE画面．担当AIが段階的なヒントを返している" loading="lazy" width="720" height="1560" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
                   <figcaption class="small text-muted">LINE：問題から段階的ヒントへ</figcaption>
                 </figure>
               </div>
@@ -695,9 +674,9 @@
               <p class="text-muted"><strong>設計：</strong>LINEには先に短い返信を返し，生成後にプッシュ配信．学習レベルの昇格・降格にはしきい値差を設けています．4人格の担当AI，Googleログイン，教材カタログ145件，実績バッジ61種，設定時刻のリマインドを備えます．初回デプロイまで105コミット，MIT Licenseで公開．</p>
               <p class="tech-line">React / Prisma / OpenAI API（Dify経由も選択可）/ GitHub Actions</p>
               <div class="shot-row shot-gallery" role="group" aria-label="TriviumのWeb画面と教材提案例">
-                <figure><div class="media-phone"><img src="media/trivium-web-dashboard.jpg" alt="TriviumのWebダッシュボード．デモデータによる3分野の三角形グラフと次の課題の提案" loading="lazy" width="420" height="887" decoding="async"></div><figcaption class="small text-muted">Trivium：Webの学習記録（デモデータ）</figcaption></figure>
-                <figure><div class="media-phone"><img src="media/trivium-web-question.jpg" alt="TriviumのWeb版．LOGICの問題文と4つの選択肢，回答ボタンを表示" loading="lazy" width="591" height="1280" decoding="async"></div><figcaption class="small text-muted">Trivium：Webでの四択問題</figcaption></figure>
-                <figure><div class="media-phone"><img src="media/trivium-line-material.jpg" alt="到達レベルを根拠に，LINEの案内役AIが書籍を理由付きで提案する画面" loading="lazy" width="720" height="1560" decoding="async"></div><figcaption class="small text-muted">Trivium：学習記録に基づく教材提案</figcaption></figure>
+                <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/trivium-web-dashboard.jpg" aria-label="画像を拡大：TriviumのWebダッシュボード．デモデータによる3分野の三角形グラフと次の課題の提案" target="_blank" rel="noopener noreferrer"><img src="media/trivium-web-dashboard.jpg" alt="TriviumのWebダッシュボード．デモデータによる3分野の三角形グラフと次の課題の提案" loading="lazy" width="420" height="887" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">Trivium：Webの学習記録（デモデータ）</figcaption></figure>
+                <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/trivium-web-question.jpg" aria-label="画像を拡大：TriviumのWeb版．LOGICの問題文と4つの選択肢，回答ボタンを表示" target="_blank" rel="noopener noreferrer"><img src="media/trivium-web-question.jpg" alt="TriviumのWeb版．LOGICの問題文と4つの選択肢，回答ボタンを表示" loading="lazy" width="591" height="1280" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">Trivium：Webでの四択問題</figcaption></figure>
+                <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/trivium-line-material.jpg" aria-label="画像を拡大：到達レベルを根拠に，LINEの案内役AIが書籍を理由付きで提案する画面" target="_blank" rel="noopener noreferrer"><img src="media/trivium-line-material.jpg" alt="到達レベルを根拠に，LINEの案内役AIが書籍を理由付きで提案する画面" loading="lazy" width="720" height="1560" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">Trivium：学習記録に基づく教材提案</figcaption></figure>
               </div>
             </div>
           </details>
@@ -720,7 +699,7 @@
               </div>
             </div>
             <figure class="case-visual">
-              <div class="media-hero"><img src="media/scriptvedit-code-video.jpg" alt="ScriptVEditの解説動画．左のPythonコードと，右の生成映像を対応させて表示" loading="lazy" width="1920" height="1080" decoding="async"></div>
+              <a class="media-hero media-trigger btn-video" data-media-kind="video" data-nico="sm46610886" href="https://www.nicovideo.jp/watch/sm46610886" aria-label="ScriptVEditの解説動画を見る" target="_blank" rel="noopener noreferrer"><img src="media/scriptvedit-code-video.jpg" alt="ScriptVEditの解説動画．左のPythonコードと，右の生成映像を対応させて表示" loading="lazy" width="1920" height="1080" decoding="async"><span class="media-label" aria-hidden="true">▶ 動画を見る</span></a>
               <figcaption class="small text-muted">左：Pythonコード／右：そのコードから生成した映像</figcaption>
             </figure>
           </div>
@@ -730,8 +709,8 @@
               <p class="text-muted"><strong>実装分担：</strong>上記の仕組みを含む実装全般，テスト生成，スクリーンショットでの出力確認はAIエージェントへ委任．本人は仕様と各機構の仕組みをほぼ決定し，映像の品質を目視で評価しています．</p>
               <p class="text-muted"><strong>別ベンチでの改善：</strong>2026年8月，AIエージェントを併用した全体監査で逐次経路のO(N²)処理を特定．可視区間trimで解消し，合成ベンチ（N=40）で約68秒 → 約5秒，回帰テスト10件で固定しました．上記の解説動画とは異なる条件の計測です．</p>
               <div class="media-grid">
-                <figure><div class="media-thumb"><img src="media/scriptvedit-perf.jpg" alt="自作解説動画のレンダリング時間1012秒と106秒を比較する場面" loading="lazy" width="1920" height="1080" decoding="async"></div><figcaption class="small text-muted">解説動画自体のレンダリング時間</figcaption></figure>
-                <figure><div class="media-thumb"><img src="media/scriptvedit.png" alt="演算子でタイムラインを記述するScriptVEditの構文解説" loading="lazy" width="1920" height="1080" decoding="async"></div><figcaption class="small text-muted">演算子によるタイムラインの記述</figcaption></figure>
+                <figure><a class="media-thumb media-trigger" data-media-kind="image" href="media/scriptvedit-perf.jpg" aria-label="画像を拡大：自作解説動画のレンダリング時間1012秒と106秒を比較する場面" target="_blank" rel="noopener noreferrer"><img src="media/scriptvedit-perf.jpg" alt="自作解説動画のレンダリング時間1012秒と106秒を比較する場面" loading="lazy" width="1920" height="1080" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">解説動画自体のレンダリング時間</figcaption></figure>
+                <figure><a class="media-thumb media-trigger" data-media-kind="image" href="media/scriptvedit.png" aria-label="画像を拡大：演算子でタイムラインを記述するScriptVEditの構文解説" target="_blank" rel="noopener noreferrer"><img src="media/scriptvedit.png" alt="演算子でタイムラインを記述するScriptVEditの構文解説" loading="lazy" width="1920" height="1080" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">演算子によるタイムラインの記述</figcaption></figure>
               </div>
             </div>
           </details>
@@ -752,7 +731,7 @@
               <a class="btn btn-outline-info btn-sm" href="https://github.com/kojima8924/ClageCook" target="_blank" rel="noopener noreferrer">GitHub・CIを確認 ↗</a>
             </div>
             <figure class="case-visual">
-              <div class="media-hero"><img src="media/clagecook-oss-windows.png" alt="Clage CookのWindows画面．4社AIの回答と統合回答を一覧表示" loading="lazy" width="1920" height="1032" decoding="async"></div>
+              <a class="media-hero media-trigger" data-media-kind="image" href="media/clagecook-oss-windows.png" aria-label="画像を拡大：Clage CookのWindows画面．4社AIの回答と統合回答を一覧表示" target="_blank" rel="noopener noreferrer"><img src="media/clagecook-oss-windows.png" alt="Clage CookのWindows画面．4社AIの回答と統合回答を一覧表示" loading="lazy" width="1920" height="1032" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
               <figcaption class="small text-muted">Windows実画面．DIRECT · LOCALは各社APIへの直接接続</figcaption>
             </figure>
           </div>
@@ -762,8 +741,8 @@
               <p class="text-muted">Flutter／DartのUI，開発用FastAPIサーバー，テストを含む実装はAIエージェントへ委任しました．進行状況は共通イベントでUIへ配信し，サーバー経由時はSSEを使用．途中で切れた回答は表示・保存しつつ統合の材料からは除外します．Direct接続と開発用reference serverは分離しています．</p>
               <p class="text-muted">生成物をレビューし，画面仕様・挙動・エラー処理の修正方針を指示．WindowsとAndroid実機で確認しています．MIT Licenseの公開ベータで，本番運用向けサポート・後方互換性は未保証です．</p>
               <div class="shot-row" role="group" aria-label="Clage CookのAndroid実機画面">
-                <figure><div class="media-phone"><img src="media/clagecook-oss-android-overview.jpg" alt="Clage CookのAndroid版．各AIの回答状況と統合回答を一覧表示" loading="lazy" width="591" height="1280" decoding="async"></div><figcaption class="small text-muted">各AIの回答と統合回答</figcaption></figure>
-                <figure><div class="media-phone"><img src="media/clagecook-oss-android.png" alt="相互批評の後も初回回答を保持して表示するAndroid画面" loading="lazy" width="1080" height="2340" decoding="async"></div><figcaption class="small text-muted">初回回答の保持</figcaption></figure>
+                <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/clagecook-oss-android-overview.jpg" aria-label="画像を拡大：Clage CookのAndroid版．各AIの回答状況と統合回答を一覧表示" target="_blank" rel="noopener noreferrer"><img src="media/clagecook-oss-android-overview.jpg" alt="Clage CookのAndroid版．各AIの回答状況と統合回答を一覧表示" loading="lazy" width="591" height="1280" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">各AIの回答と統合回答</figcaption></figure>
+                <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/clagecook-oss-android.png" aria-label="画像を拡大：相互批評の後も初回回答を保持して表示するAndroid画面" target="_blank" rel="noopener noreferrer"><img src="media/clagecook-oss-android.png" alt="相互批評の後も初回回答を保持して表示するAndroid画面" loading="lazy" width="1080" height="2340" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">初回回答の保持</figcaption></figure>
               </div>
             </div>
           </details>
@@ -773,8 +752,8 @@
               <p class="text-muted">各社AIの比較・統合をAndroidから日常的に使う非公開システムを運用し，生成の継続・再接続後の復帰・使用量ウィジェットを設計してきました．その会議フローを各社公式APIで再実装したものが公開版です．</p>
               <p class="text-muted">非公開版はKotlin／Jetpack Compose・Python／FastAPI・Glance widgetで構成．会議操作コマンド，失敗時も完了済み回答を残す流れ，JSON／ZIPでほかのAIへ引き継ぐ連携を備えています．</p>
               <div class="shot-row">
-                <figure><div class="media-phone"><img src="media/clagecook-chat.png" alt="非公開版で各AIの回答カードを表示するチャット画面" loading="lazy" width="1080" height="2340" decoding="async"></div><figcaption class="small text-muted">非公開版の回答カード</figcaption></figure>
-                <figure><div class="media-phone"><img src="media/clagecook-widget-home.png" alt="Androidのホーム画面に置いた使用量ウィジェット" loading="lazy" width="1080" height="2340" decoding="async"></div><figcaption class="small text-muted">使用量ウィジェット</figcaption></figure>
+                <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/clagecook-chat.png" aria-label="画像を拡大：非公開版で各AIの回答カードを表示するチャット画面" target="_blank" rel="noopener noreferrer"><img src="media/clagecook-chat.png" alt="非公開版で各AIの回答カードを表示するチャット画面" loading="lazy" width="1080" height="2340" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">非公開版の回答カード</figcaption></figure>
+                <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/clagecook-widget-home.png" aria-label="画像を拡大：Androidのホーム画面に置いた使用量ウィジェット" target="_blank" rel="noopener noreferrer"><img src="media/clagecook-widget-home.png" alt="Androidのホーム画面に置いた使用量ウィジェット" loading="lazy" width="1080" height="2340" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">使用量ウィジェット</figcaption></figure>
               </div>
             </div>
           </details>
@@ -788,13 +767,13 @@
           <p class="text-muted"><strong>本人の担当：</strong>機能のアイデアを考案．Chromium本体への組み込みを含む実装はほぼAIエージェントへ委任しています．開発中に認証情報の扱いの問題が再現テストで見つかり，構造を変更して同条件で再検証しました．</p>
           <a class="btn btn-outline-info btn-sm btn-video" data-nico="sm46619744" href="https://www.nicovideo.jp/watch/sm46619744" target="_blank" rel="noopener noreferrer">▶ 操作動画を見る（2倍速）</a>
           <div class="cfa-compare mt-3" role="group" aria-label="同じ検索語に対する通常表示とAI評価後の比較">
-            <figure><div class="cfa-shot"><img src="media/cfa-serp-before.png" alt="通常の「人工知能」Google検索結果．人工知能学会・FPTソフトウェア・IBMの順に表示" loading="lazy" width="1080" height="1300" decoding="async"></div><figcaption class="small text-muted">通常の検索結果</figcaption></figure>
-            <figure><div class="cfa-shot"><img src="media/cfa-serp-after.png" alt="AI評価後の検索結果．IBM・Wikipedia・人工知能学会の順になり，緑色の評価コメントを挿入" loading="lazy" width="1080" height="1300" decoding="async"></div><figcaption class="small text-muted">AIによる評価コメントと順位変更</figcaption></figure>
+            <figure><a class="cfa-shot media-trigger" data-media-kind="image" href="media/cfa-serp-before.png" aria-label="画像を拡大：通常の「人工知能」Google検索結果．人工知能学会・FPTソフトウェア・IBMの順に表示" target="_blank" rel="noopener noreferrer"><img src="media/cfa-serp-before.png" alt="通常の「人工知能」Google検索結果．人工知能学会・FPTソフトウェア・IBMの順に表示" loading="lazy" width="1080" height="1300" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">通常の検索結果</figcaption></figure>
+            <figure><a class="cfa-shot media-trigger" data-media-kind="image" href="media/cfa-serp-after.png" aria-label="画像を拡大：AI評価後の検索結果．IBM・Wikipedia・人工知能学会の順になり，緑色の評価コメントを挿入" target="_blank" rel="noopener noreferrer"><img src="media/cfa-serp-after.png" alt="AI評価後の検索結果．IBM・Wikipedia・人工知能学会の順になり，緑色の評価コメントを挿入" loading="lazy" width="1080" height="1300" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">AIによる評価コメントと順位変更</figcaption></figure>
           </div>
           <p class="cfa-swipe-hint small text-muted" aria-hidden="true">横にスワイプして比較 →</p>
           <div class="shot-row">
-            <figure><div class="media-phone"><img src="media/cfa-fab-menu.png" alt="Wikipedia上でページ要約・翻訳などのメニューを開いたAndroid画面" loading="lazy" width="1080" height="2340" decoding="async"></div><figcaption class="small text-muted">操作メニュー</figcaption></figure>
-            <figure><div class="media-phone"><img src="media/cfa-page-summary.png" alt="Wikipediaの人工知能ページを要約したAndroid画面" loading="lazy" width="1080" height="2340" decoding="async"></div><figcaption class="small text-muted">ページの要約</figcaption></figure>
+            <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/cfa-fab-menu.png" aria-label="画像を拡大：Wikipedia上でページ要約・翻訳などのメニューを開いたAndroid画面" target="_blank" rel="noopener noreferrer"><img src="media/cfa-fab-menu.png" alt="Wikipedia上でページ要約・翻訳などのメニューを開いたAndroid画面" loading="lazy" width="1080" height="2340" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">操作メニュー</figcaption></figure>
+            <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/cfa-page-summary.png" aria-label="画像を拡大：Wikipediaの人工知能ページを要約したAndroid画面" target="_blank" rel="noopener noreferrer"><img src="media/cfa-page-summary.png" alt="Wikipediaの人工知能ページを要約したAndroid画面" loading="lazy" width="1080" height="2340" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">ページの要約</figcaption></figure>
           </div>
         </div>
       </details>
@@ -848,7 +827,7 @@
         <div class="details-content">
           <h3 class="h6 mb-3">生成AI不使用の自力実装（4作品）</h3>
           <div class="archive-item">
-            <div class="media-thumb"><img src="media/handdrive.png" alt="手の傾きと開閉で赤い車を運転する3Dデモ" loading="lazy" width="1632" height="916" decoding="async"></div>
+            <a class="media-thumb media-trigger btn-video" data-media-kind="video" data-nico="sm45922395" href="https://www.nicovideo.jp/watch/sm45922395" aria-label="ハンドドライブの動画を見る" target="_blank" rel="noopener noreferrer"><img src="media/handdrive.png" alt="手の傾きと開閉で赤い車を運転する3Dデモ" loading="lazy" width="1632" height="916" decoding="async"><span class="media-label" aria-hidden="true">▶ 動画を見る</span></a>
             <div>
               <h4 class="h6 archive-title">ハンドドライブ</h4>
               <p class="tech-line mb-1">JavaScript / Three.js</p>
@@ -857,7 +836,7 @@
             </div>
           </div>
           <div class="archive-item">
-            <div class="media-thumb"><img src="media/invpend.png" alt="倒立振子が障害物を避けて移動するシミュレーション" loading="lazy" width="1579" height="916" decoding="async"></div>
+            <a class="media-thumb media-trigger btn-video" data-media-kind="video" data-nico="sm45922355" href="https://www.nicovideo.jp/watch/sm45922355" aria-label="倒立振子の動画を見る" target="_blank" rel="noopener noreferrer"><img src="media/invpend.png" alt="倒立振子が障害物を避けて移動するシミュレーション" loading="lazy" width="1579" height="916" decoding="async"><span class="media-label" aria-hidden="true">▶ 動画を見る</span></a>
             <div>
               <h4 class="h6 archive-title">倒立振子</h4>
               <p class="tech-line mb-1">C++ / ODE</p>
@@ -866,7 +845,7 @@
             </div>
           </div>
           <div class="archive-item">
-            <div class="media-thumb"><img src="media/wave-paraboloid.png" alt="伝播する波と放物面の変形をワイヤーフレームで可視化した画面" loading="lazy" width="1377" height="768" decoding="async"></div>
+            <a class="media-thumb media-trigger btn-video" data-media-kind="video" data-nico="sm45922419" href="https://www.nicovideo.jp/watch/sm45922419" aria-label="波と放物面のアニメーションの動画を見る" target="_blank" rel="noopener noreferrer"><img src="media/wave-paraboloid.png" alt="伝播する波と放物面の変形をワイヤーフレームで可視化した画面" loading="lazy" width="1377" height="768" decoding="async"><span class="media-label" aria-hidden="true">▶ 動画を見る</span></a>
             <div>
               <h4 class="h6 archive-title">波と放物面のアニメーション</h4>
               <p class="tech-line mb-1">Python</p>
@@ -876,8 +855,8 @@
           </div>
           <div class="archive-item">
             <div class="media-grid">
-              <div class="media-thumb"><img src="media/canny-original.png" alt="Canny法へ入力した自習室の掲示画像" loading="lazy" width="1458" height="928" decoding="async"></div>
-              <div class="media-thumb"><img src="media/canny-edge.png" alt="自力実装したCanny法によるエッジ抽出結果" loading="lazy" width="1462" height="932" decoding="async"></div>
+              <a class="media-thumb media-trigger" data-media-kind="image" href="media/canny-original.png" aria-label="画像を拡大：Canny法へ入力した自習室の掲示画像" target="_blank" rel="noopener noreferrer"><img src="media/canny-original.png" alt="Canny法へ入力した自習室の掲示画像" loading="lazy" width="1458" height="928" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
+              <a class="media-thumb media-trigger" data-media-kind="image" href="media/canny-edge.png" aria-label="画像を拡大：自力実装したCanny法によるエッジ抽出結果" target="_blank" rel="noopener noreferrer"><img src="media/canny-edge.png" alt="自力実装したCanny法によるエッジ抽出結果" loading="lazy" width="1462" height="932" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
             </div>
             <div>
               <h4 class="h6 archive-title">Canny法（エッジ抽出）</h4>
@@ -887,7 +866,7 @@
           </div>
           <h3 class="h6 mt-4 mb-3">その他のアプリ・ツール（3作品）</h3>
           <div class="archive-item">
-            <div class="media-thumb"><img src="media/chatgpt-windows.png" alt="ChatGPT-Windowsで会話とストリーミング回答を表示する画面" loading="lazy" width="2560" height="1504" decoding="async"></div>
+            <a class="media-thumb media-trigger btn-video" data-media-kind="video" data-nico="sm45922374" href="https://www.nicovideo.jp/watch/sm45922374" aria-label="ChatGPT-Windowsの動画を見る" target="_blank" rel="noopener noreferrer"><img src="media/chatgpt-windows.png" alt="ChatGPT-Windowsで会話とストリーミング回答を表示する画面" loading="lazy" width="2560" height="1504" decoding="async"><span class="media-label" aria-hidden="true">▶ 動画を見る</span></a>
             <div>
               <h4 class="h6 archive-title">ChatGPT-Windows</h4>
               <p class="tech-line mb-1">Python / PySide6（Qt6）/ MIT</p>
@@ -896,7 +875,7 @@
             </div>
           </div>
           <div class="archive-item">
-            <div class="media-thumb"><img src="media/chatgpt-web.png" alt="ChatGPT-Webで入力文の続きをゴーストテキストとして表示" loading="lazy" width="1024" height="823" decoding="async"></div>
+            <a class="media-thumb media-trigger btn-video" data-media-kind="video" data-nico="sm45922369" href="https://www.nicovideo.jp/watch/sm45922369" aria-label="ChatGPT-Webの動画を見る" target="_blank" rel="noopener noreferrer"><img src="media/chatgpt-web.png" alt="ChatGPT-Webで入力文の続きをゴーストテキストとして表示" loading="lazy" width="1024" height="823" decoding="async"><span class="media-label" aria-hidden="true">▶ 動画を見る</span></a>
             <div>
               <h4 class="h6 archive-title">ChatGPT-Web</h4>
               <p class="tech-line mb-1">JavaScript / 単一HTML / MIT</p>
@@ -905,7 +884,7 @@
             </div>
           </div>
           <div class="archive-item">
-            <div class="media-thumb"><img src="media/calcpy-repl.png" alt="CalcpyのREPL画面．数式入力と結果，フリック入力用の関数パレット" loading="lazy" width="1080" height="2340" decoding="async"></div>
+            <a class="media-thumb media-trigger" data-media-kind="image" href="media/calcpy-repl.png" aria-label="画像を拡大：CalcpyのREPL画面．数式入力と結果，フリック入力用の関数パレット" target="_blank" rel="noopener noreferrer"><img src="media/calcpy-repl.png" alt="CalcpyのREPL画面．数式入力と結果，フリック入力用の関数パレット" loading="lazy" width="1080" height="2340" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
             <div>
               <h4 class="h6 archive-title">Calcpy</h4>
               <p class="tech-line mb-1">Android / Kotlin・Compose / CPython・SymPy / 非公開</p>
@@ -949,197 +928,9 @@
   </main>
 
   <!-- Lightbox -->
-  <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="拡大表示" aria-hidden="true" inert></div>
+  <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="作品メディアの拡大表示" aria-hidden="true" inert></div>
 
   <script>
-    // 図は読み取れる幅で開き，拡大・縮小・全体表示を独立した操作にする．
-    (function(){
-      const overlay = document.getElementById("lightbox");
-      const backgroundElements = [...document.body.children].filter(el => el !== overlay && el.tagName !== "SCRIPT");
-      let lastTrigger = null;
-      let previousInert = [];
-      let previousOverflow = "";
-      let resizeImage = null;
-
-      function control(label, text, action){
-        const button = document.createElement("button");
-        button.type = "button";
-        button.textContent = text;
-        button.setAttribute("aria-label", label);
-        button.addEventListener("click", action);
-        return button;
-      }
-
-      function openLightbox(trigger, toolbar){
-        lastTrigger = trigger;
-        const closeBtn = control("拡大表示を閉じる", "×", close);
-        closeBtn.className = "lightbox-close";
-        toolbar.append(closeBtn);
-        toolbar.className = "lightbox-toolbar";
-        overlay.prepend(toolbar);
-        previousInert = backgroundElements.map(el => el.hasAttribute("inert"));
-        backgroundElements.forEach(el => el.setAttribute("inert", ""));
-        overlay.removeAttribute("inert");
-        overlay.classList.add("active");
-        overlay.setAttribute("aria-hidden", "false");
-        previousOverflow = document.body.style.overflow;
-        document.body.style.overflow = "hidden";
-        closeBtn.focus();
-      }
-
-      function externalLink(url, label){
-        const link = document.createElement("a");
-        link.href = url;
-        link.textContent = label;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        return link;
-      }
-
-      function showMedia(el, trigger = el){
-        overlay.replaceChildren();
-        const toolbar = document.createElement("div");
-        if(el.tagName === "VIDEO"){
-          const video = document.createElement("video");
-          video.src = el.src;
-          video.controls = true;
-          overlay.append(video);
-          openLightbox(trigger, toolbar);
-          return;
-        }
-        const image = document.createElement("img");
-        image.src = el.dataset.fullSrc || el.currentSrc || el.src;
-        image.alt = el.alt || "";
-        const viewport = document.createElement("div");
-        viewport.className = "lightbox-viewport";
-        viewport.tabIndex = 0;
-        viewport.setAttribute("role", "region");
-        viewport.setAttribute("aria-label", "画像表示領域．拡大時は上下左右にスクロールできます");
-        const stage = document.createElement("div");
-        stage.className = "lightbox-stage";
-        stage.append(image);
-        viewport.append(stage);
-        overlay.append(viewport);
-        const help = document.createElement("p");
-        help.className = "lightbox-help";
-        help.textContent = "拡大後はスワイプ・スクロール・矢印キーで移動";
-        overlay.append(help);
-        let width = 0;
-        let fitWidth = 0;
-        let maximum = 0;
-        let fitMode = false;
-        const zoomOut = control("画像を縮小", "−", () => setWidth(width / 1.5));
-        const zoomIn = control("画像を拡大", "＋", () => setWidth(width * 1.5));
-        const fit = control("画像全体を表示", "全体", () => { setWidth(fitWidth); fitMode = true; });
-        toolbar.append(zoomOut, zoomIn, fit, externalLink(image.src, "原画像 ↗"));
-        function setWidth(next, centered = true){
-          const before = width || next;
-          const x = (viewport.scrollLeft + viewport.clientWidth / 2) / before;
-          const y = (viewport.scrollTop + viewport.clientHeight / 2) / before;
-          width = Math.max(fitWidth, Math.min(maximum, next));
-          stage.style.width = width + "px";
-          fitMode = Math.abs(width - fitWidth) < 1;
-          zoomOut.disabled = fitMode;
-          zoomIn.disabled = width >= maximum - 1;
-          if(centered){
-            viewport.scrollLeft = x * width - viewport.clientWidth / 2;
-            viewport.scrollTop = y * width - viewport.clientHeight / 2;
-          }
-        }
-        function measure(initial = false){
-          const naturalWidth = image.naturalWidth || el.naturalWidth || Number(el.getAttribute("width")) || 1280;
-          const naturalHeight = image.naturalHeight || el.naturalHeight || Number(el.getAttribute("height")) || 720;
-          fitWidth = Math.min(naturalWidth, viewport.clientWidth, viewport.clientHeight * naturalWidth / naturalHeight);
-          maximum = Math.max(naturalWidth * 3, viewport.clientWidth * 4);
-          // 細かな帯図はスマホでも900px相当から開始し，横スクロールで読めるようにする．
-          const readable = el.closest(".fig-band") ? Math.max(fitWidth, Math.min(900, naturalWidth)) : fitWidth;
-          setWidth(initial ? readable : (fitMode ? fitWidth : width), false);
-        }
-        openLightbox(trigger, toolbar);
-        if(image.complete && image.naturalWidth) measure(true);
-        else image.addEventListener("load", () => measure(true), { once:true });
-        resizeImage = () => measure(false);
-      }
-
-      document.querySelectorAll(".media-hero img, .media-hero video, .media-thumb img, .media-thumb video, .media-phone img, .cfa-shot img, .flow-shot img, .fig-band img").forEach(el => {
-        if(el.closest("a")) return;
-        const label = el.dataset.zoomLabel || el.getAttribute("alt") || "画像";
-        el.tabIndex = 0;
-        el.setAttribute("role", "button");
-        el.setAttribute("aria-haspopup", "dialog");
-        el.setAttribute("aria-label", label + "を拡大表示");
-        el.addEventListener("click", () => showMedia(el));
-        el.addEventListener("keydown", event => {
-          if(event.key === "Enter" || event.key === " "){
-            event.preventDefault();
-            showMedia(el);
-          }
-        });
-      });
-
-      // 通常リンクの修飾キー操作を維持し，JavaScriptなしでも原画像・動画へ到達できる．
-      document.querySelectorAll("a[data-lightbox]").forEach(link => {
-        link.addEventListener("click", event => {
-          if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
-          const image = link.querySelector("img");
-          if(!image) return;
-          event.preventDefault();
-          showMedia(image, link);
-        });
-      });
-      document.querySelectorAll(".btn-video[data-nico]").forEach(link => {
-        link.addEventListener("click", event => {
-          if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
-          event.preventDefault();
-          const id = link.dataset.nico;
-          if(!/^sm[0-9]+$/.test(id)) return;
-          const iframe = document.createElement("iframe");
-          iframe.src = "https://embed.nicovideo.jp/watch/" + id;
-          iframe.title = (link.closest("article, .archive-item")?.querySelector("h3, h4")?.textContent || "作品") + "のデモ動画";
-          iframe.allow = "autoplay; fullscreen";
-          iframe.allowFullscreen = true;
-          overlay.replaceChildren(iframe);
-          overlay.classList.add("is-video");
-          // 子フレーム内のキーは親へ届かないため，その後ろにも閉じる操作を置く．
-          const videoClose = control("動画を閉じる", "動画を閉じる", close);
-          videoClose.className = "lightbox-video-close";
-          overlay.append(videoClose);
-          const toolbar = document.createElement("div");
-          toolbar.append(externalLink(link.href, "動画ページで見る ↗"));
-          openLightbox(link, toolbar);
-        });
-      });
-
-      overlay.addEventListener("click", event => { if(event.target === overlay) close(); });
-      window.addEventListener("resize", () => { if(resizeImage) resizeImage(); });
-      document.addEventListener("keydown", event => {
-        if(!overlay.classList.contains("active")) return;
-        if(event.key === "Escape"){ close(); return; }
-        if(event.key !== "Tab") return;
-        const focusable = [...overlay.querySelectorAll("button, a[href], iframe, video[controls], [tabindex]:not([tabindex='-1'])")]
-          .filter(el => !el.disabled);
-        const first = focusable[0], last = focusable[focusable.length - 1];
-        if(event.shiftKey && document.activeElement === first){ event.preventDefault(); last.focus(); }
-        else if(!event.shiftKey && document.activeElement === last){ event.preventDefault(); first.focus(); }
-      });
-
-      function close(){
-        if(!overlay.classList.contains("active")) return;
-        overlay.classList.remove("active");
-        overlay.classList.remove("is-video");
-        overlay.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = previousOverflow;
-        overlay.querySelector("video")?.pause();
-        overlay.replaceChildren();
-        overlay.setAttribute("inert", "");
-        backgroundElements.forEach((el,index) => { if(!previousInert[index]) el.removeAttribute("inert"); });
-        const trigger = lastTrigger;
-        lastTrigger = null;
-        resizeImage = null;
-        trigger?.focus({ preventScroll:true });
-      }
-    })();
-
     // 章へ移動した後，キーボードの読み進める位置も移動先へ揃える．
     const navEl = document.getElementById("nav");
     document.querySelectorAll("a[href^='#']").forEach(link => {

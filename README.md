@@ -3,7 +3,7 @@
 小嶋明のポートフォリオサイトです．`main` ブランチのルートをGitHub Pagesで公開しています．
 
 - 公開URL: https://kojima8924.github.io/
-- 実装: `index.html`，Bootstrap 5，Vanilla JavaScript．質問対応用のJS/CSSは同一オリジンの`assets/`へ分離
+- 実装: `index.html`，Bootstrap 5，Vanilla JavaScript．質問対応とメディア拡大表示のJS/CSSは同一オリジンの`assets/`へ分離
 - 主な内容: 研究，受託開発，生成AI不使用のCG自力実装，AIエージェントを活用した個人開発・OSS
 - このREADMEはリポジトリ内の実装を説明します．ローカル変更が公開サイトへ反映済みかどうかは，GitとGitHub Pagesの状態を別途確認してください．
 
@@ -12,7 +12,8 @@
 - `index.html`: ページ本体．CSSとJavaScriptも含む
 - `assets/assistant.js`，`assistant.css`: 質問対応のモデル選択・会話・ダイアログUI
 - `assets/assistant-site.js`，`assistant-site.css`: このサイト用の接続設定と本文内への配置
-- `tests/`: Pythonの検査・PDF回帰テストと，Node標準機能だけで動く質問対応UIのテスト
+- `assets/media-viewer.js`，`media-viewer.css`: 作品画像・動画の共通拡大ビュー，画像の拡大・前後切替と説明
+- `tests/`: Pythonの検査・PDF回帰テストと，Node標準機能だけで動く質問対応UI・メディア表示のテスト
 - `media/`: 作品画像，OGP画像，配布用PDF
 - `make_pdf.py`: 同じHTMLからA4 PDFを生成するスクリプト（採用向け／完全版の2モード）
 - `make_ogp.py`: HTML/CSSだけで1200×630のOGP画像を生成するスクリプト
@@ -48,6 +49,14 @@
 設定後もページ読込時には通信しません．利用者がボタンを開いたときだけ利用可能なモデルを取得し，質問の明示送信時だけ回答を要求します．自動再送・別モデルへの自動切替はしません．モデル変更や会話リセットで会話だけを消し，全モデル共通の利用回数は引き継ぎます．回答はHTMLとして挿入せず，参照元は資格情報を含まないHTTPSリンクに限定します．この欄とダイアログは印刷・採用向けPDFでは非表示です．
 
 UIの共通JS/CSSを更新する際は質問対応側の正本と照合し，コピーを同期して両側のテストを行います．接続先を設定するときは，未設定状態を固定確認している`tests/assistant-site.test.cjs`も，公開構成と未設定時の安全な挙動を区別する検査へ更新してください．設定を消すことはUIの無効化であり，公開APIそのものの停止ではありません．
+
+## 作品画像・動画の操作
+
+作品メディアは通常クリックで同じページ内の拡大ビューを開きます．サムネイル右下に，動画は「▶ 動画を見る」，画像は「⤢ 画像を拡大」を常時表示します．ScriptVEditの主画像は解説動画への導線，補足の構文・性能画像は静止画の拡大です．シャドウマッピングも他の画像と同じ拡大操作に揃え，資格バッジ・GitHub・論文・サービスのリンクは対象にしません．
+
+同じ作品の画像は前後に切り替え，説明と位置を表示します．拡大・縮小・全体表示を備え，長い画像や図はビュー内をスクロールして読めます．閉じるボタンとEscを用意し，閉じたら動画を止めて元の操作位置へフォーカスを戻します．外部動画フレーム内のキー入力は親ページへ届かない場合があるため，画面内の閉じるボタンも維持します．
+
+動画フレームは利用者が開いたときだけ読み込みます．配信側の制約などで再生できない場合に備え，「配信元で見る」を補助リンクとして残します．元の画像・動画URLも`href`に保持し，JavaScriptなしや修飾キーを伴う操作では通常リンクとして利用できます．操作ラベルと拡大ビューは印刷・PDFでは非表示にします．
 
 ## 図・画像と内容の同期
 
@@ -116,6 +125,7 @@ python scripts/check_portfolio.py --external  # 外部リンクの到達確認�
 python scripts/import_figures.py --check      # 図版の参照元PDF欠損・SVGの更新要否を確認
 python -m unittest discover -s tests -v       # 検査スクリプトの回帰テスト
 node --test tests/assistant.test.cjs tests/assistant-site.test.cjs  # 無通信の質問対応UI検査
+node --test tests/media-viewer.test.cjs       # 無通信のメディア表示検査
 ```
 
 重複ID，内部anchor切れ，ローカル参照切れ，alt欠落，`rel`不足，shields.io残存，プロジェクト名の表記揺れ，研究数値の誤解表現などを検査します．AtCoder／paizaの表記検査は表示テキストにのみ適用し，URLを誤検出しません．

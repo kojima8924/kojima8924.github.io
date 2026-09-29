@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- 公開APIの検証完了後にHTTPSのベースURLを設定する．空欄では通信しない． -->
-  <meta name="portfolio-assistant-endpoint" content="" />
+  <!-- 公開βのHTTPSベースURL．ページ読込時には通信せず，空欄にするとUIを無効化する． -->
+  <meta name="portfolio-assistant-endpoint" content="https://9m4lkt83ab.execute-api.ap-northeast-1.amazonaws.com" />
   <link rel="stylesheet" href="assets/assistant.css" />
   <link rel="stylesheet" href="assets/assistant-site.css" />
-  <script src="assets/assistant.js" defer></script>
-  <script src="assets/assistant-site.js" defer></script>
+  <script src="assets/assistant.js?v=20260929-beta" defer></script>
+  <script src="assets/assistant-site.js?v=20260929-beta" defer></script>
   <script src="assets/media-viewer.js" defer></script>
   <title>小嶋 明 | 研究・CG・AIアプリ開発 Portfolio</title>
   <meta name="description" content="小嶋明のポートフォリオ．触覚センサ研究とCGの自力実装，受託LINE応答AI，Trivium・ScriptVEdit・Clage Cook．本人の実装経験とAIエージェントを活用した設計・検証を分けて紹介します．" />
@@ -445,6 +445,7 @@
       </button>
       <div id="nav" class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto gap-lg-2 align-items-lg-center">
+          <li class="nav-item no-print"><a class="nav-link" href="#assistant">AIに質問</a></li>
           <li class="nav-item"><a class="nav-link" href="#research">研究</a></li>
           <li class="nav-item"><a class="nav-link" href="#client">受託案件</a></li>
           <li class="nav-item"><a class="nav-link" href="#craft">自力実装・CG</a></li>
@@ -498,6 +499,19 @@
   </header>
 
   <main id="main-content" class="container py-4" tabindex="-1">
+
+    <!-- 接続先が未設定の間は，入力欄を作らず準備中と表示する． -->
+    <section id="assistant" class="anchor no-print" aria-labelledby="assistant-title">
+      <div class="assistant-card">
+        <div>
+          <p class="section-kicker">BETA · ASK ABOUT MY WORK &amp; ME</p>
+          <h2 id="assistant-title" class="h4 section-title">AIに作品・経歴・小嶋明について質問する</h2>
+          <p class="text-muted mb-2">β版・品質検証中です．研究・作品・経歴に加え，公開資料にある経験・活動・開発の考え方も質問できます．資料にないことや私的な情報は対象外です．担当範囲や実績の説明にも誤りがあり得るため，必ず参照元をご確認ください．質問によっては回答できない場合もあります．</p>
+          <p id="assistant-availability" class="assistant-availability" role="status">質問欄の表示にはJavaScriptが必要です．作品の詳細は各項目のリンクからもご覧いただけます．</p>
+        </div>
+        <div id="assistant-mount" class="assistant-mount"></div>
+      </div>
+    </section>
 
     <!-- 研究 -->
     <section id="research" class="anchor">
@@ -893,19 +907,6 @@
           </div>
         </div>
       </details>
-    </section>
-
-    <!-- 接続先が未設定の間は，入力欄を作らず準備中と表示する． -->
-    <section id="assistant" class="anchor no-print" aria-labelledby="assistant-title">
-      <div class="assistant-card">
-        <div>
-          <p class="section-kicker">ASK ABOUT MY WORK</p>
-          <h2 id="assistant-title" class="h4 section-title">作品・経歴について質問する</h2>
-          <p class="text-muted mb-2">公開している研究・作品・担当範囲を，参照元付きで確認できるAI質問対応を準備しています．</p>
-          <p id="assistant-availability" class="assistant-availability" role="status">準備中です．現在は質問を送信できません．作品の詳細は各項目のリンクからご覧いただけます．</p>
-        </div>
-        <div id="assistant-mount" class="assistant-mount"></div>
-      </div>
     </section>
 
     <!-- 連絡先 -->

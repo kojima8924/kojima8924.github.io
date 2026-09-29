@@ -201,3 +201,47 @@ test('組込みUIは安全な描画とテーマ・印刷を維持する', () => 
   assert.match(css, /body\.pdf-summary/);
   assert.match(css, /@media print/);
 });
+
+test('質問対象に開発者の公開済み経験を含め，私的な情報と未記載事項を除く', () => {
+  const js = fs.readFileSync(path.join(__dirname, '../assets/assistant.js'), 'utf8');
+  assert.match(js, /作品・経歴・小嶋明について質問する/);
+  assert.match(js, /小嶋明の経験・活動・開発の考え方を，公開資料の範囲で質問できます/);
+  assert.match(js, /資料にないことや私的な情報は対象外/);
+  assert.match(js, /ポートフォリオ AI質問対応（β）/);
+  assert.match(js, /質問によっては回答できない場合もあります/);
+  assert.match(js, /本人の担当・実績を推測で補わない方針ですが，誤回答の可能性/);
+  assert.match(js, /例：小嶋明の技術的な強みや，開発で大切にしていることは？/);
+});
+
+test('Qwen限定catalogではQwenだけを使い，未提供の候補を選択しない', async () => {
+  const mock = ui.createMockTransport();
+  const catalog = await mock('/models');
+  catalog.models = catalog.models.filter(model => model.id === 'qwen-235b');
+  catalog.default_model = 'qwen-235b';
+  const requests = [];
+  const session = ui.createSession(async (route, body) => {
+    requests.push({ route, body });
+    return route === '/models' ? catalog : mock(route, body);
+  });
+  assert.deepEqual((await session.open()).models.map(model => model.id), ['qwen-235b']);
+  assert.throws(() => session.select('sonnet-5'), /model_invalid/);
+  await session.ask('公開資料にある研究を教えてください');
+  assert.equal(requests.length, 2);
+  assert.equal(requests[1].body.model, 'qwen-235b');
+});
+
+test('公開βの3モデルcatalogではQwenを標準とし，GLMとKimiも明示選択できる', async () => {
+  const value = await catalog();
+  const aliases = ['qwen-235b', 'glm-5', 'kimi-k2-5'];
+  value.models = value.models.filter(model => aliases.includes(model.id));
+  value.default_model = 'qwen-235b';
+  const session = ui.createSession(async () => value);
+  assert.deepEqual((await session.open()).models.map(model => model.id), aliases);
+  assert.equal(session.snapshot().modelId, 'qwen-235b');
+  for (const alias of aliases) {
+    session.select(alias);
+    assert.equal(session.snapshot().modelId, alias);
+  }
+  assert.throws(() => session.select('sonnet-5'), /model_invalid/);
+  assert.throws(() => session.select('terra'), /model_invalid/);
+});

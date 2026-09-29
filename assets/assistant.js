@@ -1,4 +1,4 @@
-/* 公開前の再利用用UI．開く操作がない限り通信しない． */
+/* β版の再利用用UI．開く操作がない限り通信しない． */
 (function (root, factory) {
   const api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;
@@ -136,12 +136,12 @@
       return node;
     }
     function button(text, className) { const node = element('button', className, text); node.type = 'button'; return node; }
-    const launcher = button(options.preview ? '模擬アシスタントを開く' : '作品について質問する', 'pa-launcher');
+    const launcher = button(options.preview ? '模擬アシスタントを開く' : '作品・経歴・小嶋明について質問する', 'pa-launcher');
     launcher.setAttribute('aria-haspopup', 'dialog');
     const dialog = element('dialog', 'pa-dialog');
     dialog.id = 'pa-dialog-' + suffix;
     launcher.setAttribute('aria-controls', dialog.id);
-    const heading = element('h2', '', options.preview ? 'AI質問対応 · 模擬プレビュー' : 'ポートフォリオ AI質問対応');
+    const heading = element('h2', '', options.preview ? 'AI質問対応 · 模擬プレビュー' : 'ポートフォリオ AI質問対応（β）');
     heading.id = 'pa-heading-' + suffix;
     dialog.setAttribute('aria-labelledby', heading.id);
     const header = element('header', 'pa-header');
@@ -150,7 +150,7 @@
     const content = element('div', 'pa-content');
     const intro = element('p', 'pa-intro', options.preview
       ? 'ローカルの操作確認用です．回答・利用回数は模擬表示で，外部通信やモデル実行はありません．'
-      : '公開済みの作品情報を根拠に回答します．AIの回答は誤ることがあるため，参照元もご確認ください．');
+      : 'β版・品質検証中です．作品・経歴のほか，小嶋明の経験・活動・開発の考え方を，公開資料の範囲で質問できます．資料にないことや私的な情報は対象外です．本人の担当・実績を推測で補わない方針ですが，誤回答の可能性があります．必ず参照元をご確認ください．質問によっては回答できない場合もあります．');
     const label = element('label', 'pa-model-label', '回答モデル');
     const select = element('select', 'pa-select');
     select.id = 'pa-model-' + suffix;
@@ -177,7 +177,7 @@
     const questionLabel = element('label', '', '質問');
     const question = element('textarea', 'pa-question');
     question.id = 'pa-question-' + suffix; questionLabel.htmlFor = question.id;
-    question.rows = 3; question.placeholder = '例：生成AIを使わず実装した作品は？'; question.maxLength = 1000;
+    question.rows = 3; question.placeholder = '例：小嶋明の技術的な強みや，開発で大切にしていることは？'; question.maxLength = 1000;
     const count = element('span', 'pa-count', '0 / 500文字'); count.id = 'pa-count-' + suffix;
     question.setAttribute('aria-describedby', count.id);
     const submit = element('button', 'pa-submit', options.preview ? '模擬回答を表示' : '送信'); submit.type = 'submit';

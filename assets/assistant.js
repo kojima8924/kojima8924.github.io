@@ -160,9 +160,10 @@
     const privacy = element('details', 'pa-privacy');
     const privacySummary = element('summary', '', '送信内容・処理地域について');
     const privacyText = element('p');
+    const processingNotice = 'ナレッジ検索はAWS，回答生成は選択モデルの設定に応じてAWS・OpenAI・Anthropicで処理します．質問・直近4往復の会話・検索した公開資料を回答生成先へ送信します．実際の送信先と処理地域は選択モデルの案内をご確認ください．提供元の保持条件は各社の規定に従います．';
     const sharedPrivacy = element('p', '', options.preview
       ? 'ここで入力した質問はAWSへ送信されません．実接続時の案内文は利用条件の確認後に確定します．個人情報や機密情報は入力しないでください．'
-      : '質問と直近4往復の会話は回答生成のためAWSへ送信されます．本アプリでは本文を履歴データベースやアプリケーションログに通常保存せず，会話はこのページを開いている間だけブラウザに保持します．利用回数の管理には日替わりの仮名化識別子を用います．期限を過ぎた回数記録は自動削除の対象になります．個人情報や機密情報は入力しないでください．');
+      : processingNotice + '本アプリでは質問・回答本文を履歴データベースやアプリケーションログに通常保存せず，会話はこのページを開いている間だけブラウザに保持します．利用回数の管理には日替わりの仮名化識別子を用います．期限を過ぎた回数記録は自動削除の対象になります．個人情報や機密情報は入力しないでください．');
     privacy.append(privacySummary, privacyText, sharedPrivacy);
     const historyNotice = element('p', 'pa-help', '会話は直近4往復のみ保持します．');
     const messages = element('div', 'pa-messages');

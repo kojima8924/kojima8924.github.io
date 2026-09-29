@@ -245,3 +245,67 @@ test('公開βの3モデルcatalogではQwenを標準とし，GLMとKimiも明�
   assert.throws(() => session.select('sonnet-5'), /model_invalid/);
   assert.throws(() => session.select('terra'), /model_invalid/);
 });
+
+// 表示分岐だけを確認する小さなDOM代替．外観確認は実ブラウザで別途行う．
+function documentFixture() {
+  const document = {};
+  class Node {
+    constructor(tag) { this.tagName = tag; this.children = []; this.attributes = {}; this.listeners = {}; this.textContent = ''; this.className = ''; }
+    append(...nodes) { for (const node of nodes) { node.parent = this; this.children.push(node); } }
+    replaceChildren(...nodes) { this.children = []; this.append(...nodes); }
+    setAttribute(name, value) { this.attributes[name] = value; }
+    addEventListener(name, callback) { this.listeners[name] = callback; }
+    focus() { document.activeElement = this; }
+    showModal() { this.open = true; }
+    close() { this.open = false; if (this.listeners.close) this.listeners.close(); }
+    setCustomValidity(value) { this.validityMessage = value; }
+    scrollIntoView() {}
+    get lastElementChild() { return this.children.at(-1); }
+  }
+  document.createElement = tag => new Node(tag);
+  document.body = new Node('body');
+  document.find = (name) => {
+    function descend(node) { if (node.className.split(' ').includes(name)) return node; for (const child of node.children) { const result = descend(child); if (result) return result; } }
+    return descend(document.body);
+  };
+  return document;
+}
+
+test('3／5モデルで選択した生成先の説明を表示し，切替だけで質問送信しない', async () => {
+  for (const aliases of [['qwen-235b', 'glm-5', 'kimi-k2-5'], ui.ALIASES]) {
+    const document = documentFixture();
+    const value = await catalog();
+    value.models = value.models.filter(model => aliases.includes(model.id));
+    value.default_model = 'qwen-235b';
+    for (const model of value.models) model.privacy_notice = model.id === 'terra'
+      ? '回答生成先はOpenAIの直接APIです．'
+      : model.id === 'sonnet-5' ? '回答生成先はAnthropicの直接APIです．' : '回答生成先はAWSです．';
+    const calls = [];
+    ui.mount({ document, transport: async route => { calls.push(route); return value; } });
+    assert.deepEqual(calls, []);
+    const privacy = document.find('pa-privacy').children.map(node => node.textContent).join(' ');
+    assert.match(privacy, /ナレッジ検索はAWS/);
+    assert.match(privacy, /選択モデルの設定に応じてAWS・OpenAI・Anthropic/);
+    assert.match(privacy, /質問・直近4往復の会話・検索した公開資料を回答生成先へ送信/);
+    assert.match(privacy, /実際の送信先と処理地域は選択モデルの案内/);
+    assert.match(privacy, /提供元の保持条件は各社の規定/);
+    await document.find('pa-launcher').listeners.click();
+    const select = document.find('pa-select');
+    assert.equal(select.value, 'qwen-235b');
+    assert.deepEqual(select.children.map(option => option.value), value.models.map(model => model.id));
+    for (const model of value.models) {
+      select.value = model.id;
+      select.listeners.change();
+      assert.equal(document.find('pa-privacy').children[1].textContent, model.privacy_notice);
+    }
+    assert.deepEqual(calls, ['/models']);
+  }
+});
+
+test('模擬UIは実際の提供元への送信を示さない', () => {
+  const document = documentFixture();
+  ui.mount({ document, preview: true, transport: ui.createMockTransport() });
+  const privacy = document.find('pa-privacy').children.map(node => node.textContent).join(' ');
+  assert.match(privacy, /入力した質問はAWSへ送信されません/);
+  assert.doesNotMatch(privacy, /回答生成先へ送信します/);
+});

@@ -6,6 +6,16 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
   const ALIASES = Object.freeze(['sonnet-5', 'terra', 'qwen-235b', 'glm-5', 'kimi-k2-5']);
+  // 旧APIを先に公開済みのUIから安全に利用できるよう，/modelsに新設定がない間は旧上限へ戻す．
+  const LEGACY_DAILY_LIMIT = 20;
+  const LEGACY_HISTORY_MESSAGES = 8;
+  const DAILY_LIMIT = 40;
+  const HISTORY_MESSAGES = 16;
+  const STARTER_SUGGESTIONS = Object.freeze([
+    '小嶋明の技術的な強みは？',
+    '研究内容を簡潔に教えて',
+    '生成AIを使わずに作った作品は？',
+  ]);
   const characters = (text) => Array.from(text);
   const clipped = (text, maximum) => characters(text).slice(0, maximum).join('');
   const validText = (value, maximum) => typeof value === 'string' && value.trim() && characters(value).length <= maximum;
@@ -30,7 +40,25 @@
       return { id: model.id, label: model.label, processing_region: model.processing_region, privacy_notice: model.privacy_notice };
     });
     if (models.length && !seen.has(value.default_model)) throw new Error('catalog_invalid');
-    return { default_model: models.length ? value.default_model : null, models };
+    let interaction = { history_messages: LEGACY_HISTORY_MESSAGES, daily_requests: LEGACY_DAILY_LIMIT, quick_replies: false };
+    if (value.interaction !== undefined) {
+      const settings = value.interaction;
+      if (!settings || !Number.isInteger(settings.history_messages) || settings.history_messages < 2 || settings.history_messages > HISTORY_MESSAGES ||
+          settings.history_messages % 2 || !Number.isInteger(settings.daily_requests) || settings.daily_requests < 1 || settings.daily_requests > DAILY_LIMIT ||
+          typeof settings.quick_replies !== 'boolean') throw new Error('catalog_invalid');
+      interaction = { history_messages: settings.history_messages, daily_requests: settings.daily_requests, quick_replies: settings.quick_replies };
+    }
+    return { default_model: models.length ? value.default_model : null, models, interaction };
+  }
+
+  function validateSuggestions(value) {
+    if (value === undefined) return [];
+    if (!Array.isArray(value) || value.length > 3) throw new Error('answer_invalid');
+    const seen = new Set();
+    return value.map((item) => {
+      if (!validText(item, 80) || /[\r\n]/.test(item) || seen.has(item.trim())) throw new Error('answer_invalid');
+      item = item.trim(); seen.add(item); return item;
+    });
   }
 
   function createHttpTransport(endpoint, fetcher) {
@@ -93,11 +121,12 @@
         try {
           const answer = await transport('/ask', { question, history: history.map((item) => ({ ...item })), model: modelId });
           if (!answer || !validText(answer.answer, 30000) || !answer.model || answer.model.id !== modelId) throw new Error('answer_invalid');
+          answer.suggestions = validateSuggestions(answer.suggestions);
           history = history.concat([
             { role: 'user', content: question },
             { role: 'assistant', content: clipped(answer.answer, 1500) },
-          ]).slice(-8);
-          if (answer.limit && Number.isInteger(answer.limit.remaining_today) && answer.limit.remaining_today >= 0 && answer.limit.remaining_today <= 20) {
+          ]).slice(-catalog.interaction.history_messages);
+          if (answer.limit && Number.isInteger(answer.limit.remaining_today) && answer.limit.remaining_today >= 0 && answer.limit.remaining_today <= catalog.interaction.daily_requests) {
             remaining = answer.limit.remaining_today;
             resetsAt = answer.limit.resets_at;
           }
@@ -111,8 +140,8 @@
     };
   }
 
-  function errorMessage(error) {
-    if (error.status === 429 && error.code === 'ip_daily_limit') return '本日の利用上限（全モデル共通20回）に達しました．日本時間9:00に戻ります．';
+  function errorMessage(error, dailyLimit) {
+    if (error.status === 429 && error.code === 'ip_daily_limit') return '本日の利用上限（全モデル共通' + (dailyLimit || LEGACY_DAILY_LIMIT) + '回）に達しました．日本時間9:00に戻ります．';
     if (error.status === 429 || error.status >= 500) return '混雑しているか，一時停止しています．自動再送はしません．';
     if (error.name === 'AbortError') return '時間内に応答がありませんでした．処理済みの可能性があるため自動再送はしません．';
     if (error.message === 'question_invalid') return '質問を1〜500文字で入力してください．';
@@ -161,20 +190,19 @@
     const privacy = element('details', 'pa-privacy');
     const privacySummary = element('summary', '', '送信内容・処理地域について');
     const privacyText = element('p');
-    const processingNotice = 'ナレッジ検索はAWS，回答生成は選択モデルの設定に応じてAWS・OpenAI・Anthropicで処理します．質問・直近4往復の会話・検索した公開資料を回答生成先へ送信します．実際の送信先と処理地域は選択モデルの案内をご確認ください．提供元の保持条件は各社の規定に従います．';
-    const sharedPrivacy = element('p', '', options.preview
+    const processingNotice = (rounds) => 'ナレッジ検索はAWS，回答生成は選択モデルの設定に応じてAWS・OpenAI・Anthropicで処理します．質問・直近' + rounds + '往復の会話・検索した公開資料を回答生成先へ送信します．実際の送信先と処理地域は選択モデルの案内をご確認ください．提供元の保持条件は各社の規定に従います．';
+    const privacySuffix = options.preview
       ? 'ここで入力した質問はAWSへ送信されません．実接続時の案内文は利用条件の確認後に確定します．個人情報や機密情報は入力しないでください．'
-      : processingNotice + '本アプリでは質問・回答本文を履歴データベースやアプリケーションログに通常保存せず，会話はこのページを開いている間だけブラウザに保持します．利用回数の管理には日替わりの仮名化識別子を用います．期限を過ぎた回数記録は自動削除の対象になります．個人情報や機密情報は入力しないでください．');
+      : '本アプリでは質問・回答本文を履歴データベースやアプリケーションログに通常保存せず，会話はこのページを開いている間だけブラウザに保持します．利用回数の管理には日替わりの仮名化識別子を用います．期限を過ぎた回数記録は自動削除の対象になります．個人情報や機密情報は入力しないでください．';
+    const sharedPrivacy = element('p', '', options.preview ? privacySuffix : processingNotice(LEGACY_HISTORY_MESSAGES / 2) + privacySuffix);
     privacy.append(privacySummary, privacyText, sharedPrivacy);
-    const historyNotice = element('p', 'pa-help', options.preview
-      ? '表示ログはページを開いている間だけ残ります．模擬回答に渡す文脈は直近4往復で，各回答は1500文字までです．会話のリセット・ページの再読み込みで消えます．'
-      : '表示ログはページを開いている間だけ残ります．AIへ送る文脈は直近4往復で，各回答は1500文字までです．会話のリセット・ページの再読み込みで消えます．');
+    const historyNotice = element('p', 'pa-help', '表示ログはページを開いている間だけ残ります．送信する会話範囲はモデル確認後に表示します．会話のリセット・ページの再読み込みで消えます．');
     const messages = element('div', 'pa-messages');
     messages.setAttribute('aria-label', '会話');
     const status = element('p', 'pa-status', '開くと利用可能なモデルを確認します．');
     status.setAttribute('role', 'status');
     status.setAttribute('aria-live', 'polite');
-    const limit = element('p', 'pa-limit', '全モデル共通：20回／IP／日（UTC）．残り回数は回答後に表示します．');
+    const limit = element('p', 'pa-limit', '利用上限はモデル確認後に表示します．');
     const reset = button('会話をリセット', 'pa-reset');
     const tools = element('div', 'pa-tools'); tools.append(limit, reset);
     const form = element('form', 'pa-form');
@@ -194,17 +222,27 @@
     function update() {
       const state = session.snapshot();
       const selected = state.catalog && state.catalog.models.find((model) => model.id === state.modelId);
+      const interaction = state.catalog ? state.catalog.interaction : { history_messages: LEGACY_HISTORY_MESSAGES, daily_requests: LEGACY_DAILY_LIMIT };
+      const historyRounds = interaction.history_messages / 2;
       select.disabled = state.busy || !selected; question.disabled = state.busy || !selected;
       submit.disabled = state.busy || !selected; reset.disabled = state.busy;
       dialog.setAttribute('aria-busy', String(state.busy));
       region.textContent = selected ? '処理地域：' + regionLabel(selected.processing_region) : '利用可能なモデルはまだ確認できていません．';
       privacyText.textContent = selected ? selected.privacy_notice : 'モデル選択後に，処理地域と保持条件の案内を表示します．';
+      if (!options.preview) sharedPrivacy.textContent = processingNotice(historyRounds) + privacySuffix;
+      historyNotice.textContent = '表示ログはページを開いている間だけ残ります．' + (options.preview ? '模擬回答' : 'AI') + 'へ送る文脈は直近' + historyRounds + '往復で，各回答は1500文字までです．会話のリセット・ページの再読み込みで消えます．';
       limit.textContent = state.remaining !== null
-        ? (options.preview ? '模擬・' : '') + '全モデル共通：本日あと' + state.remaining + '回／20回．日本時間9:00に更新．'
-        : '全モデル共通：20回／IP／日（UTC）．残り回数は未確認です．失敗した要求も回数に含まれる場合があります．';
+        ? (options.preview ? '模擬・' : '') + '全モデル共通：本日あと' + state.remaining + '回／' + interaction.daily_requests + '回．日本時間9:00に更新．'
+        : '全モデル共通：' + interaction.daily_requests + '回／IP／日（UTC）．残り回数は未確認です．失敗した要求も回数に含まれる場合があります．';
+      activeQuickReplyButtons.forEach((node) => { node.disabled = state.busy || !selected; });
     }
-    function clearMessages() { messages.replaceChildren(); }
-    function addMessage(role, text, sources, truncated, modelLabel) {
+    let activeQuickReplyButtons = [];
+    function deactivateQuickReplies() {
+      activeQuickReplyButtons.forEach((node) => { node.disabled = true; });
+      activeQuickReplyButtons = [];
+    }
+    function clearMessages() { deactivateQuickReplies(); messages.replaceChildren(); }
+    function addMessage(role, text, sources, truncated, modelLabel, suggestions) {
       const item = element('article', 'pa-message pa-message-' + role);
       const title = element('h3', '', role === 'user' ? 'あなた' : modelLabel || '回答');
       item.append(title, element('p', 'pa-answer', text));
@@ -221,7 +259,29 @@
         if (list.children.length) item.append(list);
       }
       if (truncated) item.append(element('p', 'pa-help', '回答が長いため途中で終わりました．'));
+      if (role === 'assistant' && Array.isArray(suggestions) && suggestions.length) {
+        deactivateQuickReplies();
+        const group = element('div', 'pa-quick-replies');
+        group.setAttribute('aria-label', '次の質問候補');
+        group.append(element('p', 'pa-quick-replies-label', '次の質問候補'));
+        for (const suggestion of suggestions) {
+          const reply = button(suggestion, 'pa-quick-reply');
+          reply.addEventListener('click', () => {
+            question.value = suggestion;
+            count.textContent = characters(suggestion).length + ' / 500文字';
+            return sendQuestion(suggestion);
+          });
+          activeQuickReplyButtons.push(reply); group.append(reply);
+        }
+        item.append(group);
+      }
       messages.append(item);
+    }
+    function addGreeting() {
+      const state = session.snapshot();
+      const selected = state.catalog && state.catalog.models.find((model) => model.id === state.modelId);
+      if (!selected) return;
+      addMessage('assistant', '私は「' + selected.label + '」を使うポートフォリオ案内AIです．作品・経歴・小嶋明について，質問をどうぞ！', undefined, false, selected.label, STARTER_SUGGESTIONS);
     }
     launcher.addEventListener('click', async () => {
       if (!dialog.open) dialog.showModal();
@@ -235,37 +295,43 @@
         catalog.models.forEach((model) => { const option = element('option', '', model.label); option.value = model.id; select.append(option); });
         select.value = catalog.default_model || '';
         status.textContent = catalog.models.length ? '質問を入力してください．モデル切替で自動送信はされません．' : '現在利用できるモデルはありません．';
-      } catch (error) { status.textContent = errorMessage(error); }
+        if (catalog.models.length && !messages.children.length) addGreeting();
+      } catch (error) { status.textContent = errorMessage(error, session.snapshot().catalog && session.snapshot().catalog.interaction.daily_requests); }
       update();
     });
     close.addEventListener('click', () => dialog.close());
     dialog.addEventListener('close', () => launcher.focus());
     select.addEventListener('change', () => {
       session.select(select.value); update();
+      if (!session.snapshot().history.length) { clearMessages(); addGreeting(); }
       status.textContent = options.preview
         ? 'モデルを変更しました．会話と利用回数は引き継ぎます．外部送信はしません．'
         : 'モデルを変更しました．会話と利用回数は引き継ぎます．次の送信時に，他モデルとの直近の会話も選択した回答生成先へ送ります．';
     });
-    reset.addEventListener('click', () => { session.reset(); clearMessages(); question.value = ''; question.setCustomValidity(''); count.textContent = '0 / 500文字'; status.textContent = '会話をリセットしました．利用回数はリセットされません．'; update(); question.focus(); });
+    reset.addEventListener('click', () => { session.reset(); clearMessages(); addGreeting(); question.value = ''; question.setCustomValidity(''); count.textContent = '0 / 500文字'; status.textContent = '会話をリセットしました．利用回数はリセットされません．'; update(); question.focus(); });
     question.addEventListener('input', () => { const size = characters(question.value.trim()).length; count.textContent = size + ' / 500文字'; question.setCustomValidity(size > 500 ? '500文字以内で入力してください．' : ''); });
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
+    async function sendQuestion(value) {
       if (session.snapshot().busy) return;
-      const text = question.value.trim();
+      const text = value.trim();
       if (!validText(text, 500)) { status.textContent = '質問を1〜500文字で入力してください．'; question.focus(); return; }
+      deactivateQuickReplies();
       status.textContent = options.preview ? '模擬回答を表示しています…' : '回答を待っています…';
       const pending = session.ask(text); update();
       try {
         const answer = await pending;
         const selected = session.snapshot().catalog.models.find((model) => model.id === answer.model.id);
         addMessage('user', text);
-        addMessage('assistant', answer.answer, answer.sources, answer.truncated, selected.label + (options.preview ? ' · 模擬回答' : ''));
+        addMessage('assistant', answer.answer, answer.sources, answer.truncated, selected.label + (options.preview ? ' · 模擬回答' : ''), answer.suggestions);
         question.value = ''; count.textContent = '0 / 500文字'; question.setCustomValidity('');
         status.textContent = '回答を表示しました．参照元もご確認ください．';
         messages.lastElementChild.scrollIntoView({ block: 'nearest' });
-      } catch (error) { status.textContent = errorMessage(error); }
+      } catch (error) { status.textContent = errorMessage(error, session.snapshot().catalog && session.snapshot().catalog.interaction.daily_requests); }
       update();
       if (dialog.open && !question.disabled) question.focus();
+    }
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      await sendQuestion(question.value);
     });
     update();
     return { session, host, dialog };
@@ -274,7 +340,7 @@
   function createMockTransport() {
     let used = 0;
     const names = ['Claude Sonnet 5', 'GPT-5.6 Terra', 'Qwen3 235B A22B 2507', 'GLM 5', 'Kimi K2.5'];
-    const catalog = { default_model: 'sonnet-5', models: ALIASES.map((id, index) => ({
+    const catalog = { default_model: 'sonnet-5', interaction: { history_messages: HISTORY_MESSAGES, daily_requests: DAILY_LIMIT, quick_replies: true }, models: ALIASES.map((id, index) => ({
       id, label: names[index],
       processing_region: index < 2 ? 'グローバル推論（国外処理あり） · 模擬設定' : '東京を想定 · 経路未検証の模擬設定',
       privacy_notice: 'これは候補モデルの模擬表示です．契約・保持条件・利用可否を確認済みであることを示すものではありません．',
@@ -282,16 +348,17 @@
     return async function (path, body) {
       if (path === '/models') return validateCatalog(catalog);
       if (path !== '/ask' || !body || !ALIASES.includes(body.model)) throw new Error('model_invalid');
-      if (used >= 20) { const error = new Error('limit'); error.status = 429; error.code = 'ip_daily_limit'; throw error; }
+      if (used >= DAILY_LIMIT) { const error = new Error('limit'); error.status = 429; error.code = 'ip_daily_limit'; throw error; }
       used += 1;
       const tomorrow = new Date(); tomorrow.setUTCHours(24, 0, 0, 0);
       return {
         answer: 'これは操作確認用の固定回答です．入力された質問への実際のAI回答ではありません．\n\n公開済み資料を参照した回答と，根拠リンクをこの位置に表示する想定です．モデルを切り替えても，模擬回答の品質差や実行速度は評価できません．',
+        suggestions: ['この研究の概要は？', '生成AI不使用の作品は？', '開発で重視していることは？'],
         sources: [{ n: 1, label: 'ポートフォリオ（外部サイト）', url: 'https://kojima8924.github.io/' }],
-        truncated: false, limit: { remaining_today: 20 - used, resets_at: tomorrow.toISOString() },
+        truncated: false, limit: { remaining_today: DAILY_LIMIT - used, resets_at: tomorrow.toISOString() },
         model: { ...catalog.models.find((model) => model.id === body.model) },
       };
     };
   }
-  return { ALIASES, regionLabel, safeHttps, validateCatalog, createHttpTransport, createSession, createMockTransport, errorMessage, mount };
+  return { ALIASES, regionLabel, safeHttps, validateCatalog, validateSuggestions, createHttpTransport, createSession, createMockTransport, errorMessage, mount };
 });

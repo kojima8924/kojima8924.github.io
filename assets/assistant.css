@@ -41,6 +41,9 @@ html:has(.pa-dialog[open]) { overflow: hidden; }
 .pa-answer { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .pa-sources { padding-left: 20px; margin: 12px 0 0; font-size: .86rem; overflow-wrap: anywhere; }
 .pa-sources a { color: var(--pa-accent); text-decoration: underline; text-underline-offset: 3px; }
+.pa-quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.pa-quick-replies-label { flex-basis: 100%; margin: 0; color: var(--pa-muted); font-size: .82rem; font-weight: 700; }
+.pa-quick-reply { min-height: 40px !important; padding: 7px 11px !important; border-color: var(--pa-accent) !important; color: var(--pa-accent) !important; font-size: .86rem !important; text-align: left; }
 .pa-status { font-size: .88rem; margin: 14px 0; overflow-wrap: anywhere; }
 .pa-tools { display: flex; align-items: center; gap: 12px; justify-content: space-between; border-top: 1px solid var(--pa-line); margin-top: 16px; padding-top: 10px; }
 .pa-limit { margin: 0; }

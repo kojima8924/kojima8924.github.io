@@ -1,5 +1,5 @@
 {
-  "version": "26.9.16",
+  "version": "26.9.30",
   "messages": [
     {
       "type": "info",
@@ -17,23 +17,53 @@
       "lastColumn": 72,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
-      "extract": "f-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n  <ti",
+      "extract": "f-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n  <!-",
       "hiliteStart": 10,
       "hiliteLength": 70
     },
     {
       "type": "info",
       "lastLine": 7,
-      "lastColumn": 163,
+      "lastColumn": 116,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
-      "extract": "/title>\n  <meta name=\"description\" content=\"複数LLMを扱うFlutterアプリ Clage Cook、LINEで学ぶ学習サービス Trivium、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ\" />\n\n  <!",
+      "extract": "する． -->\n  <meta name=\"portfolio-assistant-endpoint\" content=\"https://9m4lkt83ab.execute-api.ap-northeast-1.amazonaws.com\" />\n  <li",
       "hiliteStart": 10,
-      "hiliteLength": 161
+      "hiliteLength": 114
     },
     {
       "type": "info",
-      "lastLine": 10,
+      "lastLine": 8,
+      "lastColumn": 79,
+      "firstColumn": 3,
+      "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+      "extract": "com\" />\n  <link rel=\"stylesheet\" href=\"assets/assistant.css?v=20260930-quickreplies\" />\n  <li",
+      "hiliteStart": 10,
+      "hiliteLength": 77
+    },
+    {
+      "type": "info",
+      "lastLine": 9,
+      "lastColumn": 60,
+      "firstColumn": 3,
+      "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+      "extract": "ies\" />\n  <link rel=\"stylesheet\" href=\"assets/assistant-site.css\" />\n  <sc",
+      "hiliteStart": 10,
+      "hiliteLength": 58
+    },
+    {
+      "type": "info",
+      "lastLine": 14,
+      "lastColumn": 146,
+      "firstColumn": 3,
+      "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+      "extract": "/title>\n  <meta name=\"description\" content=\"小嶋明のポートフォリオ．触覚センサ研究とCGの自力実装，受託LINE応答AI，Trivium・ScriptVEdit・Clage Cook．本人の実装経験とAIエージェントを活用した設計・検証を分けて紹介します．\" />\n\n  <!",
+      "hiliteStart": 10,
+      "hiliteLength": 144
+    },
+    {
+      "type": "info",
+      "lastLine": 17,
       "lastColumn": 47,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
@@ -43,47 +73,47 @@
     },
     {
       "type": "info",
-      "lastLine": 11,
-      "lastColumn": 73,
+      "lastLine": 18,
+      "lastColumn": 71,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
-      "extract": "ite\" />\n  <meta property=\"og:title\" content=\"小嶋 明 | AIアプリケーションエンジニア Portfolio\" />\n  <me",
+      "extract": "ite\" />\n  <meta property=\"og:title\" content=\"小嶋 明 | 研究・CG・AIアプリ開発 Portfolio\" />\n  <me",
       "hiliteStart": 10,
-      "hiliteLength": 71
+      "hiliteLength": 69
     },
     {
       "type": "info",
-      "lastLine": 12,
-      "lastColumn": 170,
+      "lastLine": 19,
+      "lastColumn": 100,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
-      "extract": "lio\" />\n  <meta property=\"og:description\" content=\"複数LLMを扱うFlutterアプリ Clage Cook、LINEで学ぶ学習サービス Trivium、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ\" />\n  <me",
+      "extract": "lio\" />\n  <meta property=\"og:description\" content=\"研究・CGの自力実装を土台に，受託・AIアプリの設計と検証へ．論文，CG動画，実績と担当範囲を紹介します．\" />\n  <me",
       "hiliteStart": 10,
-      "hiliteLength": 168
+      "hiliteLength": 98
     },
     {
       "type": "info",
-      "lastLine": 13,
+      "lastLine": 20,
       "lastColumn": 93,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
-      "extract": "ォリオ\" />\n  <meta property=\"og:image\" content=\"https://kojima8924.github.io/media/ogp-portfolio.png\" />\n  <me",
+      "extract": "ます．\" />\n  <meta property=\"og:image\" content=\"https://kojima8924.github.io/media/ogp-portfolio.png\" />\n  <me",
       "hiliteStart": 10,
       "hiliteLength": 91
     },
     {
       "type": "info",
-      "lastLine": 14,
-      "lastColumn": 68,
+      "lastLine": 21,
+      "lastColumn": 73,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
-      "extract": "png\" />\n  <meta property=\"og:image:alt\" content=\"小嶋明のAIアプリ開発・機械学習ポートフォリオ\" />\n  <me",
+      "extract": "png\" />\n  <meta property=\"og:image:alt\" content=\"小嶋明の研究・受託・自力CG・AI活用開発ポートフォリオ\" />\n  <me",
       "hiliteStart": 10,
-      "hiliteLength": 66
+      "hiliteLength": 71
     },
     {
       "type": "info",
-      "lastLine": 15,
+      "lastLine": 22,
       "lastColumn": 68,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
@@ -93,7 +123,7 @@
     },
     {
       "type": "info",
-      "lastLine": 16,
+      "lastLine": 23,
       "lastColumn": 47,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
@@ -103,7 +133,7 @@
     },
     {
       "type": "info",
-      "lastLine": 17,
+      "lastLine": 24,
       "lastColumn": 60,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
@@ -113,47 +143,47 @@
     },
     {
       "type": "info",
-      "lastLine": 18,
-      "lastColumn": 74,
+      "lastLine": 25,
+      "lastColumn": 72,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
-      "extract": "age\" />\n  <meta name=\"twitter:title\" content=\"小嶋 明 | AIアプリケーションエンジニア Portfolio\" />\n  <me",
+      "extract": "age\" />\n  <meta name=\"twitter:title\" content=\"小嶋 明 | 研究・CG・AIアプリ開発 Portfolio\" />\n  <me",
       "hiliteStart": 10,
-      "hiliteLength": 72
+      "hiliteLength": 70
     },
     {
       "type": "info",
-      "lastLine": 19,
-      "lastColumn": 171,
+      "lastLine": 26,
+      "lastColumn": 101,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
-      "extract": "lio\" />\n  <meta name=\"twitter:description\" content=\"複数LLMを扱うFlutterアプリ Clage Cook、LINEで学ぶ学習サービス Trivium、Android ChromiumへのAI統合 ChromiumforA、動画編集DSL ScriptVEditを開発する小嶋明のポートフォリオ\" />\n  <me",
+      "extract": "lio\" />\n  <meta name=\"twitter:description\" content=\"研究・CGの自力実装を土台に，受託・AIアプリの設計と検証へ．論文，CG動画，実績と担当範囲を紹介します．\" />\n  <me",
       "hiliteStart": 10,
-      "hiliteLength": 169
+      "hiliteLength": 99
     },
     {
       "type": "info",
-      "lastLine": 20,
+      "lastLine": 27,
       "lastColumn": 94,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
-      "extract": "ォリオ\" />\n  <meta name=\"twitter:image\" content=\"https://kojima8924.github.io/media/ogp-portfolio.png\" />\n  <me",
+      "extract": "ます．\" />\n  <meta name=\"twitter:image\" content=\"https://kojima8924.github.io/media/ogp-portfolio.png\" />\n  <me",
       "hiliteStart": 10,
       "hiliteLength": 92
     },
     {
       "type": "info",
-      "lastLine": 21,
-      "lastColumn": 69,
+      "lastLine": 28,
+      "lastColumn": 74,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
-      "extract": "png\" />\n  <meta name=\"twitter:image:alt\" content=\"小嶋明のAIアプリ開発・機械学習ポートフォリオ\" />\n  <li",
+      "extract": "png\" />\n  <meta name=\"twitter:image:alt\" content=\"小嶋明の研究・受託・自力CG・AI活用開発ポートフォリオ\" />\n  <li",
       "hiliteStart": 10,
-      "hiliteLength": 67
+      "hiliteLength": 72
     },
     {
       "type": "info",
-      "lastLine": 22,
+      "lastLine": 29,
       "lastColumn": 63,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
@@ -163,13 +193,23 @@
     },
     {
       "type": "info",
-      "lastLine": 25,
+      "lastLine": 32,
       "lastColumn": 61,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
       "extract": "con -->\n  <link rel=\"icon\" href=\"favicon.svg\" type=\"image/svg+xml\" />\n\n  <!",
       "hiliteStart": 10,
       "hiliteLength": 59
+    },
+    {
+      "type": "info",
+      "lastLine": 438,
+      "lastColumn": 58,
+      "firstColumn": 3,
+      "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
+      "extract": "/style>\n  <link rel=\"stylesheet\" href=\"assets/media-viewer.css\" />\n</hea",
+      "hiliteStart": 10,
+      "hiliteLength": 56
     }
   ],
   "language": "ja"

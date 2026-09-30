@@ -140,7 +140,7 @@ HTML = r"""
       <div class="kicker">PORTFOLIO</div>
       <h1>AKIRA<br>KOJIMA</h1>
       <div class="jp">自力実装を土台に，<br>設計と検証へ</div>
-      <p class="sub">小嶋 明 ｜ ソフトウェアエンジニア<br>研究・CGから，受託・AI活用アプリへ</p>
+      <p class="sub">小嶋 明 ｜ AIアプリケーションエンジニア<br>研究・CGから，受託・AI活用アプリへ</p>
       <div class="pill-row">
         <span class="pill">Python</span>
         <span class="pill">C++ / GLSL</span>

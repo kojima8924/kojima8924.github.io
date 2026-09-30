@@ -153,8 +153,11 @@ PDF_METADATA = {
 }
 
 
-# 再圧縮しない画像（資格のデジタルバッジ。AWS の利用ルール上、画質を落とす改変もしない）
-UNALTERED_IMAGES = [Path(__file__).resolve().parent / "media" / "badge-aws-ai-practitioner.png"]
+# 再圧縮しない資格画像（発行元の図柄を、サイト掲載用の縮小以外では改変しない）
+UNALTERED_IMAGES = [
+    Path(__file__).resolve().parent / "media" / "badge-aws-ai-practitioner.png",
+    Path(__file__).resolve().parent / "media" / "badge-g-kentei-2026-5.png",
+]
 
 
 def _find_unaltered_images(document) -> list:

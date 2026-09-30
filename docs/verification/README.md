@@ -2,6 +2,26 @@
 
 このフォルダのログは，実行した時点の成果物に対する記録です．後から変更したHTML・PDFに対する合格判定や，GitHub Pagesへの公開反映を保証するものではありません．新しい検証は実行日・対象・方法と一緒に追記し，古いログを未実行の新結果として扱わないでください．
 
+## 2026-09-30：資格表記の統一・G検定ロゴ・PDF/OGP再生成
+
+### 同日追記：axe-coreとW3C Nuの再実行
+
+上記の変更後の`index.html`に対して，2026-09-19以来となるaxe-core 4.10.2（dark／light両テーマ・details全展開・初回描画の`color_scheme`でテーマ確定，1280×900）とW3C Nu（https://validator.w3.org/nu/?out=json ）を再実行し，`axe-core.json`と`w3c-nu.json`を今回の結果で更新しました．
+
+- 初回実行では，axe-coreが両テーマで`landmark-complementary-is-top-level`（Heroの`<header>`内にある`<aside class="profile-facts">`）1件，Nuが`aria-label`を持つ`div.metric-grid`にroleがないerror 1件を報告しました．どちらも2026-09-20以降の構成変更で入ったもので，旧ログには現れていません．
+- `<aside>`を`<div role="group">`へ，`div.metric-grid`に`role="group"`を追加して再実行し，axe-coreは両テーマともviolations 0件，Nuはerror 0件・warning 0件（infoのみ21件）になりました．見た目・DOM順・CSSは変えていません．
+- 修正後にPython 45件・Node 56件・内部検査（エラー0・警告0，ID 25個・画像34枚・外部リンク25件）を再実行し，いずれも正常でした．PDF・OGPは本文の変更がないため再生成していません．
+
+Heroと詳細経歴の資格名・取得年月を統一し，JSON-LDの3資格にも取得年月を設定しました．JDLA公式のG検定合格ロゴ（2026 #5）は，元の2801×1706px RGBA画像をPillowのLANCZOSでトリミングせず420×256pxへ縮小し，AWSバッジの隣へリンクなしで掲載しています．白背景ボックスの保護余白は8px，表示画像は105×64pxです．スマホ画面では2ロゴを隣接させたまま説明文だけを次行へ送ります．
+
+- `python -m unittest discover -s tests -v`は45件成功．`node --test tests/*.test.cjs`は，初回に旧キャッシュバスターを期待する1件が失敗したため，新しいJS/CSS版を検査するよう更新し，最終的に56件成功・失敗0・skip 0でした．
+- `python scripts/check_portfolio.py`はエラー0・警告0（ID 25個・画像34枚・外部リンク25件）．`--external`もエラー0・警告0で，25件すべて到達しました．`python scripts/import_figures.py --check`は更新要0件・参照元PDF欠損0件でした．
+- Playwright ChromiumでPC 1440×1000／スマホ相当390×844のライト・ダークを確認し，4条件ともページ全体・Hero資格欄・資格ロゴ行の横はみ出しは0件でした．G検定ロゴは白背景・8px余白・リンクなし・指定altであることもDOMと表示の両方で確認しました．これはブラウザのviewport検査であり，実機検証ではありません．
+- `media/ogp-portfolio.png`は肩書を「AIアプリケーションエンジニア」にして1200×630px・95,093 bytesで再生成し，文字切れ・重なりがないことを確認しました．`media/ogp-ai-portfolio.png`は変更していません．
+- 採用向けPDFは2ページ・433,257 bytes，完全版は8ページ・1,307,617 bytesです．PyMuPDFの本文抽出で完全版6ページ目にキムワイプ卓球会の活動を確認し，採用向けには含まれないことを確認しました．URIリンクは採用向け13件・完全版58件で，`127.0.0.1`を指すリンクは両版とも0件です．Popplerで全10ページを画像化し，資格ロゴ，本文，画像，改ページに切れ・重なりがないことを目視確認しました．
+- `git diff --check`は指摘なし．変更したテキストファイルはUTF-8（BOMなし）・CRLFで，bare LFは0件です．
+- 今回版のaxe-core，W3C Nu，Androidなどの実機検証は未実施です．過去版の結果は今回版へ流用しません．commit・pushも行っていません．
+
 ## 2026-09-30：キムワイプ卓球会の活動・発表
 
 詳細経歴と補足作品の間に`#activities`を追加しました．会長としての運営経験と，2018〜2022年の5題の発表・公式予稿リンクを掲載しています．既存の未コミットのAI会話履歴保持変更は維持しています．この検証時点では未pushです．

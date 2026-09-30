@@ -7,7 +7,7 @@
   <meta name="portfolio-assistant-endpoint" content="https://9m4lkt83ab.execute-api.ap-northeast-1.amazonaws.com" />
   <link rel="stylesheet" href="assets/assistant.css" />
   <link rel="stylesheet" href="assets/assistant-site.css" />
-  <script src="assets/assistant.js?v=20260929-beta2" defer></script>
+  <script src="assets/assistant.js?v=20260929-history" defer></script>
   <script src="assets/assistant-site.js?v=20260929-beta2" defer></script>
   <script src="assets/media-viewer.js" defer></script>
   <title>小嶋 明 | 研究・CG・AIアプリ開発 Portfolio</title>
@@ -826,6 +826,59 @@
             <li><strong>製品の構成技術</strong><span>FastAPI / Dify / Next.js / PostgreSQL / Flutter / FFmpegなど．実装はAIへ委任しており，本人の習得技術とは区別しています</span></li>
           </ul>
           <p class="small text-muted mt-3 mb-0 no-print">研究・自力実装と，現在のAIエージェントを活用する開発を区別して掲載しています．生成物をそのまま採用せず，検証できる仕様・評価基準を定めることを重視しています．</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- サークル活動：運営経験と研究会での発表 -->
+    <section id="activities" class="anchor pdf-full-only">
+      <div class="section-heading">
+        <p class="section-kicker">06 / ACTIVITIES</p>
+        <h2 class="h4 section-title">サークル活動・発表</h2>
+        <p class="section-intro">遊びや運営上の課題を数理・情報科学で考察し，実装へつなげる活動にも取り組みました．</p>
+      </div>
+      <div class="project-card">
+        <div class="row g-4">
+          <div class="col-12 col-lg-5">
+            <h3>東京大学キムワイプ卓球会（UT-KTT）</h3>
+            <p class="text-muted">キムワイプの箱をラケットにして卓球を楽しみ，論文や研究会といった科学界の文化も取り入れる「サイエンティフィック・スポーツ」のサークルです．競技や多彩なテーマの発表を通じ，文理・専門分野を越えた交流を大切にしています．</p>
+            <p class="text-muted"><strong>2019・2020年の2年間，会長を担当．</strong>駒場祭の体験会・大会運営，参加時間や連続勤務に配慮したシフト調整，学園祭運営との交渉，スポンサーとの連絡・報告，取材対応を行いました．</p>
+            <ul class="list-unstyled small mb-0">
+              <li><a class="d-inline-block py-1" href="https://ut.tokyo.jp.iktta.org/" target="_blank" rel="noopener noreferrer">UT-KTT公式サイト ↗</a></li>
+              <li><a class="d-inline-block py-1" href="https://ut.tokyo.jp.iktta.org/?m=201304" target="_blank" rel="noopener noreferrer">会の紹介・交流の理念（2013年） ↗</a></li>
+              <li><a class="d-inline-block py-1" href="https://www.iktta.org/ss/index.ja.html" target="_blank" rel="noopener noreferrer">競技の考え方（国際キムワイプ卓球協会） ↗</a></li>
+            </ul>
+            <h3 class="mt-4">合成データから入力インターフェースへ</h3>
+            <p class="text-muted small">2022年の発表では，箱の3Dモデルから合成学習データを作り，既存のYOLOv5を転移学習．カメラで検出した位置・大きさをUnity内の操作へ反映する入力インターフェースを試作しました．</p>
+            <p class="role-note small mb-2"><strong>本人の担当：</strong>Blenderでの撮影スクリプト，合成画像生成のPythonスクリプト，Unity連携を自作．学習にはYOLOv5の既存機能を利用しています．</p>
+            <p class="small text-muted mb-0">試作範囲は検出・入力連携までで，卓球ゲーム全体・オンライン対戦は未完成です．</p>
+          </div>
+          <div class="col-12 col-lg-7">
+            <h3>サークル研究会での発表・予稿（5題）</h3>
+            <p class="small text-muted">2018〜2022年に4回の研究会で発表．2018〜2020年の4題は主に理論的考察，2022年は検出システムの試作です．</p>
+            <ul class="stack-map">
+              <li>
+                <span class="tech-line">2018.05 · 第3回研究会</span>
+                <a class="d-block py-1" href="https://ut.tokyo.jp.iktta.org/wp-content/uploads/Proceedings-1.pdf" aria-label="予稿PDF：３人以上のキムワイプ卓球の得点計算に関する考察" target="_blank" rel="noopener noreferrer">３人以上のキムワイプ卓球の得点計算に関する考察 <span class="nowrap">（予稿PDF ↗）</span></a>
+              </li>
+              <li>
+                <span class="tech-line">2019.05 · 第4回研究会</span>
+                <a class="d-block py-1" href="https://ut.tokyo.jp.iktta.org/wp-content/uploads/Proceedings_3.pdf" aria-label="予稿PDF：キムワイプ卓球の台の割り当てアルゴリズムの比較" target="_blank" rel="noopener noreferrer">キムワイプ卓球の台の割り当てアルゴリズムの比較 <span class="nowrap">（予稿PDF ↗）</span></a>
+              </li>
+              <li>
+                <span class="tech-line">2020.09 · 第5回研究会（次の発表と同じ予稿集）</span>
+                <a class="d-block py-1" href="https://ut.tokyo.jp.iktta.org/wp-content/uploads/Proceedings_4.pdf" aria-label="予稿PDF：過去のキムワイプ卓球研究の分類と紹介" target="_blank" rel="noopener noreferrer">過去のキムワイプ卓球研究の分類と紹介 <span class="nowrap">（予稿PDF ↗）</span></a>
+              </li>
+              <li>
+                <span class="tech-line">2020.09 · 第5回研究会（上の発表と同じ予稿集）</span>
+                <a class="d-block py-1" href="https://ut.tokyo.jp.iktta.org/wp-content/uploads/Proceedings_4.pdf" aria-label="予稿PDF：ソートアルゴリズムによるキムワイプ卓球大会の順位決定" target="_blank" rel="noopener noreferrer">ソートアルゴリズムによるキムワイプ卓球大会の順位決定 <span class="nowrap">（予稿PDF ↗）</span></a>
+              </li>
+              <li>
+                <span class="tech-line">2022.05 · 第7回研究会</span>
+                <a class="d-block py-1" href="https://ut.tokyo.jp.iktta.org/wp-content/uploads/Proceedings-6-1.pdf" aria-label="予稿PDF：YOLOv5 を用いたカメラ画像からのキムワイプ検出と入力インターフェースへの応用" target="_blank" rel="noopener noreferrer">YOLOv5 を用いたカメラ画像からのキムワイプ検出と入力インターフェースへの応用 <span class="nowrap">（予稿PDF ↗）</span></a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>

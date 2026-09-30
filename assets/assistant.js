@@ -81,7 +81,7 @@
       select(id) {
         if (busy) throw new Error('busy');
         if (!catalog || !catalog.models.some((model) => model.id === id)) throw new Error('model_invalid');
-        if (id !== modelId) { modelId = id; history = []; }
+        modelId = id;
       },
       reset() { if (busy) throw new Error('busy'); history = []; },
       async ask(question) {
@@ -127,7 +127,6 @@
     const session = createSession(transport);
     const host = document.createElement('section');
     host.className = 'pa-widget no-print';
-    let sequence = 0;
     const suffix = String(Date.now()) + '-' + String(Math.random()).slice(2, 8);
     function element(tag, className, text) {
       const node = document.createElement(tag);
@@ -156,7 +155,9 @@
     select.id = 'pa-model-' + suffix;
     label.htmlFor = select.id;
     const region = element('p', 'pa-region');
-    const switchNotice = element('p', 'pa-help', 'モデルを切り替えると会話をリセットします．利用回数は全モデルで共通です．');
+    const switchNotice = element('p', 'pa-help', options.preview
+      ? 'モデルを切り替えても会話は残ります．このプレビューでは外部送信しません．利用回数は全モデルで共通です．'
+      : 'モデルを切り替えても会話は残り，切替だけでは送信しません．次の送信時には，他モデルとの直近の会話も選択した回答生成先へ送信します．引き継ぎたくない場合は，送信前に会話をリセットしてください．利用回数は全モデルで共通です．');
     const privacy = element('details', 'pa-privacy');
     const privacySummary = element('summary', '', '送信内容・処理地域について');
     const privacyText = element('p');
@@ -165,7 +166,9 @@
       ? 'ここで入力した質問はAWSへ送信されません．実接続時の案内文は利用条件の確認後に確定します．個人情報や機密情報は入力しないでください．'
       : processingNotice + '本アプリでは質問・回答本文を履歴データベースやアプリケーションログに通常保存せず，会話はこのページを開いている間だけブラウザに保持します．利用回数の管理には日替わりの仮名化識別子を用います．期限を過ぎた回数記録は自動削除の対象になります．個人情報や機密情報は入力しないでください．');
     privacy.append(privacySummary, privacyText, sharedPrivacy);
-    const historyNotice = element('p', 'pa-help', '会話は直近4往復のみ保持します．');
+    const historyNotice = element('p', 'pa-help', options.preview
+      ? '表示ログはページを開いている間だけ残ります．模擬回答に渡す文脈は直近4往復で，各回答は1500文字までです．会話のリセット・ページの再読み込みで消えます．'
+      : '表示ログはページを開いている間だけ残ります．AIへ送る文脈は直近4往復で，各回答は1500文字までです．会話のリセット・ページの再読み込みで消えます．');
     const messages = element('div', 'pa-messages');
     messages.setAttribute('aria-label', '会話');
     const status = element('p', 'pa-status', '開くと利用可能なモデルを確認します．');
@@ -200,7 +203,7 @@
         ? (options.preview ? '模擬・' : '') + '全モデル共通：本日あと' + state.remaining + '回／20回．日本時間9:00に更新．'
         : '全モデル共通：20回／IP／日（UTC）．残り回数は未確認です．失敗した要求も回数に含まれる場合があります．';
     }
-    function clearMessages() { messages.replaceChildren(); sequence = 0; }
+    function clearMessages() { messages.replaceChildren(); }
     function addMessage(role, text, sources, truncated, modelLabel) {
       const item = element('article', 'pa-message pa-message-' + role);
       const title = element('h3', '', role === 'user' ? 'あなた' : modelLabel || '回答');
@@ -219,7 +222,6 @@
       }
       if (truncated) item.append(element('p', 'pa-help', '回答が長いため途中で終わりました．'));
       messages.append(item);
-      if (++sequence > 8) messages.firstElementChild.remove();
     }
     launcher.addEventListener('click', async () => {
       if (!dialog.open) dialog.showModal();
@@ -239,8 +241,10 @@
     close.addEventListener('click', () => dialog.close());
     dialog.addEventListener('close', () => launcher.focus());
     select.addEventListener('change', () => {
-      session.select(select.value); clearMessages(); update();
-      status.textContent = 'モデルを変更し，会話をリセットしました．利用回数は引き継ぎます．';
+      session.select(select.value); update();
+      status.textContent = options.preview
+        ? 'モデルを変更しました．会話と利用回数は引き継ぎます．外部送信はしません．'
+        : 'モデルを変更しました．会話と利用回数は引き継ぎます．次の送信時に，他モデルとの直近の会話も選択した回答生成先へ送ります．';
     });
     reset.addEventListener('click', () => { session.reset(); clearMessages(); question.value = ''; question.setCustomValidity(''); count.textContent = '0 / 500文字'; status.textContent = '会話をリセットしました．利用回数はリセットされません．'; update(); question.focus(); });
     question.addEventListener('input', () => { const size = characters(question.value.trim()).length; count.textContent = size + ' / 500文字'; question.setCustomValidity(size > 500 ? '500文字以内で入力してください．' : ''); });

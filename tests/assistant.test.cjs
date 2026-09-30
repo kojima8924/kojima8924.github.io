@@ -77,15 +77,26 @@ test('質問上限はUnicodeコードポイントで数え，超過時は通信�
   assert.equal(calls, 2);
 });
 
-test('モデル切替とリセットは会話だけを消し，共通回数を維持する', async () => {
-  const session = ui.createSession(ui.createMockTransport());
+test('モデル切替は履歴と共通回数を維持し，次の送信に以前のモデルとの会話を渡す', async () => {
+  const calls = [];
+  const mock = ui.createMockTransport();
+  const session = ui.createSession(async (route, body) => { calls.push({ route, body }); return mock(route, body); });
   await session.open(); await session.ask('作品');
+  const history = session.snapshot().history;
+  const beforeSwitch = calls.length;
   session.select('terra');
-  assert.equal(session.snapshot().history.length, 0);
+  assert.deepEqual(session.snapshot().history, history);
+  assert.equal(calls.length, beforeSwitch);
   assert.equal(session.snapshot().remaining, 19);
-  await session.ask('研究'); session.reset();
+  await session.ask('その研究について');
+  assert.equal(calls.at(-1).body.model, 'terra');
+  assert.deepEqual(calls.at(-1).body.history, history);
+  assert.equal(session.snapshot().history.length, 4);
+  session.reset();
   assert.equal(session.snapshot().remaining, 18);
   assert.equal(session.snapshot().history.length, 0);
+  await session.ask('新しい質問');
+  assert.deepEqual(calls.at(-1).body.history, []);
 });
 
 test('snapshotで取得した履歴を書き換えても内部履歴は変わらない', async () => {
@@ -104,6 +115,8 @@ test('応答待ちの二重送信・モデル変更・リセットを拒否す�
   await assert.rejects(session.ask('再送'), /busy/);
   assert.throws(() => session.select('terra'), /busy/);
   assert.throws(() => session.reset(), /busy/);
+  assert.equal(session.snapshot().modelId, 'sonnet-5');
+  assert.deepEqual(session.snapshot().history, []);
   resolve({ answer: '回答', model: { id: 'sonnet-5' } }); await pending;
   assert.equal(session.snapshot().busy, false);
 });
@@ -122,6 +135,28 @@ test('エラー時には再送・モデル切替をせず，失敗した履歴�
   assert.equal(session.snapshot().busy, false);
 });
 
+test('切替後の失敗でもそれ以前のモデルとの履歴を保持し，次の明示送信でだけ再利用する', async () => {
+  const mock = ui.createMockTransport();
+  const calls = [];
+  let fail = false;
+  const session = ui.createSession(async (route, body) => {
+    calls.push({ route, body });
+    if (route === '/ask' && fail) throw Object.assign(new Error('unavailable'), { status: 503 });
+    return mock(route, body);
+  });
+  await session.open(); await session.ask('作品');
+  const previous = session.snapshot().history;
+  session.select('terra'); fail = true;
+  await assert.rejects(session.ask('その担当は？'));
+  assert.deepEqual(session.snapshot().history, previous);
+  assert.equal(session.snapshot().modelId, 'terra');
+  assert.equal(session.snapshot().busy, false);
+  assert.equal(calls.filter(call => call.route === '/ask').length, 2);
+  fail = false; await session.ask('説明を続けて');
+  assert.deepEqual(calls.at(-1).body.history, previous);
+  assert.equal(session.snapshot().history.length, 4);
+});
+
 test('異なるモデルの回答は採用しない', async () => {
   const ready = await catalog();
   const session = ui.createSession(async (route) => route === '/models' ? ready : { answer: '回答', model: { id: 'terra' } });
@@ -136,7 +171,7 @@ test('上限エラーは全モデル共通の残り0として保持する', asyn
   session.select('terra');
   await assert.rejects(session.ask('質問'), (error) => error.status === 429 && error.code === 'ip_daily_limit');
   assert.equal(session.snapshot().remaining, 0);
-  assert.equal(session.snapshot().history.length, 0);
+  assert.equal(session.snapshot().history.length, 8);
 });
 
 test('HTTP接続はHTTPS明示必須で，初期化だけではfetchを呼ばない', () => {
@@ -270,6 +305,136 @@ function documentFixture() {
   };
   return document;
 }
+
+test('画面ログはモデル切替後もモデル名・全文・出典を保ち，6往復しても消さない', async () => {
+  const document = documentFixture();
+  const mock = ui.createMockTransport();
+  const calls = [];
+  let answers = 0;
+  const mounted = ui.mount({ document, transport: async (route, body) => {
+    calls.push({ route, body });
+    const result = await mock(route, body);
+    if (route === '/ask') {
+      answers++;
+      result.answer = answers === 1 ? '😀'.repeat(1600) : '回答' + answers;
+      result.sources = [{ n: 1, label: '出典' + answers, url: 'https://example.invalid/source-' + answers }];
+    }
+    return result;
+  } });
+  await document.find('pa-launcher').listeners.click();
+  const messages = document.find('pa-messages');
+  const select = document.find('pa-select');
+  const question = document.find('pa-question');
+  const form = document.find('pa-form');
+  async function ask(text) { question.value = text; await form.listeners.submit({ preventDefault() {} }); }
+  await ask('質問0');
+  const firstReply = messages.children[1];
+  const firstSource = firstReply.children[2].children[0].children[0];
+  assert.equal(firstReply.children[0].textContent, 'Claude Sonnet 5');
+  assert.equal(Array.from(firstReply.children[1].textContent).length, 1600);
+  assert.equal(firstSource.href, 'https://example.invalid/source-1');
+  assert.equal(firstSource.target, '_blank');
+  assert.equal(firstSource.rel, 'noopener noreferrer');
+  const previousHistory = mounted.session.snapshot().history;
+  assert.equal(Array.from(previousHistory[1].content).length, 1500);
+  select.value = 'terra'; select.listeners.change();
+  assert.equal(messages.children.length, 2);
+  assert.equal(messages.children[1], firstReply);
+  assert.deepEqual(mounted.session.snapshot().history, previousHistory);
+  assert.equal(calls.length, 2);
+  assert.match(document.find('pa-status').textContent, /次の送信時に，他モデルとの直近の会話も/);
+  await ask('質問1');
+  assert.equal(calls.at(-1).body.model, 'terra');
+  assert.deepEqual(calls.at(-1).body.history, previousHistory);
+  assert.equal(messages.children[3].children[0].textContent, 'GPT-5.6 Terra');
+  for (let i = 2; i < 6; i++) await ask('質問' + i);
+  assert.equal(messages.children.length, 12);
+  assert.equal(messages.children[0].children[1].textContent, '質問0');
+  assert.equal(messages.children[1], firstReply);
+  assert.equal(firstReply.children[2].children[0].children[0], firstSource);
+  assert.equal(firstSource.href, 'https://example.invalid/source-1');
+  assert.equal(calls.at(-1).body.history.length, 8);
+  assert.equal(calls.at(-1).body.history[0].content, '質問1');
+  assert.equal(mounted.session.snapshot().history[0].content, '質問2');
+  document.find('pa-close').listeners.click();
+  await document.find('pa-launcher').listeners.click();
+  assert.equal(messages.children.length, 12);
+  assert.equal(calls.length, 7);
+});
+
+test('表示ログとAPI文脈の保存範囲を分け，切替後の送信先変更を案内する', async () => {
+  const document = documentFixture();
+  ui.mount({ document, transport: ui.createMockTransport() });
+  const notices = document.find('pa-content').children.filter(node => node.className === 'pa-help')
+    .map(node => node.textContent).join(' ');
+  assert.match(notices, /表示ログはページを開いている間だけ残ります/);
+  assert.match(notices, /AIへ送る文脈は直近4往復で，各回答は1500文字まで/);
+  assert.match(notices, /再読み込みで消えます/);
+  assert.match(notices, /切替だけでは送信しません/);
+  assert.match(notices, /他モデルとの直近の会話も選択した回答生成先へ送信/);
+  assert.match(notices, /引き継ぎたくない場合は，送信前に会話をリセット/);
+  assert.doesNotMatch(notices, /会話をリセットします|直近4往復のみ保持/);
+});
+
+test('応答待ちは切替・resetを無効にし，失敗しても以前の画面ログと履歴を保持する', async () => {
+  const document = documentFixture();
+  const mock = ui.createMockTransport();
+  let rejectRequest, fail = false;
+  let asks = 0;
+  const mounted = ui.mount({ document, transport: async (route, body) => {
+    if (route === '/ask') {
+      asks++;
+      if (fail) return new Promise((resolve, reject) => { rejectRequest = reject; });
+    }
+    return mock(route, body);
+  } });
+  await document.find('pa-launcher').listeners.click();
+  const question = document.find('pa-question');
+  const form = document.find('pa-form');
+  const select = document.find('pa-select');
+  const reset = document.find('pa-reset');
+  const messages = document.find('pa-messages');
+  question.value = '最初の質問'; await form.listeners.submit({ preventDefault() {} });
+  const priorNodes = [...messages.children];
+  const priorHistory = mounted.session.snapshot().history;
+  select.value = 'terra'; select.listeners.change();
+  fail = true; question.value = '失敗する質問';
+  const pending = form.listeners.submit({ preventDefault() {} });
+  assert.equal(select.disabled, true);
+  assert.equal(reset.disabled, true);
+  assert.equal(document.find('pa-submit').disabled, true);
+  assert.throws(() => mounted.session.select('qwen-235b'), /busy/);
+  assert.throws(() => mounted.session.reset(), /busy/);
+  await form.listeners.submit({ preventDefault() {} });
+  assert.equal(asks, 2);
+  rejectRequest(Object.assign(new Error('failed'), { status: 503 })); await pending;
+  assert.deepEqual(messages.children, priorNodes);
+  assert.deepEqual(mounted.session.snapshot().history, priorHistory);
+  assert.equal(mounted.session.snapshot().modelId, 'terra');
+  assert.equal(question.value, '失敗する質問');
+  assert.equal(select.disabled, false);
+  assert.equal(reset.disabled, false);
+  assert.match(document.find('pa-status').textContent, /自動再送はしません/);
+  reset.listeners.click();
+  assert.equal(messages.children.length, 0);
+  assert.deepEqual(mounted.session.snapshot().history, []);
+  assert.equal(mounted.session.snapshot().modelId, 'terra');
+  assert.equal(question.value, '');
+  assert.equal(asks, 2);
+});
+
+test('新しくページを開いたUIには以前の会話を復元しない', async () => {
+  const document = documentFixture();
+  const first = ui.mount({ document, transport: ui.createMockTransport() });
+  await document.find('pa-launcher').listeners.click();
+  document.find('pa-question').value = '作品';
+  await document.find('pa-form').listeners.submit({ preventDefault() {} });
+  assert.equal(first.session.snapshot().history.length, 2);
+  const newDocument = documentFixture();
+  const second = ui.mount({ document: newDocument, transport: ui.createMockTransport() });
+  assert.equal(newDocument.find('pa-messages').children.length, 0);
+  assert.deepEqual(second.session.snapshot().history, []);
+});
 
 test('3／5モデルで選択した生成先の説明を表示し，切替だけで質問送信しない', async () => {
   for (const aliases of [['qwen-235b', 'glm-5', 'kimi-k2-5'], ui.ALIASES]) {

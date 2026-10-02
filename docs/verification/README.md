@@ -2,6 +2,19 @@
 
 このフォルダのログは，実行した時点の成果物に対する記録です．後から変更したHTML・PDFに対する合格判定や，GitHub Pagesへの公開反映を保証するものではありません．新しい検証は実行日・対象・方法と一緒に追記し，古いログを未実行の新結果として扱わないでください．
 
+## 2026-10-02：GitHub Foundations の資格掲載
+
+2026-10-02に取得したGitHub Foundations（発行元GitHub）を，Heroの資格欄・詳細経歴の資格の段落・JSON-LDの`hasCredential`へ「GitHub Foundations 取得（2026年10月）」として追加しました．並びは取得順（基本情報技術者→G検定→AWS Certified AI Practitioner→GitHub Foundations）です．検証URL・バッジ画像は未提供のため，リンクも画像も付けていません（JSON-LDにも`url`なし）．DOM順・CSSは変えていません．`scripts/check_portfolio.py`の資格表記チェックに新表記を追加し，`README.md`の資格の記述も更新しました．
+
+- `python -m unittest discover -s tests`は45件成功．`node --test tests/*.test.cjs`は56件成功・失敗0・skip 0．テストコードの変更は不要でした．
+- `python scripts/check_portfolio.py`はエラー0・警告0（ID 25個・画像34枚・外部リンク25件）．`--external`もエラー0・警告0．`python scripts/import_figures.py --check`は更新要0件・参照元PDF欠損0件でした．
+- Playwright ChromiumでPC 1440×1000／スマホ相当390×844のライト・ダーク（`color_scheme`指定）4条件を確認し，すべてページ全体の`scrollWidth == clientWidth`（1440／390）で，Hero資格欄・詳細資格欄の画面外へのはみ出しは0件，コンソールのerror／warningも0件でした．各条件のHero資格欄・詳細資格欄を撮影して目視し，文字切れ・重なりがないことを確認しました（390px幅ではHeroのAWS・GitHub Foundationsの行が2行に折り返します）．画像はGit対象外の`tmp/ghf-20261002/`に保存しています．これはブラウザのviewport検査であり，実機検証ではありません．
+- axe-core 4.10.2（dark／light両テーマ・details全展開，1280×900）は両テーマともviolations 0件，W3C Nuはerror 0件・warning 0件（infoのみ21件）で，`axe-core.json`と`w3c-nu.json`を今回の結果で更新しました．
+- `python make_pdf.py`で両PDFを再生成しました．採用向けPDFは2ページ・433,281 bytes，完全版は8ページ・1,307,792 bytesです．PyMuPDFの本文抽出で「GitHub Foundations」を採用向け1ページ目，完全版1・6ページ目に確認しました．URIリンクは採用向け13件・完全版58件で，`127.0.0.1`を指すリンクは両版とも0件です．採用向けの2ページを80dpiで画像化して目視し，1ページ目のプロフィール欄の資格4行が切れていないこと，2ページに収まっていることを確認しました．完全版の画像での目視は1ページ目のみです．
+- OGP（`make_ogp.py`）は資格を記載していないことをgrepで確認し，再生成していません．
+- `git diff --check`は指摘なし．変更したテキストファイルはUTF-8（BOMなし）・CRLFで，bare LFは0件です．
+- Androidなどの実機検証，スクリーンリーダーでの確認，GitHub Pages公開後の確認は未実施です．この記録の時点ではcommit・pushも行っていません．
+
 ## 2026-09-30：資格表記の統一・G検定ロゴ・PDF/OGP再生成
 
 ### 同日追記：axe-coreとW3C Nuの再実行

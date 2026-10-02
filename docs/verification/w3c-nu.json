@@ -203,7 +203,7 @@
     },
     {
       "type": "info",
-      "lastLine": 438,
+      "lastLine": 445,
       "lastColumn": 58,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",

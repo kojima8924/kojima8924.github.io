@@ -1,5 +1,5 @@
 {
-  "version": "26.9.30",
+  "version": "26.10.2",
   "messages": [
     {
       "type": "info",
@@ -203,7 +203,7 @@
     },
     {
       "type": "info",
-      "lastLine": 445,
+      "lastLine": 462,
       "lastColumn": 58,
       "firstColumn": 3,
       "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",

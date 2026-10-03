@@ -17,6 +17,7 @@ VALID_STRUCTURE = """
   <article id="trivium-card"></article>
   <article id="chromiumfora-card"></article>
   <article id="scriptvedit-card"></article>
+  <article id="portfolio-assistant-card"></article>
 </section>
 <figure class="fig-band"><img src="figure.svg" width="1280" height="360"></figure>
 """
@@ -148,6 +149,35 @@ class 資格リンク検査テスト(unittest.TestCase):
     def test_表示リンクのみでは構造化データ欠落を検出する(self) -> None:
         errors = self.check(f'<a href="{check_portfolio.EXPECTED_CREDLY}">資格証明</a>')
         self.assertIn("JSON-LDにCredlyの検証URLがない", errors)
+
+
+class 非公開作品の掲載検査テスト(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.pattern = next(
+            pattern
+            for pattern, reason in check_portfolio.FORBIDDEN_PATTERNS
+            if reason.startswith("portfolio-assistant の非公開リポジトリ")
+        )
+
+    def test_非公開リポジトリと内部識別子を検出する(self) -> None:
+        for text in (
+            "https://github.com/kojima8924/portfolio-assistant",
+            "arn:aws:lambda:ap-northeast-1:000000000000:function:x",
+            "portfolio-assistant-dev",
+            "https://example.execute-api.ap-northeast-1.amazonaws.com/ask",
+        ):
+            with self.subTest(text=text):
+                self.assertIsNotNone(re.search(self.pattern, text))
+
+    def test_作品カードのidと接続先metaは許容する(self) -> None:
+        for text in (
+            'id="portfolio-assistant-card"',
+            'name="portfolio-assistant-endpoint" content="https://example.execute-api.ap-northeast-1.amazonaws.com"',
+            "media/portfolio-assistant-dialog.webp",
+        ):
+            with self.subTest(text=text):
+                self.assertIsNone(re.search(self.pattern, text))
 
 
 class Paiza表記検査テスト(unittest.TestCase):

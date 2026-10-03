@@ -235,6 +235,17 @@
     .cfa-shot img { width:100%; height:100%; object-fit:contain; cursor:zoom-in; }
     .cfa-swipe-hint { display:none; }
     .cfa-feature-list { padding-left:1.2em; color:var(--muted); }
+    .media-hero.media-dialog { aspect-ratio:840/1485; max-width:340px; margin-inline:auto; }
+    .arch-figure { margin:0 0 16px; }
+    .arch-figure figcaption { margin-top:7px; }
+    .arch-flow { list-style:none; padding:0; margin:0 0 10px; display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px; }
+    .arch-flow li { display:flex; align-items:center; font-size:.86rem; }
+    .arch-flow li + li::before { content:"→" / ""; color:var(--muted); margin-right:8px; }
+    .arch-flow span { border:1px solid var(--border); background:var(--bg); border-radius:8px; padding:5px 10px; }
+    .arch-branches { list-style:none; padding:0; margin:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+    .arch-branches li { min-width:0; border:1px solid var(--border); border-left:3px solid var(--accent); background:var(--bg); border-radius:8px; padding:8px 10px; font-size:.86rem; line-height:1.55; }
+    .arch-branches strong { display:block; color:var(--fg); }
+    .arch-branches span { color:var(--muted); overflow-wrap:anywhere; }
     img[role="button"]:focus-visible { outline:3px solid var(--accent); outline-offset:-3px; }
     .fig-band { margin:18px 0 0; background:#fff; border:1px solid var(--border); border-radius:10px; padding:10px; overflow-x:auto; }
     .fig-band img { width:100%; height:auto; display:block; cursor:zoom-in; }
@@ -302,6 +313,7 @@
       .timeline { grid-template-columns:1fr; gap:3px; }
       .timeline .ev { margin-bottom:10px; }
       .cfa-shot { height:230px; }
+      .arch-branches { grid-template-columns:1fr; }
       .btn-sm { min-height:40px; }
       .lightbox-overlay { padding-left:10px; padding-right:10px; }
       .lightbox-toolbar { left:10px; right:10px; gap:5px; }
@@ -376,6 +388,14 @@
       .flow-shot { flex-basis:190px; }
       .flow-shot img { max-height:100mm; object-fit:contain; }
       .cfa-shot { height:190px; }
+      .case-visual .media-hero.media-dialog { max-height:none; max-width:150px; }
+      .arch-flow li, .arch-branches li { font-size:9px; }
+      .arch-flow span, .arch-branches li { padding:3px 6px; }
+      .arch-figure { break-inside:avoid; margin-bottom:6px; }
+      #portfolio-assistant-card .case-grid { display:block; break-inside:auto; }
+      #portfolio-assistant-card .case-visual { display:none; }
+      #portfolio-assistant-card .case-copy { display:block; }
+      #portfolio-assistant-card .case-points li { break-inside:avoid; }
       .media-hero::after, .media-thumb::after, .media-phone::after, .cfa-shot::after { display:none; }
       figure, .print-keep, .shot-row > div { break-inside:avoid; }
       figure { margin:0 0 6px; }
@@ -527,6 +547,7 @@
         </div>
         <div id="assistant-mount" class="assistant-mount"></div>
       </div>
+      <p class="small text-muted mt-2 mb-0">この質問機能の設計・安全対策・検証は<a href="#portfolio-assistant-card">作品紹介</a>で説明しています．</p>
     </section>
 
     <!-- 研究 -->
@@ -785,6 +806,50 @@
                 <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/clagecook-chat.png" aria-label="画像を拡大：非公開版で各AIの回答カードを表示するチャット画面" target="_blank" rel="noopener noreferrer"><img src="media/clagecook-chat.png" alt="非公開版で各AIの回答カードを表示するチャット画面" loading="lazy" width="1080" height="2340" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">非公開版の回答カード</figcaption></figure>
                 <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/clagecook-widget-home.png" aria-label="画像を拡大：Androidのホーム画面に置いた使用量ウィジェット" target="_blank" rel="noopener noreferrer"><img src="media/clagecook-widget-home.png" alt="Androidのホーム画面に置いた使用量ウィジェット" loading="lazy" width="1080" height="2340" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">使用量ウィジェット</figcaption></figure>
               </div>
+            </div>
+          </details>
+        </article>
+
+        <article id="portfolio-assistant-card" class="card case-card project-card anchor">
+          <div class="case-grid">
+            <div class="case-copy">
+              <p class="section-kicker">RAG × AWS / β・品質検証中</p>
+              <h3 class="h4 card-title">portfolio-assistant — このサイトのAI質問機能</h3>
+              <p class="text-muted">このポートフォリオに組み込んだ質問応答AI（β・品質検証中）．公開資料と，公開用に承認した本人回答だけを検索し，出典付きで回答します．出典は，公開資料を番号付きリンク，本人提供情報をURLなしの注記として区別します．</p>
+              <ul class="case-points">
+                <li><strong>本人の担当：</strong>要件・回答範囲・安全方針の決定，安全面と最低限の回答品質を先に確かめる優先順位付け，AWS操作・公開・費用の承認，生成物のレビューと検証結果に基づく採否判断，回答ナレッジ用の本人回答の提供．実装はAIエージェント（Codex CLI・Claude Code）へ委任．</li>
+                <li><strong>設計判断（安全・費用）：</strong>APIキーはブラウザに渡さず，サーバー側で専用の暗号化パラメーターから読み込みます．利用回数は全モデル共通で1日40回／IP．IPはHMACで仮名化し，期限付きで保存．Lambdaの予約同時実行数を停止手段とし，モデル障害時も別モデルへ自動で切り替えません．</li>
+                <li class="summary-hide"><strong>設計判断（回答品質）：</strong>根拠や引用のない回答は後処理で安全な定型文へ置き換え，禁止表現も検査します．本人とAIの担当範囲を取り違えないよう，ナレッジ側で自力実装とAIへの実装委任を区別して記述しています．私的な情報には答えません．</li>
+                <li class="summary-hide"><strong>モデル：</strong>5モデルから選択（既定はQwen3 235B）．Qwen3・GLM 5・Kimi K2.5はAmazon Bedrock，GPT-5.6 TerraはOpenAI，Claude Sonnet 5はAnthropicのAPIで生成し，検索は共通のBedrockナレッジベースで行います．</li>
+              </ul>
+              <p class="small text-muted summary-hide">2026年9月19日に開発を始め，9月29日にβ公開．9月30日に会話履歴8往復・次の質問候補・回答ナレッジ34文書へ更新しました．回答の誤りや未回答があり得ます．</p>
+              <p class="tech-line">Amazon Bedrock（Knowledge Bases / S3 Vectors）/ AWS Lambda（Python）/ API Gateway / DynamoDB / Vanilla JavaScript</p>
+              <a class="btn btn-outline-info btn-sm no-print" href="#assistant">質問欄で試す ↑</a>
+            </div>
+            <figure class="case-visual">
+              <a class="media-hero media-dialog media-trigger" data-media-kind="image" href="media/portfolio-assistant-dialog.webp" aria-label="画像を拡大：公開サイトの質問欄を開いた画面．回答モデルにQwen3 235Bを選択し，初回案内と質問例3件を表示" target="_blank" rel="noopener noreferrer"><img src="media/portfolio-assistant-dialog.webp" alt="公開サイトの質問欄を開いた画面．回答モデルにQwen3 235Bを選択し，初回案内と質問例3件を表示" loading="lazy" width="840" height="1485" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
+              <figcaption class="small text-muted">公開サイトの質問欄．モデル選択と初回案内（質問は未送信）</figcaption>
+            </figure>
+          </div>
+          <details class="project-details pdf-full-only">
+            <summary>構成・運用と検証の範囲</summary>
+            <div class="details-content">
+              <figure class="arch-figure">
+                <ol class="arch-flow" aria-label="質問の経路">
+                  <li><span>ブラウザ（このサイト）</span></li>
+                  <li><span>API Gateway</span></li>
+                  <li><span>AWS Lambda（Python）</span></li>
+                </ol>
+                <ul class="arch-branches" aria-label="Lambdaから呼び出す処理">
+                  <li><strong>ナレッジ検索</strong><span>Amazon Bedrock Knowledge Bases（S3 Vectors）</span></li>
+                  <li><strong>利用回数</strong><span>DynamoDB（全モデル共通40回／IP／日）</span></li>
+                  <li><strong>回答生成</strong><span>選択したモデルに応じてBedrock・OpenAI・Anthropic</span></li>
+                </ul>
+                <figcaption class="small text-muted">構成の概要．APIキーはサーバー側だけで扱います</figcaption>
+              </figure>
+              <p class="text-muted"><strong>運用：</strong>工程ごとに権限を分けたIAMロールで操作．AWSを変更するスクリプトは既定で無通信とし，書込みの前後に状態を読み戻し，自動再試行はしません．ナレッジの更新は差分だけを条件付きで同期します．</p>
+              <p class="text-muted"><strong>検証：</strong>自動テストは，外部サービスを模擬してPython 1,164件・Node 43件（2026年10月3日時点）．本番のデータベースでも，検証用の記録に対して日次上限の40回目までの成功と41回目以降の拒否を確認しました．</p>
+              <p class="text-muted mb-0"><strong>状態：</strong>β・品質検証中です．上記は限られた条件での確認で，包括的な品質保証ではありません．回答は参照元とあわせてご確認ください．リポジトリは非公開のため，リンクは掲載していません．</p>
             </div>
           </details>
         </article>

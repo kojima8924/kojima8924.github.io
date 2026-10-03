@@ -2,6 +2,31 @@
 
 このフォルダのログは，実行した時点の成果物に対する記録です．後から変更したHTML・PDFに対する合格判定や，GitHub Pagesへの公開反映を保証するものではありません．新しい検証は実行日・対象・方法と一緒に追記し，古いログを未実行の新結果として扱わないでください．
 
+## 2026-10-03：AI質問機能（portfolio-assistant）の作品紹介を追加
+
+`#works`のClage Cookの後（ChromiumforAの折りたたみの前）に，`#portfolio-assistant-card`（概要・本人の担当・設計判断・モデル・tech-line・質問欄へのページ内リンク・画面画像，折りたたみ内に構成の流れ・運用・検証・状態）を追加し，`#assistant`の質問欄の直下に作品紹介への1行リンクを追加しました．DOM順・CSSの`order`・ナビゲーション項目は変えていません．構成の流れはHTML/CSS（既存のCSS変数）だけで描き，外部ライブラリ・外部通信は追加していません．リポジトリが非公開のためGitHubリンクは付けていません．
+
+- 文面は`portfolio-assistant`のREADME・`docs/spec.md`・2026-09-29公開記録・2026-09-30本番化記録と回答指示（`lambda/assistant_answer.py`）に基づきます．テスト件数は同リポジトリで2026-10-03に実測（`python -B -m unittest discover -s tests`：1,164件成功，`node --test web/assistant.test.cjs web/local-site-bridge.test.cjs`：43件成功）．40回目成功・41回目以降拒否は2026-09-30本番化記録の検証用itemに対する42回の条件付き更新（40成功・2拒否）です．
+- 画像`media/portfolio-assistant-dialog.webp`（840×1485px・187,254 bytes・lossless WebP）は，公開サイトをPlaywright Chromium（1440×1700・ライト・2倍解像度）で開き，起動ボタンを押して`GET /models`と初回案内・質問例3件の表示を待ってダイアログだけを撮影し，Lanczos法で縮小しました．撮影中のPOST要求は0件で，質問は送信していません．スマホ幅の撮影はダイアログが縦スクロールで切れるため採用していません．
+- `scripts/check_portfolio.py`に，非公開リポジトリへのリンク・`arn:aws`・Lambda関数名・API経路（`/models`・`/ask`）の掲載を検出する規則と，作品名リンク`portfolio-assistant`→`#portfolio-assistant-card`を追加し，`tests/test_check_portfolio.py`に検出・許容の2件を追加しました．
+- `python -m unittest discover -s tests`は47件成功．`node --test tests/*.test.cjs`は56件成功・失敗0・skip 0．
+- `python scripts/check_portfolio.py`はエラー0・警告0（ID 26個・画像35枚・外部リンク25件）．`--external`もエラー0・警告0．`python scripts/import_figures.py --check`は更新要0件・参照元PDF欠損0件でした．
+- Playwright Chromiumのローカル配信でPC 1440×1000／スマホ相当390×844のライト・ダーク4条件を確認し，すべてページ全体の`scrollWidth == clientWidth`（1440／390），新カード（1174／352）と内部要素・リンク行の横はみ出し0件，コンソールのerror／warning 0件，外部通信はBootstrapのCDNだけ（質問APIへの通信0件）でした．リンク行から`#portfolio-assistant-card`へ移動できることも確認しました．新カード（折りたたみ展開）とリンク行を撮影して目視し，文字切れ・重なりがないことを確認しました（要素撮影時の固定ナビ・スキップリンクの写り込みは撮影上のものです）．画像はGit対象外の`tmp/assistant-case-20261003/`にあります．これはブラウザのviewport検査であり，実機検証ではありません．
+- axe-core 4.10.2（dark／light両テーマ・details全展開，1280×900）は両テーマともviolations 0件，W3C Nuはerror 0件・warning 0件（infoのみ21件）でした．両JSONを今回の結果で再出力しました（`axe-core.json`は前回と内容が同一のため差分なし）．
+- `python make_pdf.py`で両PDFを再生成しました．最初はカードを`pdf-full-only`にして採用向けから除外し，完全版は9ページ（カードを分割しない指定で5ページ目の下約33%が空白，最終ページは空白77%）でした．後述の「PDF品質の見直し」で改善しています．
+- `git diff --check`は指摘なし．変更したテキストファイルはUTF-8（BOMなし）・CRLFで，bare LFは0件です．
+- Androidなどの実機検証，スクリーンリーダーでの確認，GitHub Pages公開後の確認は未実施です．この記録の時点ではcommit・pushも行っていません．
+
+### 同日追記：PDF品質の見直し
+
+本人の依頼で両PDFを全ページ画像化し，改ページ・余白・リンク・画像解像度を見直しました．印刷用CSSだけを変更し，画面表示・DOM順・本文は変えていません．
+
+- 完全版の最終ページが空白77%で，受入基準の「最終ページ空白50%未満」を満たしていませんでした．原因は新カードの分割禁止で，5ページ目の下約33%が空き，後続が1ページずつ押し出されていました．
+- 新カードは印刷時だけ`case-grid`を1列にして分割を許可し，画面画像（150px幅では判読できない）を印刷から外しました．項目単位と構成図は分割しません．完全版は9→8ページ・1,335,804 bytes，各ページの下余白は最大29%（2ページ目，`#craft`の改ページ指定によるもので従来どおり），最終ページは14%です．カードの途中で改ページしても空の枠だけが残ることはありません．
+- 採用向けにもカードを載せました．採用向けでは「設計判断（回答品質）」「モデル」の行と日付の段落を`summary-hide`で省き，本人の担当と安全・費用の設計判断の2行に絞っています．2ページを維持し，2ページ目の下余白は約21%→6%，451,258 bytesです．
+- 両PDFとも`127.0.0.1`等のローカルURL 0件（URIリンクは採用向け13・完全版58），画像の実効解像度は全ページ110dpi以上，フォントは游ゴシックUIを埋め込み済み，PDFの題名・作成者のメタデータも維持しています．全10ページを70dpiで画像化して目視し，文字切れ・重なり・孤立した見出しやキャプションはありませんでした．
+- 変更後もPython 47件・Node 56件・内部検査（エラー0・警告0）・`git diff --check`が正常でした．印刷用CSSだけの変更のため，axe-core／W3C Nuは再実行していません．
+
 ## 2026-10-02：GitHub Foundations の資格掲載
 
 2026-10-02に取得したGitHub Foundations（発行元GitHub）を，Heroの資格欄・詳細経歴の資格の段落・JSON-LDの`hasCredential`へ「GitHub Foundations 取得（2026年10月）」として追加しました．並びは取得順（基本情報技術者→G検定→AWS Certified AI Practitioner→GitHub Foundations）です．検証URL・バッジ画像は未提供のため，リンクも画像も付けていません（JSON-LDにも`url`なし）．DOM順・CSSは変えていません．`scripts/check_portfolio.py`の資格表記チェックに新表記を追加し，`README.md`の資格の記述も更新しました．

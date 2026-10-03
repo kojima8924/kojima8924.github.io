@@ -37,6 +37,9 @@ FORBIDDEN_PATTERNS = [
     (r"最大\s*19\.2|26問|1秒以内|その後も改善|(?<!バッジ)(?<!学習実績バッジ)実績\s*61\s*種", "研究・Trivium の誤読されやすい表現"),
     (r"倍率が分割数に対して過大|可視区間トリムが抜けていたと特定", "ScriptVEdit の O(N²) を本人が発見したように読める表現"),
     (r"クラウドLLM|クラウド\s*LLM|再監査", "受託案件の匿名化の説明は、正規表現とローカルLLMの段階に限る"),
+    # portfolio-assistant は非公開リポジトリ。リンクやAWS内部の識別子を掲載しない
+    (r"github\.com/kojima8924/portfolio-assistant|arn:aws[a-z-]*:|portfolio-assistant-dev\b|execute-api\.[a-z0-9-]+\.amazonaws\.com/(?:models|ask)",
+     "portfolio-assistant の非公開リポジトリ・AWS内部識別子・API経路の掲載"),
 ]
 
 # 表示テキスト（script/style以外）にのみ適用する検査。
@@ -92,6 +95,7 @@ WORK_ANCHORS = {
     "Trivium": "trivium-card",
     "ChromiumforA": "chromiumfora-card",
     "ScriptVEdit": "scriptvedit-card",
+    "portfolio-assistant": "portfolio-assistant-card",
 }
 EXPECTED_CREDLY = "https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url"
 VOID_ELEMENTS = {

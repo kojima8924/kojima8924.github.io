@@ -240,7 +240,8 @@
     quickReplies.hidden = true;
     const question = element('textarea', 'pa-question');
     question.id = 'pa-question-' + suffix; questionLabel.htmlFor = question.id;
-    question.rows = 3; question.placeholder = '例：小嶋明の技術的な強みや，開発で大切にしていることは？'; question.maxLength = 1000;
+    // 例文の placeholder は候補と紛らわしいため置かない．
+    question.rows = 3; question.maxLength = 1000;
     const count = element('span', 'pa-count', '0 / 500文字'); count.id = 'pa-count-' + suffix;
     question.setAttribute('aria-describedby', count.id);
     // 残り回数は文字数の隣に短く出す．詳しい条件は折りたたみ内の「利用回数」に置く．
@@ -279,25 +280,53 @@
         : (options.preview ? '模擬・' : '') + (state.remaining !== null ? '本日残り' + state.remaining + '回' : '本日上限' + interaction.daily_requests + '回');
       activeQuickReplyButtons.forEach((node) => { node.disabled = state.busy || !selected; });
     }
+    // 質問の最大文字数（Unicodeコードポイント，前後の空白を除く）．
+    const QUESTION_MAX = 500;
     let activeQuickReplyButtons = [];
+    // 現在の候補のうち入力欄へ追加済みのもの（候補の組を置き換えると空にする）．
+    const addedSuggestions = new Set();
     function clearQuickReplies() {
+      addedSuggestions.clear();
       activeQuickReplyButtons.forEach((node) => { node.disabled = true; });
       activeQuickReplyButtons = [];
       quickReplies.replaceChildren();
       quickReplies.hidden = true;
     }
-    // 候補は文字列としてボタンへ描画し，押したら通常の質問として1回だけ送信する．
+    // 入力欄の文字数表示と上限検査を更新する（input イベントと候補の追記で共用）．
+    function refreshCount() {
+      const size = characters(question.value.trim()).length;
+      count.textContent = size + ' / ' + QUESTION_MAX + '文字';
+      question.setCustomValidity(size > QUESTION_MAX ? QUESTION_MAX + '文字以内で入力してください．' : '');
+    }
+    // 候補を押しても送信しない．入力欄へ追記するだけで，送信は送信ボタンでのみ行う．
+    function appendSuggestion(reply, suggestion) {
+      // 応答待ち中と，追加済みの候補（同じ候補の二重追記）は何もしない．
+      if (session.snapshot().busy || reply.disabled || addedSuggestions.has(suggestion)) return;
+      const current = question.value || '';
+      // 空（空白のみ含む）ならそのまま入れ，既存の文があれば末尾の空白を整えて改行1つの後に追記する．
+      const next = current.trim() ? current.replace(/\s+$/u, '') + '\n' + suggestion : suggestion;
+      if (characters(next.trim()).length > QUESTION_MAX) {
+        status.textContent = '追加すると' + QUESTION_MAX + '文字を超えるため，候補を追加しませんでした．';
+        return;
+      }
+      question.value = next;
+      addedSuggestions.add(suggestion);
+      reply.setAttribute('aria-pressed', 'true');
+      refreshCount();
+      status.textContent = '候補を入力欄に追加しました．内容を確認して送信してください．';
+      question.focus();
+      const end = question.value.length;
+      if (typeof question.setSelectionRange === 'function') question.setSelectionRange(end, end);
+    }
+    // 候補は文字列としてボタンへ描画する．押した候補は「追加済み」（aria-pressed="true"）にする．
     function showQuickReplies(suggestions) {
       clearQuickReplies();
       if (!Array.isArray(suggestions) || !suggestions.length) return;
-      quickReplies.append(element('p', 'pa-quick-replies-label', '次の質問候補'));
+      quickReplies.append(element('p', 'pa-quick-replies-label', '次の質問候補（押すと入力欄に追加）'));
       for (const suggestion of suggestions) {
         const reply = button(suggestion, 'pa-quick-reply');
-        reply.addEventListener('click', () => {
-          question.value = suggestion;
-          count.textContent = characters(suggestion).length + ' / 500文字';
-          return sendQuestion(suggestion);
-        });
+        reply.setAttribute('aria-pressed', 'false');
+        reply.addEventListener('click', () => appendSuggestion(reply, suggestion));
         activeQuickReplyButtons.push(reply); quickReplies.append(reply);
       }
       quickReplies.hidden = false;
@@ -340,7 +369,7 @@
         select.replaceChildren();
         catalog.models.forEach((model) => { const option = element('option', '', model.label); option.value = model.id; select.append(option); });
         select.value = catalog.default_model || '';
-        status.textContent = catalog.models.length ? '質問を入力するか，候補を選んでください．' : '現在利用できるモデルはありません．';
+        status.textContent = catalog.models.length ? '質問を入力してください．候補を押すと入力欄に追加されます．' : '現在利用できるモデルはありません．';
         if (catalog.models.length && !messages.children.length) addGreeting();
       } catch (error) { status.textContent = errorMessage(error, session.snapshot().catalog && session.snapshot().catalog.interaction.daily_requests); }
       update();
@@ -355,13 +384,13 @@
         : 'モデルを変更しました．会話と利用回数は引き継ぎます．次の送信時に，他モデルとの直近の会話も選択した回答生成先へ送ります．';
     });
     reset.addEventListener('click', () => { session.reset(); clearMessages(); addGreeting(); question.value = ''; question.setCustomValidity(''); count.textContent = '0 / 500文字'; status.textContent = '会話をリセットしました．利用回数はリセットされません．'; update(); question.focus(); });
-    question.addEventListener('input', () => { const size = characters(question.value.trim()).length; count.textContent = size + ' / 500文字'; question.setCustomValidity(size > 500 ? '500文字以内で入力してください．' : ''); });
+    question.addEventListener('input', refreshCount);
     async function sendQuestion(value) {
       if (session.snapshot().busy) return;
       const text = value.trim();
-      if (!validText(text, 500)) { status.textContent = '質問を1〜500文字で入力してください．'; question.focus(); return; }
+      if (!validText(text, QUESTION_MAX)) { status.textContent = '質問を1〜' + QUESTION_MAX + '文字で入力してください．'; question.focus(); return; }
       status.textContent = options.preview ? '模擬回答を表示しています…' : '回答を待っています…';
-      // 応答待ちの間は update() が候補ボタンを無効にし，重複送信を防ぐ．
+      // 応答待ちの間は update() が送信ボタン・候補ボタンを無効にし，重複送信を防ぐ．
       const pending = session.ask(text); update();
       try {
         const answer = await pending;

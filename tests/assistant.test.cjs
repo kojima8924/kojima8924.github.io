@@ -260,6 +260,11 @@ test('組込みUIは安全な描画とテーマ・印刷を維持する', () => 
   assert.match(css, /prefers-color-scheme: dark/);
   assert.match(css, /body\.pdf-summary/);
   assert.match(css, /@media print/);
+  // 質問欄に例文の placeholder を設定せず，候補ボタンから送信処理を直接呼ばない．
+  assert.doesNotMatch(js, /\.placeholder\s*=|setAttribute\('placeholder'/);
+  assert.doesNotMatch(js, /return sendQuestion\(suggestion\)/);
+  // 追加済みの候補は aria-pressed で控えめな見た目にする．
+  assert.match(css, /\.pa-quick-reply\[aria-pressed="true"\]/);
 });
 
 test('質問対象に開発者の公開済み経験を含め，私的な情報と未記載事項を除く', () => {
@@ -270,7 +275,8 @@ test('質問対象に開発者の公開済み経験を含め，私的な情報�
   assert.match(js, /ポートフォリオ AI質問対応（β）/);
   assert.match(js, /質問によっては回答できない場合もあります/);
   assert.match(js, /本人の担当・実績を推測で補わない方針ですが，誤回答の可能性/);
-  assert.match(js, /例：小嶋明の技術的な強みや，開発で大切にしていることは？/);
+  // 質問欄の例文 placeholder は候補と紛らわしいため削除した．
+  assert.doesNotMatch(js, /例：小嶋明の技術的な強みや，開発で大切にしていることは？/);
 });
 
 test('Qwen限定catalogではQwenだけを使い，未提供の候補を選択しない', async () => {
@@ -319,6 +325,7 @@ function documentFixture() {
     showModal() { this.open = true; }
     close() { this.open = false; if (this.listeners.close) this.listeners.close(); }
     setCustomValidity(value) { this.validityMessage = value; }
+    setSelectionRange(start, end) { this.selection = [start, end]; }
     scrollIntoView() {}
     get lastElementChild() { return this.children.at(-1); }
   }
@@ -339,41 +346,116 @@ function documentFixture() {
 function textOf(node) { return [node.textContent, ...node.children.map(textOf)].join(' '); }
 function hasAncestor(node, ancestor) { for (let parent = node.parent; parent; parent = parent.parent) if (parent === ancestor) return true; return false; }
 
-test('初回案内は履歴へ混ぜず，クイックリプライを1回の質問として送信して更新する', async () => {
+// 候補の追記を検査するための共通準備．/ask の呼び出しを記録し，ダイアログを開いた状態で返す．
+async function openWithCalls() {
   const document = documentFixture();
   const calls = [];
   const mock = ui.createMockTransport();
   const mounted = ui.mount({ document, transport: async (route, body) => {
     calls.push({ route, body }); return mock(route, body);
   } });
-  const replies = document.find('pa-quick-replies');
-  assert.equal(replies.hidden, true);
   await document.find('pa-launcher').listeners.click();
+  const asks = () => calls.filter(call => call.route === '/ask');
+  return { document, calls, asks, mounted, question: document.find('pa-question'), form: document.find('pa-form'), replies: document.find('pa-quick-replies'), status: document.find('pa-status') };
+}
+
+test('初回案内は履歴へ混ぜず，候補を押しても送信せず入力欄へ追記し，送信ボタンでだけ送る', async () => {
+  const { document, calls, asks, mounted, question, form, replies, status } = await openWithCalls();
   const messages = document.find('pa-messages');
   assert.equal(messages.children.length, 1);
   assert.match(messages.children[0].children[1].textContent, /Claude Sonnet 5.*質問をどうぞ/);
   assert.deepEqual(mounted.session.snapshot().history, []);
   assert.equal(replies.hidden, false);
+  assert.match(status.textContent, /質問を入力してください．候補を押すと入力欄に追加されます．/);
+  assert.doesNotMatch(status.textContent, /候補を選んで/);
+  // 例文の placeholder は置かない．
+  assert.ok(!question.placeholder);
+  assert.equal(question.attributes.placeholder, undefined);
   assert.deepEqual(replies.children.slice(1).map(node => node.textContent), ['小嶋明の技術的な強みは？', '大学院での研究内容を簡潔に教えて', '生成AIを使わずに作った作品は？']);
-  const starter = replies.children[1];
-  assert.equal(starter.className, 'pa-quick-reply');
-  const pending = starter.listeners.click();
-  // 応答待ちの間は候補を押せず，重ねて押しても送信しない．
-  assert.ok(replies.children.slice(1).every(node => node.disabled));
-  await replies.children[2].listeners.click();
-  await pending;
-  assert.equal(calls.filter(call => call.route === '/ask').length, 1);
-  assert.equal(calls.at(-1).body.question, starter.textContent);
+  const [first, second] = replies.children.slice(1);
+  assert.equal(first.className, 'pa-quick-reply');
+  assert.ok(replies.children.slice(1).every(node => node.attributes['aria-pressed'] === 'false'));
+  // 空白だけの入力欄には候補をそのまま入れる．送信（fetch 相当の /ask）は起きない．
+  question.value = '  \n ';
+  await first.listeners.click();
+  assert.equal(asks().length, 0);
+  assert.equal(question.value, '小嶋明の技術的な強みは？');
+  assert.equal(first.attributes['aria-pressed'], 'true');
+  assert.equal(document.activeElement, question);
+  assert.deepEqual(question.selection, [question.value.length, question.value.length]);
+  assert.equal(document.find('pa-count').textContent, '12 / 500文字');
+  assert.match(status.textContent, /入力欄に追加しました/);
+  // 同じ候補を再度押しても二重に追記しない．
+  await first.listeners.click();
+  assert.equal(question.value, '小嶋明の技術的な強みは？');
+  // 別の候補は改行1つの後に追記する．
+  await second.listeners.click();
+  assert.equal(question.value, '小嶋明の技術的な強みは？\n大学院での研究内容を簡潔に教えて');
+  assert.equal(second.attributes['aria-pressed'], 'true');
+  assert.equal(replies.children[3].attributes['aria-pressed'], 'false');
+  assert.equal(asks().length, 0);
+  assert.deepEqual(mounted.session.snapshot().history, []);
+  // 送信ボタン（フォーム submit）で，追記した文がそのまま1回だけ送られる．
+  await form.listeners.submit({ preventDefault() {} });
+  assert.equal(asks().length, 1);
+  assert.equal(calls.at(-1).body.question, '小嶋明の技術的な強みは？\n大学院での研究内容を簡潔に教えて');
   assert.deepEqual(calls.at(-1).body.history, []);
   assert.equal(mounted.session.snapshot().history.length, 2);
   assert.equal(messages.children.length, 3);
-  // 新しい回答の候補で置き換え，回答メッセージの中には候補を描画しない．
+  assert.equal(question.value, '');
+  // 新しい回答の候補で置き換え，追加済みの状態は引き継がない．回答メッセージの中には候補を描画しない．
   assert.equal(document.findAll('pa-quick-replies').length, 1);
   assert.deepEqual(replies.children.slice(1).map(node => node.textContent), ['この研究の概要は？', '生成AI不使用の作品は？', '開発で重視していることは？']);
-  assert.ok(replies.children.slice(1).every(node => node.disabled === false));
-  assert.equal(starter.disabled, true);
+  assert.ok(replies.children.slice(1).every(node => node.disabled === false && node.attributes['aria-pressed'] === 'false'));
+  assert.equal(first.disabled, true);
   assert.ok(document.findAll('pa-quick-reply').every(node => !hasAncestor(node, messages)));
+  // 以前の組で追加済みだった候補と同じ文でも，新しい組では追記できる．
+  await replies.children[1].listeners.click();
+  assert.equal(question.value, 'この研究の概要は？');
+  assert.equal(asks().length, 1);
 });
+
+test('既存の文には末尾の空白を整えて改行1つで追記し，500文字を超える追記はしない', async () => {
+  const { asks, question, replies, status, document } = await openWithCalls();
+  const [first, second, third] = replies.children.slice(1);
+  question.value = '最初の文  \n\n \t';
+  await first.listeners.click();
+  assert.equal(question.value, '最初の文\n小嶋明の技術的な強みは？');
+  // 追記後が500文字を超える場合は追記せず，状態表示で知らせる．
+  const long = 'あ'.repeat(490);
+  question.value = long;
+  await second.listeners.click();
+  assert.equal(question.value, long);
+  assert.equal(second.attributes['aria-pressed'], 'false');
+  assert.match(status.textContent, /500文字を超えるため，候補を追加しませんでした/);
+  // ちょうど500文字（コードポイント）までは追記できる．
+  const fill = '𠀋'.repeat(500 - 1 - [...third.textContent].length);
+  question.value = fill;
+  await third.listeners.click();
+  assert.equal(question.value, fill + '\n' + third.textContent);
+  assert.equal([...question.value].length, 500);
+  assert.equal(document.find('pa-count').textContent, '500 / 500文字');
+  assert.equal(question.validityMessage, '');
+  assert.equal(asks().length, 0);
+});
+
+test('応答待ち中は候補を押しても追記・送信せず，重複送信しない', async () => {
+  const { asks, question, form, replies } = await openWithCalls();
+  const [first, second] = replies.children.slice(1);
+  await first.listeners.click();
+  const pending = form.listeners.submit({ preventDefault() {} });
+  assert.ok(replies.children.slice(1).every(node => node.disabled));
+  assert.equal(submitDisabled(form), true);
+  await second.listeners.click();
+  assert.equal(question.value, '小嶋明の技術的な強みは？');
+  // 応答待ちに重ねた送信も受け付けない．
+  await form.listeners.submit({ preventDefault() {} });
+  await pending;
+  assert.equal(asks().length, 1);
+  assert.equal(asks()[0].body.question, '小嶋明の技術的な強みは？');
+});
+// 送信ボタンの無効状態を返す．
+function submitDisabled(form) { return form.children.find(node => node.className === 'pa-form-bottom').children.find(node => node.className === 'pa-submit').disabled; }
 
 test('質問候補は質問欄の直前の専用コンテナに置き，候補がない回答や失敗では隠す', async () => {
   const document = documentFixture();

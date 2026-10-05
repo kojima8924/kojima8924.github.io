@@ -354,7 +354,7 @@ test('初回案内は履歴へ混ぜず，クイックリプライを1回の質�
   assert.match(messages.children[0].children[1].textContent, /Claude Sonnet 5.*質問をどうぞ/);
   assert.deepEqual(mounted.session.snapshot().history, []);
   assert.equal(replies.hidden, false);
-  assert.deepEqual(replies.children.slice(1).map(node => node.textContent), ['小嶋明の技術的な強みは？', '研究内容を簡潔に教えて', '生成AIを使わずに作った作品は？']);
+  assert.deepEqual(replies.children.slice(1).map(node => node.textContent), ['小嶋明の技術的な強みは？', '大学院での研究内容を簡潔に教えて', '生成AIを使わずに作った作品は？']);
   const starter = replies.children[1];
   assert.equal(starter.className, 'pa-quick-reply');
   const pending = starter.listeners.click();

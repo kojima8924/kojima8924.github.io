@@ -17,7 +17,7 @@
   const RECORD_NOTICE_SHORT = '質問と回答は品質改善・不適切な利用の確認のため記録し，90日で削除します．個人情報や社外秘は入力しないでください．';
   const STARTER_SUGGESTIONS = Object.freeze([
     '小嶋明の技術的な強みは？',
-    '研究内容を簡潔に教えて',
+    '大学院での研究内容を簡潔に教えて',
     '生成AIを使わずに作った作品は？',
   ]);
   const characters = (text) => Array.from(text);

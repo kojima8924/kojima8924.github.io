@@ -11,6 +11,8 @@
   const LEGACY_HISTORY_MESSAGES = 8;
   const DAILY_LIMIT = 40;
   const HISTORY_MESSAGES = 16;
+  // 実接続時だけ送信欄の直後に常時表示する，本文記録の告知（文言は一字一句この文で固定）．
+  const RECORD_NOTICE = '誤回答の修正，回答品質の改善，不適切な利用の確認のため，質問と回答の本文を記録します．記録はAIツールによる分析や，本人（小嶋明）が確認することがあります．IPアドレスなど利用者を特定する情報は本文と結び付けて保存せず，記録は90日で削除します．個人情報や社外秘の内容は入力しないでください．';
   const STARTER_SUGGESTIONS = Object.freeze([
     '小嶋明の技術的な強みは？',
     '研究内容を簡潔に教えて',
@@ -193,7 +195,7 @@
     const processingNotice = (rounds) => 'ナレッジ検索はAWS，回答生成は選択モデルの設定に応じてAWS・OpenAI・Anthropicで処理します．質問・直近' + rounds + '往復の会話・検索した公開資料を回答生成先へ送信します．実際の送信先と処理地域は選択モデルの案内をご確認ください．提供元の保持条件は各社の規定に従います．';
     const privacySuffix = options.preview
       ? 'ここで入力した質問はAWSへ送信されません．実接続時の案内文は利用条件の確認後に確定します．個人情報や機密情報は入力しないでください．'
-      : '本アプリでは質問・回答本文を履歴データベースやアプリケーションログに通常保存せず，会話はこのページを開いている間だけブラウザに保持します．利用回数の管理には日替わりの仮名化識別子を用います．期限を過ぎた回数記録は自動削除の対象になります．個人情報や機密情報は入力しないでください．';
+      : '画面の会話はこのページを開いている間だけブラウザに保持します．質問と回答の本文は送信欄の下の案内のとおり記録し，90日で削除します．利用回数の管理には日替わりの仮名化識別子を用います．期限を過ぎた回数記録は自動削除の対象になります．個人情報や機密情報は入力しないでください．';
     const sharedPrivacy = element('p', '', options.preview ? privacySuffix : processingNotice(LEGACY_HISTORY_MESSAGES / 2) + privacySuffix);
     privacy.append(privacySummary, privacyText, sharedPrivacy);
     const historyNotice = element('p', 'pa-help', '表示ログはページを開いている間だけ残ります．送信する会話範囲はモデル確認後に表示します．会話のリセット・ページの再読み込みで消えます．');
@@ -215,6 +217,13 @@
     const submit = element('button', 'pa-submit', options.preview ? '模擬回答を表示' : '送信'); submit.type = 'submit';
     const formBottom = element('div', 'pa-form-bottom'); formBottom.append(count, submit);
     form.append(questionLabel, question, formBottom);
+    // 記録の告知は送信ボタンの直後に折りたたまず置く．模擬プレビューは本文を記録しないので出さない．
+    if (!options.preview) {
+      const recordNotice = element('p', 'pa-help pa-record-notice', RECORD_NOTICE);
+      recordNotice.id = 'pa-record-' + suffix;
+      question.setAttribute('aria-describedby', count.id + ' ' + recordNotice.id);
+      form.append(recordNotice);
+    }
     content.append(intro, label, select, region, switchNotice, privacy, historyNotice, messages, status, tools, form);
     dialog.append(header, content); host.append(launcher, dialog);
     (options.container || document.body).append(host);
@@ -360,5 +369,5 @@
       };
     };
   }
-  return { ALIASES, regionLabel, safeHttps, validateCatalog, validateSuggestions, createHttpTransport, createSession, createMockTransport, errorMessage, mount };
+  return { ALIASES, RECORD_NOTICE, regionLabel, safeHttps, validateCatalog, validateSuggestions, createHttpTransport, createSession, createMockTransport, errorMessage, mount };
 });

@@ -57,8 +57,8 @@ test('HTMLは公開βの接続先を明示し，無通信の初期化と静的�
   assert.match(html, /研究・作品・経歴に加え，公開資料にある経験・活動・開発の考え方も/);
   assert.match(html, /資料にないことや私的な情報は対象外/);
   assert.match(html, /担当範囲や実績の説明にも誤りがあり得るため，必ず参照元/);
-  assert.match(html, /href="assets\/assistant\.css\?v=20260930-quickreplies"/);
-  assert.match(html, /src="assets\/assistant\.js\?v=20260930-quickreplies" defer/);
+  assert.match(html, /href="assets\/assistant\.css\?v=20261005-conversation-log"/);
+  assert.match(html, /src="assets\/assistant\.js\?v=20261005-conversation-log" defer/);
   assert.match(html, /src="assets\/assistant-site\.js\?v=20260929-beta2" defer/);
   const bridge = fs.readFileSync(path.join(__dirname, '../assets/assistant-site.js'), 'utf8');
   assert.doesNotMatch(bridge, /localStorage|sessionStorage|location\.|fetch\(|createMockTransport/);

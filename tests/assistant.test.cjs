@@ -536,3 +536,46 @@ test('模擬UIは実際の提供元への送信を示さない', () => {
   assert.match(privacy, /入力した質問はAWSへ送信されません/);
   assert.doesNotMatch(privacy, /回答生成先へ送信します/);
 });
+
+const RECORD_NOTICE_TEXT = '誤回答の修正，回答品質の改善，不適切な利用の確認のため，質問と回答の本文を記録します．記録はAIツールによる分析や，本人（小嶋明）が確認することがあります．IPアドレスなど利用者を特定する情報は本文と結び付けて保存せず，記録は90日で削除します．個人情報や社外秘の内容は入力しないでください．';
+
+test('実接続時は本文記録の告知を送信ボタンの直後に常時表示し，旧い本文非保存の説明を出さない', async () => {
+  const document = documentFixture();
+  ui.mount({ document, transport: ui.createMockTransport() });
+  const form = document.find('pa-form');
+  const notice = document.find('pa-record-notice');
+  assert.ok(notice, '告知が必要');
+  // 開く前（未通信）から，折りたたみではなくフォーム内に表示する．
+  assert.equal(notice.tagName, 'p');
+  assert.equal(notice.parent, form);
+  assert.ok(notice.className.split(' ').includes('pa-help'));
+  const bottom = document.find('pa-form-bottom');
+  assert.ok(bottom.children.includes(document.find('pa-submit')));
+  assert.equal(form.children.indexOf(notice), form.children.indexOf(bottom) + 1);
+  assert.equal(form.children.at(-1), notice);
+  assert.equal(notice.textContent, RECORD_NOTICE_TEXT);
+  assert.equal(ui.RECORD_NOTICE, RECORD_NOTICE_TEXT);
+  assert.ok(document.find('pa-question').attributes['aria-describedby'].split(' ').includes(notice.id));
+  let parent = notice.parent;
+  while (parent) { assert.notEqual(parent.tagName, 'details'); parent = parent.parent; }
+  await document.find('pa-launcher').listeners.click();
+  document.find('pa-question').value = '研究について';
+  await form.listeners.submit({ preventDefault() {} });
+  assert.equal(document.find('pa-record-notice'), notice);
+  assert.equal(notice.textContent, RECORD_NOTICE_TEXT);
+  const privacy = document.find('pa-privacy').children.map(node => node.textContent).join(' ');
+  assert.doesNotMatch(privacy, /通常保存せず|履歴データベースやアプリケーションログ/);
+  assert.match(privacy, /質問と回答の本文は送信欄の下の案内のとおり記録し，90日で削除します/);
+  assert.match(privacy, /このページを開いている間だけブラウザに保持/);
+  assert.match(privacy, /日替わりの仮名化識別子/);
+  const source = fs.readFileSync(path.join(__dirname, '../assets/assistant.js'), 'utf8');
+  assert.doesNotMatch(source, /通常保存せず/);
+});
+
+test('模擬プレビューでは本文記録の告知を出さない', async () => {
+  const document = documentFixture();
+  ui.mount({ document, preview: true, transport: ui.createMockTransport() });
+  await document.find('pa-launcher').listeners.click();
+  assert.equal(document.find('pa-record-notice'), undefined);
+  assert.equal(document.find('pa-question').attributes['aria-describedby'], document.find('pa-count').id);
+});

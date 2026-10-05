@@ -10,8 +10,8 @@
 /* サイトの見出し・details・画像用規則を，モーダルの中へ持ち込まない． */
 #assistant .pa-dialog { margin: auto; text-align: left; }
 #assistant .pa-header { margin: 0; }
-#assistant .pa-privacy { border: 0; }
-#assistant .pa-privacy summary { color: var(--pa-text); }
+#assistant .pa-guide { border: 0; }
+#assistant .pa-guide summary { color: var(--pa-text); }
 @media (max-width: 700px) {
   .assistant-card { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 20px; }
   #assistant .pa-launcher { width: 100%; }

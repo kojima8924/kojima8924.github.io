@@ -25,15 +25,24 @@ html:has(.pa-dialog[open]) { overflow: hidden; }
 .pa-header h2 { font-size: 1.12rem; line-height: 1.4; margin: 0; }
 .pa-close { flex-shrink: 0; }
 .pa-content { padding: 20px 24px 24px; }
-.pa-intro { margin: 0 0 20px; }
-.pa-model-label, .pa-form label { display: block; font-weight: 700; margin-bottom: 6px; }
+.pa-intro { margin: 0 0 12px; font-size: .9rem; line-height: 1.6; }
+/* 回答モデル・選択欄・処理地域を1行に並べ，狭い幅では処理地域を次の行へ折り返す． */
+.pa-model-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.pa-model-label { font-weight: 700; margin: 0; }
 .pa-select, .pa-question { width: 100%; min-width: 0; border: 1px solid var(--pa-line); border-radius: 10px; padding: 10px 12px; background: var(--pa-bg); color: var(--pa-text); font-size: 16px; }
-.pa-region { margin: 8px 0 4px; font-size: .87rem; font-weight: 600; overflow-wrap: anywhere; }
-.pa-help, .pa-limit, .pa-count { color: var(--pa-muted); font-size: .82rem; }
+.pa-model-row .pa-select { flex: 1 1 11rem; width: auto; max-width: 18rem; padding: 8px 10px; }
+.pa-region { flex: 1 1 auto; min-width: 0; margin: 0; color: var(--pa-muted); font-size: .8rem; font-weight: 600; overflow-wrap: anywhere; }
+.pa-help, .pa-limit, .pa-count, .pa-remaining { color: var(--pa-muted); font-size: .82rem; }
 .pa-help { margin: 6px 0 12px; }
-.pa-privacy { background: var(--pa-surface); border-radius: 10px; padding: 2px 12px; margin: 14px 0; font-size: .86rem; }
-.pa-privacy summary { cursor: pointer; padding: 9px 0; }
-.pa-privacy p { margin-top: 4px; overflow-wrap: anywhere; }
+/* 送信先・会話の扱い・利用回数などの説明は1つの折りたたみにまとめる． */
+.pa-guide { background: var(--pa-surface); border-radius: 10px; padding: 0 12px; margin: 10px 0 12px; font-size: .84rem; }
+.pa-guide summary { cursor: pointer; display: flex; align-items: center; font-weight: 600; padding: 4px 0; }
+.pa-guide[open] summary { border-bottom: 1px solid var(--pa-line); }
+.pa-guide-section { padding: 8px 0 2px; }
+.pa-guide-section + .pa-guide-section { border-top: 1px dashed var(--pa-line); }
+.pa-guide .pa-guide-title { margin: 0 0 2px; font-size: .82rem; font-weight: 700; line-height: 1.5; color: var(--pa-text); }
+.pa-guide p { margin: 0 0 6px; color: var(--pa-muted); font-size: .82rem; line-height: 1.6; overflow-wrap: anywhere; }
+.pa-guide .pa-limit { margin: 0 0 6px; }
 .pa-messages { display: grid; gap: 12px; }
 .pa-message { min-width: 0; padding: 14px 16px; border: 1px solid var(--pa-line); border-radius: 12px; }
 .pa-message-user { background: var(--pa-surface); margin-left: 24px; }
@@ -41,24 +50,30 @@ html:has(.pa-dialog[open]) { overflow: hidden; }
 .pa-answer { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .pa-sources { padding-left: 20px; margin: 12px 0 0; font-size: .86rem; overflow-wrap: anywhere; }
 .pa-sources a { color: var(--pa-accent); text-decoration: underline; text-underline-offset: 3px; }
-.pa-quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-.pa-quick-replies-label { flex-basis: 100%; margin: 0; color: var(--pa-muted); font-size: .82rem; font-weight: 700; }
+/* 最新の質問候補だけを質問欄の直上に置く．候補がないときは hidden で隠す． */
+.pa-quick-replies { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+.pa-quick-replies[hidden] { display: none; }
+.pa-quick-replies-label { flex-basis: 100%; margin: 0; color: var(--pa-muted); font-size: .78rem; font-weight: 700; }
 .pa-quick-reply { min-height: 40px !important; padding: 7px 11px !important; border-color: var(--pa-accent) !important; color: var(--pa-accent) !important; font-size: .86rem !important; text-align: left; }
-.pa-status { font-size: .88rem; margin: 14px 0; overflow-wrap: anywhere; }
-.pa-tools { display: flex; align-items: center; gap: 12px; justify-content: space-between; border-top: 1px solid var(--pa-line); margin-top: 16px; padding-top: 10px; }
-.pa-limit { margin: 0; }
-.pa-reset { flex-shrink: 0; font-size: .82rem !important; }
-.pa-form { margin-top: 16px; }
+.pa-status { font-size: .84rem; margin: 10px 0; overflow-wrap: anywhere; }
+.pa-status:empty { display: none; }
+.pa-form { border-top: 1px solid var(--pa-line); padding-top: 8px; }
+.pa-form-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.pa-form .pa-question-label { display: block; font-weight: 700; margin: 0; }
+/* 会話リセットは質問ラベルの右に，文字リンク風の控えめなボタンとして置く． */
+.pa-widget .pa-reset { flex-shrink: 0; border-color: transparent; background: transparent; color: var(--pa-muted); font-size: .8rem; padding: 6px 4px; text-decoration: underline; text-underline-offset: 3px; }
 .pa-question { display: block; resize: vertical; min-height: 90px; max-height: 260px; }
 .pa-question::placeholder { color: var(--pa-muted); opacity: 1; }
 .pa-form-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
-.pa-form .pa-record-notice { margin: 8px 0 0; line-height: 1.55; overflow-wrap: anywhere; }
+.pa-form-meta { flex: 1 1 auto; min-width: 0; margin: 0; line-height: 1.5; }
+.pa-remaining:empty { display: none; }
+.pa-remaining::before { content: "・"; }
+.pa-form .pa-record-notice { margin: 6px 0 0; font-size: .78rem; line-height: 1.5; overflow-wrap: anywhere; }
 @media (max-width: 480px) {
   .pa-dialog { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); border-radius: 14px; }
   .pa-header { padding: 12px 14px; gap: 8px; }
   .pa-header h2 { font-size: 1rem; }
-  .pa-content { padding: 16px 14px; }
-  .pa-tools { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .pa-content { padding: 12px 14px 14px; }
   .pa-message-user { margin-left: 14px; }
 }
 body.pdf-summary .pa-widget { display: none !important; }

@@ -11,8 +11,10 @@
   const LEGACY_HISTORY_MESSAGES = 8;
   const DAILY_LIMIT = 40;
   const HISTORY_MESSAGES = 16;
-  // 実接続時だけ送信欄の直後に常時表示する，本文記録の告知（文言は一字一句この文で固定）．
+  // 実接続時だけ表示する，本文記録の告知全文（文言は一字一句この文で固定）．
   const RECORD_NOTICE = '誤回答の修正，回答品質の改善，不適切な利用の確認のため，質問と回答の本文を記録します．記録はAIツールによる分析や，本人（小嶋明）が確認することがあります．IPアドレスなど利用者を特定する情報は本文と結び付けて保存せず，記録は90日で削除します．個人情報や社外秘の内容は入力しないでください．';
+  // 送信ボタン直下に常時表示する短い記録告知．全文（RECORD_NOTICE）は「ご利用にあたって」内に置く．
+  const RECORD_NOTICE_SHORT = '質問と回答は品質改善・不適切な利用の確認のため記録し，90日で削除します．個人情報や社外秘は入力しないでください．';
   const STARTER_SUGGESTIONS = Object.freeze([
     '小嶋明の技術的な強みは？',
     '研究内容を簡潔に教えて',
@@ -154,6 +156,8 @@
 
   function mount(options) {
     const document = options.document || globalThis.document;
+    // 本文を記録するのは実接続時だけ．模擬プレビューでは記録の告知を出さない．
+    const recordsBody = !options.preview;
     const transport = options.transport || createHttpTransport(options.endpoint);
     const session = createSession(transport);
     const host = document.createElement('section');
@@ -178,53 +182,81 @@
     const close = button('閉じる', 'pa-close');
     header.append(heading, close);
     const content = element('div', 'pa-content');
+    // 常時表示は1文に絞り，対象範囲などの詳細は「ご利用にあたって」の折りたたみへ移す．
     const intro = element('p', 'pa-intro', options.preview
       ? 'ローカルの操作確認用です．回答・利用回数は模擬表示で，外部通信やモデル実行はありません．'
-      : 'β版・品質検証中です．作品・経歴のほか，小嶋明の経験・活動・開発の考え方を，公開資料の範囲で質問できます．資料にないことや私的な情報は対象外です．本人の担当・実績を推測で補わない方針ですが，誤回答の可能性があります．必ず参照元をご確認ください．質問によっては回答できない場合もあります．');
+      : 'β版・品質検証中です．公開資料の範囲で回答し，誤りの可能性があるため参照元をご確認ください．');
+    // 回答モデル・選択欄・処理地域は1行にまとめる（狭い幅では折り返す）．
+    const modelRow = element('div', 'pa-model-row');
     const label = element('label', 'pa-model-label', '回答モデル');
     const select = element('select', 'pa-select');
     select.id = 'pa-model-' + suffix;
     label.htmlFor = select.id;
     const region = element('p', 'pa-region');
-    const switchNotice = element('p', 'pa-help', options.preview
-      ? 'モデルを切り替えても会話は残ります．このプレビューでは外部送信しません．利用回数は全モデルで共通です．'
-      : 'モデルを切り替えても会話は残り，切替だけでは送信しません．次の送信時には，他モデルとの直近の会話も選択した回答生成先へ送信します．引き継ぎたくない場合は，送信前に会話をリセットしてください．利用回数は全モデルで共通です．');
-    const privacy = element('details', 'pa-privacy');
-    const privacySummary = element('summary', '', '送信内容・処理地域について');
-    const privacyText = element('p');
+    modelRow.append(label, select, region);
+    // 送信先・会話の扱い・利用回数の説明は，事実を削らずに1つの折りたたみへまとめる．
+    const guide = element('details', 'pa-guide');
+    const guideSummary = element('summary', '', 'ご利用にあたって（送信先・会話の扱い・利用回数）');
+    function guideSection(title, ...nodes) {
+      const section = element('section', 'pa-guide-section');
+      section.append(element('h3', 'pa-guide-title', title), ...nodes);
+      return section;
+    }
+    const scope = element('p', 'pa-scope', options.preview
+      ? '作品・経歴のほか，小嶋明の経験・活動・開発の考え方を，公開資料の範囲で質問できる想定です．模擬回答のため，実際の回答内容は確認できません．'
+      : '作品・経歴のほか，小嶋明の経験・活動・開発の考え方を，公開資料の範囲で質問できます．資料にないことや私的な情報は対象外です．本人の担当・実績を推測で補わない方針ですが，誤回答の可能性があります．必ず参照元をご確認ください．質問によっては回答できない場合もあります．');
+    const privacyText = element('p', 'pa-model-privacy');
     const processingNotice = (rounds) => 'ナレッジ検索はAWS，回答生成は選択モデルの設定に応じてAWS・OpenAI・Anthropicで処理します．質問・直近' + rounds + '往復の会話・検索した公開資料を回答生成先へ送信します．実際の送信先と処理地域は選択モデルの案内をご確認ください．提供元の保持条件は各社の規定に従います．';
     const privacySuffix = options.preview
       ? 'ここで入力した質問はAWSへ送信されません．実接続時の案内文は利用条件の確認後に確定します．個人情報や機密情報は入力しないでください．'
-      : '画面の会話はこのページを開いている間だけブラウザに保持します．質問と回答の本文は送信欄の下の案内のとおり記録し，90日で削除します．利用回数の管理には日替わりの仮名化識別子を用います．期限を過ぎた回数記録は自動削除の対象になります．個人情報や機密情報は入力しないでください．';
-    const sharedPrivacy = element('p', '', options.preview ? privacySuffix : processingNotice(LEGACY_HISTORY_MESSAGES / 2) + privacySuffix);
-    privacy.append(privacySummary, privacyText, sharedPrivacy);
-    const historyNotice = element('p', 'pa-help', '表示ログはページを開いている間だけ残ります．送信する会話範囲はモデル確認後に表示します．会話のリセット・ページの再読み込みで消えます．');
+      : '画面の会話はこのページを開いている間だけブラウザに保持します．質問と回答の本文は下記「質問と回答の記録」のとおり記録し，90日で削除します．利用回数の管理には日替わりの仮名化識別子を用います．期限を過ぎた回数記録は自動削除の対象になります．個人情報や機密情報は入力しないでください．';
+    const sharedPrivacy = element('p', 'pa-shared-privacy', options.preview ? privacySuffix : processingNotice(LEGACY_HISTORY_MESSAGES / 2) + privacySuffix);
+    const switchNotice = element('p', 'pa-switch-notice', options.preview
+      ? 'モデルを切り替えても会話は残ります．このプレビューでは外部送信しません．利用回数は全モデルで共通です．'
+      : 'モデルを切り替えても会話は残り，切替だけでは送信しません．次の送信時には，他モデルとの直近の会話も選択した回答生成先へ送信します．引き継ぎたくない場合は，送信前に会話をリセットしてください．利用回数は全モデルで共通です．');
+    const historyNotice = element('p', 'pa-history-notice', '表示ログはページを開いている間だけ残ります．送信する会話範囲はモデル確認後に表示します．会話のリセット・ページの再読み込みで消えます．');
+    const limit = element('p', 'pa-limit', '利用上限はモデル確認後に表示します．');
+    const guideSections = [guideSection('対象範囲', scope), guideSection('送信先・処理地域', privacyText, sharedPrivacy)];
+    if (recordsBody) {
+      // 本人が確定した記録の告知全文（一字一句固定）は折りたたみ内に置く．
+      guideSections.push(guideSection('質問と回答の記録', element('p', 'pa-record-full', RECORD_NOTICE)));
+    }
+    guideSections.push(guideSection('モデル切替と会話の範囲', switchNotice, historyNotice), guideSection('利用回数', limit));
+    guide.append(guideSummary, ...guideSections);
     const messages = element('div', 'pa-messages');
     messages.setAttribute('aria-label', '会話');
     const status = element('p', 'pa-status', '開くと利用可能なモデルを確認します．');
     status.setAttribute('role', 'status');
     status.setAttribute('aria-live', 'polite');
-    const limit = element('p', 'pa-limit', '利用上限はモデル確認後に表示します．');
-    const reset = button('会話をリセット', 'pa-reset');
-    const tools = element('div', 'pa-tools'); tools.append(limit, reset);
     const form = element('form', 'pa-form');
-    const questionLabel = element('label', '', '質問');
+    const formHead = element('div', 'pa-form-head');
+    const questionLabel = element('label', 'pa-question-label', '質問');
+    const reset = button('会話をリセット', 'pa-reset');
+    formHead.append(questionLabel, reset);
+    // 次の質問候補は最新の1組だけを質問欄の直上に置き，過去の回答の中には残さない．
+    const quickReplies = element('div', 'pa-quick-replies');
+    quickReplies.setAttribute('role', 'group');
+    quickReplies.setAttribute('aria-label', '次の質問候補');
+    quickReplies.hidden = true;
     const question = element('textarea', 'pa-question');
     question.id = 'pa-question-' + suffix; questionLabel.htmlFor = question.id;
     question.rows = 3; question.placeholder = '例：小嶋明の技術的な強みや，開発で大切にしていることは？'; question.maxLength = 1000;
     const count = element('span', 'pa-count', '0 / 500文字'); count.id = 'pa-count-' + suffix;
     question.setAttribute('aria-describedby', count.id);
+    // 残り回数は文字数の隣に短く出す．詳しい条件は折りたたみ内の「利用回数」に置く．
+    const remaining = element('span', 'pa-remaining');
+    const meta = element('p', 'pa-form-meta'); meta.append(count, remaining);
     const submit = element('button', 'pa-submit', options.preview ? '模擬回答を表示' : '送信'); submit.type = 'submit';
-    const formBottom = element('div', 'pa-form-bottom'); formBottom.append(count, submit);
-    form.append(questionLabel, question, formBottom);
-    // 記録の告知は送信ボタンの直後に折りたたまず置く．模擬プレビューは本文を記録しないので出さない．
-    if (!options.preview) {
-      const recordNotice = element('p', 'pa-help pa-record-notice', RECORD_NOTICE);
+    const formBottom = element('div', 'pa-form-bottom'); formBottom.append(meta, submit);
+    form.append(formHead, quickReplies, question, formBottom);
+    // 記録の告知は送信ボタンの直後に短い1行だけ常時表示する（全文は折りたたみ内）．
+    if (recordsBody) {
+      const recordNotice = element('p', 'pa-help pa-record-notice', RECORD_NOTICE_SHORT);
       recordNotice.id = 'pa-record-' + suffix;
       question.setAttribute('aria-describedby', count.id + ' ' + recordNotice.id);
       form.append(recordNotice);
     }
-    content.append(intro, label, select, region, switchNotice, privacy, historyNotice, messages, status, tools, form);
+    content.append(intro, modelRow, guide, messages, status, form);
     dialog.append(header, content); host.append(launcher, dialog);
     (options.container || document.body).append(host);
 
@@ -243,15 +275,35 @@
       limit.textContent = state.remaining !== null
         ? (options.preview ? '模擬・' : '') + '全モデル共通：本日あと' + state.remaining + '回／' + interaction.daily_requests + '回．日本時間9:00に更新．'
         : '全モデル共通：' + interaction.daily_requests + '回／IP／日（UTC）．残り回数は未確認です．失敗した要求も回数に含まれる場合があります．';
+      remaining.textContent = !state.catalog ? ''
+        : (options.preview ? '模擬・' : '') + (state.remaining !== null ? '本日残り' + state.remaining + '回' : '本日上限' + interaction.daily_requests + '回');
       activeQuickReplyButtons.forEach((node) => { node.disabled = state.busy || !selected; });
     }
     let activeQuickReplyButtons = [];
-    function deactivateQuickReplies() {
+    function clearQuickReplies() {
       activeQuickReplyButtons.forEach((node) => { node.disabled = true; });
       activeQuickReplyButtons = [];
+      quickReplies.replaceChildren();
+      quickReplies.hidden = true;
     }
-    function clearMessages() { deactivateQuickReplies(); messages.replaceChildren(); }
-    function addMessage(role, text, sources, truncated, modelLabel, suggestions) {
+    // 候補は文字列としてボタンへ描画し，押したら通常の質問として1回だけ送信する．
+    function showQuickReplies(suggestions) {
+      clearQuickReplies();
+      if (!Array.isArray(suggestions) || !suggestions.length) return;
+      quickReplies.append(element('p', 'pa-quick-replies-label', '次の質問候補'));
+      for (const suggestion of suggestions) {
+        const reply = button(suggestion, 'pa-quick-reply');
+        reply.addEventListener('click', () => {
+          question.value = suggestion;
+          count.textContent = characters(suggestion).length + ' / 500文字';
+          return sendQuestion(suggestion);
+        });
+        activeQuickReplyButtons.push(reply); quickReplies.append(reply);
+      }
+      quickReplies.hidden = false;
+    }
+    function clearMessages() { clearQuickReplies(); messages.replaceChildren(); }
+    function addMessage(role, text, sources, truncated, modelLabel) {
       const item = element('article', 'pa-message pa-message-' + role);
       const title = element('h3', '', role === 'user' ? 'あなた' : modelLabel || '回答');
       item.append(title, element('p', 'pa-answer', text));
@@ -268,29 +320,14 @@
         if (list.children.length) item.append(list);
       }
       if (truncated) item.append(element('p', 'pa-help', '回答が長いため途中で終わりました．'));
-      if (role === 'assistant' && Array.isArray(suggestions) && suggestions.length) {
-        deactivateQuickReplies();
-        const group = element('div', 'pa-quick-replies');
-        group.setAttribute('aria-label', '次の質問候補');
-        group.append(element('p', 'pa-quick-replies-label', '次の質問候補'));
-        for (const suggestion of suggestions) {
-          const reply = button(suggestion, 'pa-quick-reply');
-          reply.addEventListener('click', () => {
-            question.value = suggestion;
-            count.textContent = characters(suggestion).length + ' / 500文字';
-            return sendQuestion(suggestion);
-          });
-          activeQuickReplyButtons.push(reply); group.append(reply);
-        }
-        item.append(group);
-      }
       messages.append(item);
     }
     function addGreeting() {
       const state = session.snapshot();
       const selected = state.catalog && state.catalog.models.find((model) => model.id === state.modelId);
       if (!selected) return;
-      addMessage('assistant', '私は「' + selected.label + '」を使うポートフォリオ案内AIです．作品・経歴・小嶋明について，質問をどうぞ！', undefined, false, selected.label, STARTER_SUGGESTIONS);
+      addMessage('assistant', '私は「' + selected.label + '」を使うポートフォリオ案内AIです．作品・経歴・小嶋明について，質問をどうぞ！', undefined, false, selected.label);
+      showQuickReplies(STARTER_SUGGESTIONS);
     }
     launcher.addEventListener('click', async () => {
       if (!dialog.open) dialog.showModal();
@@ -303,7 +340,7 @@
         select.replaceChildren();
         catalog.models.forEach((model) => { const option = element('option', '', model.label); option.value = model.id; select.append(option); });
         select.value = catalog.default_model || '';
-        status.textContent = catalog.models.length ? '質問を入力してください．モデル切替で自動送信はされません．' : '現在利用できるモデルはありません．';
+        status.textContent = catalog.models.length ? '質問を入力するか，候補を選んでください．' : '現在利用できるモデルはありません．';
         if (catalog.models.length && !messages.children.length) addGreeting();
       } catch (error) { status.textContent = errorMessage(error, session.snapshot().catalog && session.snapshot().catalog.interaction.daily_requests); }
       update();
@@ -323,18 +360,23 @@
       if (session.snapshot().busy) return;
       const text = value.trim();
       if (!validText(text, 500)) { status.textContent = '質問を1〜500文字で入力してください．'; question.focus(); return; }
-      deactivateQuickReplies();
       status.textContent = options.preview ? '模擬回答を表示しています…' : '回答を待っています…';
+      // 応答待ちの間は update() が候補ボタンを無効にし，重複送信を防ぐ．
       const pending = session.ask(text); update();
       try {
         const answer = await pending;
         const selected = session.snapshot().catalog.models.find((model) => model.id === answer.model.id);
         addMessage('user', text);
-        addMessage('assistant', answer.answer, answer.sources, answer.truncated, selected.label + (options.preview ? ' · 模擬回答' : ''), answer.suggestions);
+        addMessage('assistant', answer.answer, answer.sources, answer.truncated, selected.label + (options.preview ? ' · 模擬回答' : ''));
+        showQuickReplies(answer.suggestions);
         question.value = ''; count.textContent = '0 / 500文字'; question.setCustomValidity('');
         status.textContent = '回答を表示しました．参照元もご確認ください．';
         messages.lastElementChild.scrollIntoView({ block: 'nearest' });
-      } catch (error) { status.textContent = errorMessage(error, session.snapshot().catalog && session.snapshot().catalog.interaction.daily_requests); }
+      } catch (error) {
+        // 失敗後は古い候補を使わせない（入力欄の文はそのまま残す）．
+        clearQuickReplies();
+        status.textContent = errorMessage(error, session.snapshot().catalog && session.snapshot().catalog.interaction.daily_requests);
+      }
       update();
       if (dialog.open && !question.disabled) question.focus();
     }
@@ -369,5 +411,5 @@
       };
     };
   }
-  return { ALIASES, RECORD_NOTICE, regionLabel, safeHttps, validateCatalog, validateSuggestions, createHttpTransport, createSession, createMockTransport, errorMessage, mount };
+  return { ALIASES, RECORD_NOTICE, RECORD_NOTICE_SHORT, regionLabel, safeHttps, validateCatalog, validateSuggestions, createHttpTransport, createSession, createMockTransport, errorMessage, mount };
 });

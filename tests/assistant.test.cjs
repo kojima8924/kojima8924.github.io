@@ -328,8 +328,16 @@ function documentFixture() {
     function descend(node) { if (node.className.split(' ').includes(name)) return node; for (const child of node.children) { const result = descend(child); if (result) return result; } }
     return descend(document.body);
   };
+  document.findAll = (name) => {
+    const found = [];
+    (function descend(node) { if (node.className.split(' ').includes(name)) found.push(node); node.children.forEach(descend); })(document.body);
+    return found;
+  };
   return document;
 }
+// 子孫を含むテキストをまとめて返す．
+function textOf(node) { return [node.textContent, ...node.children.map(textOf)].join(' '); }
+function hasAncestor(node, ancestor) { for (let parent = node.parent; parent; parent = parent.parent) if (parent === ancestor) return true; return false; }
 
 test('初回案内は履歴へ混ぜず，クイックリプライを1回の質問として送信して更新する', async () => {
   const document = documentFixture();
@@ -338,21 +346,103 @@ test('初回案内は履歴へ混ぜず，クイックリプライを1回の質�
   const mounted = ui.mount({ document, transport: async (route, body) => {
     calls.push({ route, body }); return mock(route, body);
   } });
+  const replies = document.find('pa-quick-replies');
+  assert.equal(replies.hidden, true);
   await document.find('pa-launcher').listeners.click();
   const messages = document.find('pa-messages');
   assert.equal(messages.children.length, 1);
   assert.match(messages.children[0].children[1].textContent, /Claude Sonnet 5.*質問をどうぞ/);
   assert.deepEqual(mounted.session.snapshot().history, []);
-  const starter = messages.children[0].children[2].children[1];
+  assert.equal(replies.hidden, false);
+  assert.deepEqual(replies.children.slice(1).map(node => node.textContent), ['小嶋明の技術的な強みは？', '研究内容を簡潔に教えて', '生成AIを使わずに作った作品は？']);
+  const starter = replies.children[1];
   assert.equal(starter.className, 'pa-quick-reply');
-  await starter.listeners.click();
+  const pending = starter.listeners.click();
+  // 応答待ちの間は候補を押せず，重ねて押しても送信しない．
+  assert.ok(replies.children.slice(1).every(node => node.disabled));
+  await replies.children[2].listeners.click();
+  await pending;
+  assert.equal(calls.filter(call => call.route === '/ask').length, 1);
   assert.equal(calls.at(-1).body.question, starter.textContent);
   assert.deepEqual(calls.at(-1).body.history, []);
   assert.equal(mounted.session.snapshot().history.length, 2);
   assert.equal(messages.children.length, 3);
-  const next = messages.children[2].children.at(-1);
-  assert.equal(next.className, 'pa-quick-replies');
-  assert.equal(next.children.length, 4);
+  // 新しい回答の候補で置き換え，回答メッセージの中には候補を描画しない．
+  assert.equal(document.findAll('pa-quick-replies').length, 1);
+  assert.deepEqual(replies.children.slice(1).map(node => node.textContent), ['この研究の概要は？', '生成AI不使用の作品は？', '開発で重視していることは？']);
+  assert.ok(replies.children.slice(1).every(node => node.disabled === false));
+  assert.equal(starter.disabled, true);
+  assert.ok(document.findAll('pa-quick-reply').every(node => !hasAncestor(node, messages)));
+});
+
+test('質問候補は質問欄の直前の専用コンテナに置き，候補がない回答や失敗では隠す', async () => {
+  const document = documentFixture();
+  const mock = ui.createMockTransport();
+  let mode = 'normal';
+  ui.mount({ document, transport: async (route, body) => {
+    if (route === '/ask' && mode === 'fail') throw Object.assign(new Error('unavailable'), { status: 503 });
+    const result = await mock(route, body);
+    if (route === '/ask' && mode === 'none') delete result.suggestions;
+    if (route === '/ask' && mode === 'html') result.suggestions = ['<img src=x onerror=alert(1)>'];
+    return result;
+  } });
+  const form = document.find('pa-form');
+  const replies = document.find('pa-quick-replies');
+  const question = document.find('pa-question');
+  // form 内で，質問ラベル行の後・textarea の直前に置く．
+  assert.equal(replies.parent, form);
+  assert.equal(form.children.indexOf(replies) + 1, form.children.indexOf(question));
+  assert.ok(form.children.indexOf(document.find('pa-form-head')) < form.children.indexOf(replies));
+  assert.equal(replies.attributes['aria-label'], '次の質問候補');
+  await document.find('pa-launcher').listeners.click();
+  async function ask(text) { question.value = text; await form.listeners.submit({ preventDefault() {} }); }
+  mode = 'html'; await ask('質問1');
+  assert.equal(replies.children[1].textContent, '<img src=x onerror=alert(1)>');
+  assert.equal(replies.children[1].children.length, 0);
+  mode = 'none'; await ask('質問2');
+  assert.equal(replies.hidden, true);
+  assert.equal(replies.children.length, 0);
+  mode = 'normal'; await ask('質問3');
+  assert.equal(replies.hidden, false);
+  assert.equal(replies.children.length, 4);
+  mode = 'fail'; await ask('失敗する質問');
+  assert.equal(replies.hidden, true);
+  assert.equal(replies.children.length, 0);
+  assert.equal(question.value, '失敗する質問');
+  const messages = document.find('pa-messages');
+  for (const item of messages.children) assert.doesNotMatch(textOf(item), /次の質問候補/);
+  document.find('pa-reset').listeners.click();
+  assert.equal(replies.hidden, false);
+  assert.equal(replies.children[1].textContent, '小嶋明の技術的な強みは？');
+});
+
+test('ダイアログの常時表示は短い説明・モデル行・会話・質問欄の順に絞る', async () => {
+  const document = documentFixture();
+  ui.mount({ document, transport: ui.createMockTransport() });
+  await document.find('pa-launcher').listeners.click();
+  const content = document.find('pa-content');
+  assert.deepEqual(content.children.map(node => node.className), ['pa-intro', 'pa-model-row', 'pa-guide', 'pa-messages', 'pa-status', 'pa-form']);
+  assert.equal(document.find('pa-intro').textContent, 'β版・品質検証中です．公開資料の範囲で回答し，誤りの可能性があるため参照元をご確認ください．');
+  assert.deepEqual(document.find('pa-model-row').children.map(node => node.className), ['pa-model-label', 'pa-select', 'pa-region']);
+  assert.match(document.find('pa-region').textContent, /^処理地域：/);
+  const guide = document.find('pa-guide');
+  assert.equal(guide.tagName, 'details');
+  assert.equal(guide.children[0].textContent, 'ご利用にあたって（送信先・会話の扱い・利用回数）');
+  const form = document.find('pa-form');
+  assert.deepEqual(form.children.map(node => node.className), ['pa-form-head', 'pa-quick-replies', 'pa-question', 'pa-form-bottom', 'pa-help pa-record-notice']);
+  assert.ok(document.find('pa-form-head').children.includes(document.find('pa-reset')));
+  // 常時表示（折りたたみと会話の外）には詳細説明を出さない．
+  const visible = content.children.filter(node => node !== guide && node !== document.find('pa-messages')).map(textOf).join(' ');
+  assert.doesNotMatch(visible, /表示ログ|切替だけでは送信しません|日替わりの仮名化識別子|ナレッジ検索はAWS|IP／日|AIツールによる分析/);
+  // 残り回数は文字数の隣に短く，詳細は折りたたみ内に置く．
+  assert.equal(document.find('pa-remaining').parent, document.find('pa-count').parent);
+  assert.equal(document.find('pa-remaining').textContent, '本日上限40回');
+  assert.ok(hasAncestor(document.find('pa-limit'), guide));
+  assert.match(document.find('pa-limit').textContent, /40回／IP／日（UTC）．残り回数は未確認です．失敗した要求も回数に含まれる場合があります/);
+  document.find('pa-question').value = '作品';
+  await form.listeners.submit({ preventDefault() {} });
+  assert.equal(document.find('pa-remaining').textContent, '本日残り39回');
+  assert.match(document.find('pa-limit').textContent, /本日あと39回／40回．日本時間9:00に更新/);
 });
 
 test('不正なクイックリプライ形式は回答全体を拒否する', async () => {
@@ -426,8 +516,7 @@ test('表示ログとAPI文脈の保存範囲を分け，切替後の送信先�
   const document = documentFixture();
   ui.mount({ document, transport: ui.createMockTransport() });
   await document.find('pa-launcher').listeners.click();
-  const notices = document.find('pa-content').children.filter(node => node.className === 'pa-help')
-    .map(node => node.textContent).join(' ');
+  const notices = textOf(document.find('pa-guide'));
   assert.match(notices, /表示ログはページを開いている間だけ残ります/);
   assert.match(notices, /AIへ送る文脈は直近8往復で，各回答は1500文字まで/);
   assert.match(notices, /再読み込みで消えます/);
@@ -511,7 +600,7 @@ test('3／5モデルで選択した生成先の説明を表示し，切替だけ
     ui.mount({ document, transport: async route => { calls.push(route); return value; } });
     assert.deepEqual(calls, []);
     await document.find('pa-launcher').listeners.click();
-    const privacy = document.find('pa-privacy').children.map(node => node.textContent).join(' ');
+    const privacy = textOf(document.find('pa-guide'));
     assert.match(privacy, /ナレッジ検索はAWS/);
     assert.match(privacy, /選択モデルの設定に応じてAWS・OpenAI・Anthropic/);
     assert.match(privacy, /質問・直近8往復の会話・検索した公開資料を回答生成先へ送信/);
@@ -523,7 +612,8 @@ test('3／5モデルで選択した生成先の説明を表示し，切替だけ
     for (const model of value.models) {
       select.value = model.id;
       select.listeners.change();
-      assert.equal(document.find('pa-privacy').children[1].textContent, model.privacy_notice);
+      assert.equal(document.find('pa-model-privacy').textContent, model.privacy_notice);
+      assert.ok(hasAncestor(document.find('pa-model-privacy'), document.find('pa-guide')));
     }
     assert.deepEqual(calls, ['/models']);
   }
@@ -532,14 +622,16 @@ test('3／5モデルで選択した生成先の説明を表示し，切替だけ
 test('模擬UIは実際の提供元への送信を示さない', () => {
   const document = documentFixture();
   ui.mount({ document, preview: true, transport: ui.createMockTransport() });
-  const privacy = document.find('pa-privacy').children.map(node => node.textContent).join(' ');
+  const privacy = textOf(document.find('pa-guide'));
   assert.match(privacy, /入力した質問はAWSへ送信されません/);
   assert.doesNotMatch(privacy, /回答生成先へ送信します/);
 });
 
 const RECORD_NOTICE_TEXT = '誤回答の修正，回答品質の改善，不適切な利用の確認のため，質問と回答の本文を記録します．記録はAIツールによる分析や，本人（小嶋明）が確認することがあります．IPアドレスなど利用者を特定する情報は本文と結び付けて保存せず，記録は90日で削除します．個人情報や社外秘の内容は入力しないでください．';
 
-test('実接続時は本文記録の告知を送信ボタンの直後に常時表示し，旧い本文非保存の説明を出さない', async () => {
+const RECORD_NOTICE_SHORT_TEXT = '質問と回答は品質改善・不適切な利用の確認のため記録し，90日で削除します．個人情報や社外秘は入力しないでください．';
+
+test('実接続時は短い記録告知を送信ボタンの直後に常時表示し，確定した全文を折りたたみ内に置く', async () => {
   const document = documentFixture();
   ui.mount({ document, transport: ui.createMockTransport() });
   const form = document.find('pa-form');
@@ -553,19 +645,28 @@ test('実接続時は本文記録の告知を送信ボタンの直後に常時�
   assert.ok(bottom.children.includes(document.find('pa-submit')));
   assert.equal(form.children.indexOf(notice), form.children.indexOf(bottom) + 1);
   assert.equal(form.children.at(-1), notice);
-  assert.equal(notice.textContent, RECORD_NOTICE_TEXT);
-  assert.equal(ui.RECORD_NOTICE, RECORD_NOTICE_TEXT);
+  assert.equal(notice.textContent, RECORD_NOTICE_SHORT_TEXT);
+  assert.equal(ui.RECORD_NOTICE_SHORT, RECORD_NOTICE_SHORT_TEXT);
   assert.ok(document.find('pa-question').attributes['aria-describedby'].split(' ').includes(notice.id));
   let parent = notice.parent;
   while (parent) { assert.notEqual(parent.tagName, 'details'); parent = parent.parent; }
+  // 本人が確定した全文は一字一句そのまま「ご利用にあたって」の中に1回だけ置く．
+  const guide = document.find('pa-guide');
+  const full = document.find('pa-record-full');
+  assert.equal(full.textContent, RECORD_NOTICE_TEXT);
+  assert.equal(ui.RECORD_NOTICE, RECORD_NOTICE_TEXT);
+  assert.ok(hasAncestor(full, guide));
+  assert.equal(document.findAll('pa-record-full').length, 1);
+  assert.doesNotMatch(textOf(form), /AIツールによる分析/);
   await document.find('pa-launcher').listeners.click();
   document.find('pa-question').value = '研究について';
   await form.listeners.submit({ preventDefault() {} });
   assert.equal(document.find('pa-record-notice'), notice);
-  assert.equal(notice.textContent, RECORD_NOTICE_TEXT);
-  const privacy = document.find('pa-privacy').children.map(node => node.textContent).join(' ');
+  assert.equal(notice.textContent, RECORD_NOTICE_SHORT_TEXT);
+  assert.equal(full.textContent, RECORD_NOTICE_TEXT);
+  const privacy = textOf(guide);
   assert.doesNotMatch(privacy, /通常保存せず|履歴データベースやアプリケーションログ/);
-  assert.match(privacy, /質問と回答の本文は送信欄の下の案内のとおり記録し，90日で削除します/);
+  assert.match(privacy, /質問と回答の本文は下記「質問と回答の記録」のとおり記録し，90日で削除します/);
   assert.match(privacy, /このページを開いている間だけブラウザに保持/);
   assert.match(privacy, /日替わりの仮名化識別子/);
   const source = fs.readFileSync(path.join(__dirname, '../assets/assistant.js'), 'utf8');
@@ -577,5 +678,8 @@ test('模擬プレビューでは本文記録の告知を出さない', async ()
   ui.mount({ document, preview: true, transport: ui.createMockTransport() });
   await document.find('pa-launcher').listeners.click();
   assert.equal(document.find('pa-record-notice'), undefined);
+  assert.equal(document.find('pa-record-full'), undefined);
+  assert.doesNotMatch(textOf(document.body), /90日で削除/);
+  assert.equal(document.find('pa-remaining').textContent, '模擬・本日上限40回');
   assert.equal(document.find('pa-question').attributes['aria-describedby'], document.find('pa-count').id);
 });

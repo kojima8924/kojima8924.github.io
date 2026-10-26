@@ -64,6 +64,7 @@ TEXT_REQUIRED_STRINGS = [
     ("G検定 取得（2026年9月）", "資格表記"),
     ("AWS Certified AI Practitioner 取得（2026年9月）", "資格表記"),
     ("GitHub Foundations 取得（2026年10月）", "資格表記"),
+    ("AWS Certified Cloud Practitioner 取得（2026年10月）", "資格表記"),
 ]
 
 # README等の関連文書にも適用する検査（index.htmlとの文書間矛盾の検出）

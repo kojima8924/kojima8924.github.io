@@ -2,6 +2,17 @@
 
 このフォルダのログは，実行した時点の成果物に対する記録です．後から変更したHTML・PDFに対する合格判定や，GitHub Pagesへの公開反映を保証するものではありません．新しい検証は実行日・対象・方法と一緒に追記し，古いログを未実行の新結果として扱わないでください．
 
+## 2026-10-26：AWS Certified Cloud Practitioner の資格掲載
+
+本人が試験直後の画面で合格表示を確認したAWS Certified Cloud Practitioner（発行元Amazon Web Services）を，Heroの資格欄・詳細経歴の資格の段落・JSON-LDの`hasCredential`へ「AWS Certified Cloud Practitioner 取得（2026年10月）」として追加しました．正式通知とCredlyバッジは後日のため，検証リンクもバッジ画像も付けていません（JSON-LDにも`url`なし）．表示上の並びは既存の取得順（基本情報技術者→G検定→AWS Certified AI Practitioner→GitHub Foundations→AWS Certified Cloud Practitioner）を守って末尾に置き，順序に意味のないJSON-LDだけは同じAWSのAI Practitionerの直後に置きました．DOM順・CSSは変えていません．`scripts/check_portfolio.py`の資格表記チェックに新表記を追加し，`README.md`の資格の記述も更新しました．
+
+- `python -m unittest discover -s tests`は47件成功．`node --test tests/*.test.cjs`は62件成功・失敗0・skip 0．テストコードの変更は不要でした．
+- `python scripts/check_portfolio.py`はエラー0・警告0（ID 26個・画像35枚・外部リンク25件）．`python scripts/import_figures.py --check`は更新要0件・参照元PDF欠損0件でした．`--external`は未実施です．
+- `python make_pdf.py`で両PDFを再生成しました．採用向けPDFは2ページ・451,184 bytes，完全版は8ページ・1,335,816 bytesです．PyMuPDFの本文抽出で「Cloud Practitioner」を採用向け1ページ目，完全版1・7ページ目に確認しました．URIリンクは採用向け13件・完全版58件で，`127.0.0.1`を指すリンクは両版とも0件です．採用向けの2ページを80dpiで画像化して目視し，1ページ目のプロフィール欄の資格5行が切れていないこと，2ページに収まっていることを確認しました．完全版の画像での目視は未実施です．
+- OGP（`make_ogp.py`）は資格を記載していないことをgrepで確認し，再生成していません．
+- `git diff --check`は指摘なし．変更したテキストファイルはUTF-8（BOMなし）・CRLFで，bare LFは0件です．
+- Playwrightでのviewport・横はみ出し確認，axe-core，W3C Nu，Androidなどの実機検証，スクリーンリーダーでの確認，GitHub Pages公開後の確認は未実施です．
+
 ## 2026-10-03：AI質問機能（portfolio-assistant）の作品紹介を追加
 
 `#works`のClage Cookの後（ChromiumforAの折りたたみの前）に，`#portfolio-assistant-card`（概要・本人の担当・設計判断・モデル・tech-line・質問欄へのページ内リンク・画面画像，折りたたみ内に構成の流れ・運用・検証・状態）を追加し，`#assistant`の質問欄の直下に作品紹介への1行リンクを追加しました．DOM順・CSSの`order`・ナビゲーション項目は変えていません．構成の流れはHTML/CSS（既存のCSS変数）だけで描き，外部ライブラリ・外部通信は追加していません．リポジトリが非公開のためGitHubリンクは付けていません．

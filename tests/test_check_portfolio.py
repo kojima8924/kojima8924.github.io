@@ -129,26 +129,51 @@ class 資格リンク検査テスト(unittest.TestCase):
     def check(self, html: str) -> list[str]:
         return check_portfolio.check_credential_links(parse(html), html)
 
+    AIF = check_portfolio.EXPECTED_CREDLY_AIF
+    CLF = check_portfolio.EXPECTED_CREDLY_CLF
+
+    @staticmethod
+    def metadata(*urls: str) -> str:
+        body = ",".join(f'{{"url":"{url}"}}' for url in urls)
+        return f'<script type="application/ld+json">[{body}]</script>'
+
+    @staticmethod
+    def links(*urls: str) -> str:
+        return "".join(f'<a href="{url}">資格証明</a>' for url in urls)
+
     def test_掲載回数を固定せずURL一致を確認する(self) -> None:
-        url = check_portfolio.EXPECTED_CREDLY
-        metadata = f'<script type="application/ld+json">{{"url":"{url}"}}</script>'
         for count in (1, 2, 4):
             with self.subTest(count=count):
-                html = metadata + f'<a href="{url}">資格証明</a>' * count
+                html = self.metadata(self.AIF, self.CLF) + self.links(self.AIF, self.CLF) * count
                 self.assertEqual(self.check(html), [])
 
+    def test_期待するURLは2資格分(self) -> None:
+        self.assertEqual(check_portfolio.EXPECTED_CREDLY, {self.AIF, self.CLF})
+        self.assertIn("0045d984-825f-4110-bc04-3f929dbd961f", self.CLF)
+
     def test_異なる資格URLを検出する(self) -> None:
-        errors = self.check('<a href="https://www.credly.com/badges/wrong/public_url">資格証明</a>')
+        html = self.metadata(self.AIF, self.CLF) + self.links(self.AIF, self.CLF)
+        html += '<a href="https://www.credly.com/badges/wrong/public_url">資格証明</a>'
+        errors = self.check(html)
         self.assertTrue(any("検証URLが不一致" in error for error in errors))
 
+    def test_片方の資格URLの欠落を検出する(self) -> None:
+        for present, missing in ((self.AIF, self.CLF), (self.CLF, self.AIF)):
+            with self.subTest(missing=missing):
+                errors = self.check(self.metadata(present) + self.links(present))
+                self.assertTrue(any("検証URLが不一致" in error for error in errors))
+                self.assertIn(f"Credlyの検証URLへの表示リンクがない: {missing}", errors)
+                self.assertIn(f"JSON-LDにCredlyの検証URLがない: {missing}", errors)
+
     def test_構造化データのみでは表示リンク欠落を検出する(self) -> None:
-        url = check_portfolio.EXPECTED_CREDLY
-        errors = self.check(f'<script type="application/ld+json">{{"url":"{url}"}}</script>')
-        self.assertIn("Credlyの検証URLへの表示リンクがない", errors)
+        errors = self.check(self.metadata(self.AIF, self.CLF))
+        for url in (self.AIF, self.CLF):
+            self.assertIn(f"Credlyの検証URLへの表示リンクがない: {url}", errors)
 
     def test_表示リンクのみでは構造化データ欠落を検出する(self) -> None:
-        errors = self.check(f'<a href="{check_portfolio.EXPECTED_CREDLY}">資格証明</a>')
-        self.assertIn("JSON-LDにCredlyの検証URLがない", errors)
+        errors = self.check(self.links(self.AIF, self.CLF))
+        for url in (self.AIF, self.CLF):
+            self.assertIn(f"JSON-LDにCredlyの検証URLがない: {url}", errors)
 
 
 class 非公開作品の掲載検査テスト(unittest.TestCase):

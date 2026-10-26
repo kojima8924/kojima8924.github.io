@@ -156,26 +156,55 @@ PDF_METADATA = {
 # 再圧縮しない資格画像（発行元の図柄を、サイト掲載用の縮小以外では改変しない）
 UNALTERED_IMAGES = [
     Path(__file__).resolve().parent / "media" / "badge-aws-ai-practitioner.png",
+    Path(__file__).resolve().parent / "media" / "badge-aws-cloud-practitioner.png",
     Path(__file__).resolve().parent / "media" / "badge-g-kentei-2026-5.png",
 ]
 
 
+def _rgb_samples(pix) -> bytes:
+    """Pixmap からアルファを除いたRGBの画素列を返す。"""
+    import pymupdf
+
+    if pix.colorspace is None or pix.colorspace.n != 3:
+        pix = pymupdf.Pixmap(pymupdf.csRGB, pix)
+    if pix.alpha:
+        pix = pymupdf.Pixmap(pix, 0)
+    return pix.samples
+
+
 def _find_unaltered_images(document) -> list:
-    """UNALTERED_IMAGES と同じ寸法・アルファ付きの埋め込み画像を (ページ番号, xref, 元ファイル) で返す。"""
+    """UNALTERED_IMAGES と一致するアルファ付きの埋め込み画像を (ページ番号, xref, 元ファイル) で返す。
+
+    同じ寸法の資格画像が複数ある（AWSの2バッジはどちらも256×256）ため、寸法だけでなく
+    RGB画素の差がもっとも小さい元ファイルを対応付ける。寸法だけで選ぶと別のバッジ画像で
+    置き換えてしまう。
+    """
     import pymupdf
 
     targets = []
     for path in UNALTERED_IMAGES:
         if path.exists():
             pix = pymupdf.Pixmap(str(path))
-            targets.append((path, pix.width, pix.height))
+            targets.append((path, pix.width, pix.height, _rgb_samples(pix)))
     found = []
     for page in document:
         for info in page.get_images(full=True):
             xref, smask, width, height = info[0], info[1], info[2], info[3]
-            for path, tw, th in targets:
-                if smask and (width, height) == (tw, th):
-                    found.append((page.number, xref, path))
+            if not smask:
+                continue
+            candidates = [t for t in targets if (width, height) == (t[1], t[2])]
+            if not candidates:
+                continue
+            if len(candidates) == 1:
+                found.append((page.number, xref, candidates[0][0]))
+                continue
+            embedded = _rgb_samples(pymupdf.Pixmap(document, xref))
+            best = min(
+                candidates,
+                key=lambda t: sum(abs(a - b) for a, b in zip(embedded, t[3]))
+                if len(embedded) == len(t[3]) else float("inf"),
+            )
+            found.append((page.number, xref, best[0]))
     return found
 
 

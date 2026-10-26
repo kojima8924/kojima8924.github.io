@@ -122,5 +122,25 @@ class PDFリンク後処理テスト(unittest.TestCase):
             self.assertEqual(make_pdf._rewrite_local_pdf_links(document, origin), 0)
 
 
+
+@unittest.skipIf(pymupdf is None, "PyMuPDFが必要")
+class 資格画像保護テスト(unittest.TestCase):
+    def test_同じ寸法の2つのAWSバッジをそれぞれ正しい元画像に対応付ける(self) -> None:
+        badges = [path for path in make_pdf.UNALTERED_IMAGES if path.name.startswith("badge-aws-")]
+        self.assertEqual(
+            sorted(path.name for path in badges),
+            ["badge-aws-ai-practitioner.png", "badge-aws-cloud-practitioner.png"],
+        )
+        # 掲載順と逆順に埋め込んでも、寸法ではなく画素で対応付けることを確認する．
+        with pymupdf.open() as document:
+            page = document.new_page()
+            xrefs = {}
+            for index, path in enumerate(reversed(badges)):
+                xrefs[path] = page.insert_image(pymupdf.Rect(30 + index * 90, 30, 110 + index * 90, 110), filename=str(path))
+            found = make_pdf._find_unaltered_images(document)
+        self.assertEqual(sorted((xref, path.name) for _, xref, path in found),
+                         sorted((xref, path.name) for path, xref in xrefs.items()))
+
+
 if __name__ == "__main__":
     unittest.main()

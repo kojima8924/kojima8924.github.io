@@ -84,7 +84,8 @@ REQUIRED_STRINGS = [
     ("19.2%低減", "HWHMの表現"),
     ("ScriptVEdit", "公式プロジェクト名"),
     ("a.kojima8924@gmail.com", "メール導線"),
-    ("credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7", "AWS認定の検証リンク（Credly）"),
+    ("credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7", "AWS Certified AI Practitionerの検証リンク（Credly）"),
+    ("credly.com/badges/0045d984-825f-4110-bc04-3f929dbd961f", "AWS Certified Cloud Practitionerの検証リンク（Credly）"),
     ("github.com/kojima8924", "GitHub導線"),
     ("frobt.2023.1157911", "論文リンク"),
 ]
@@ -98,7 +99,10 @@ WORK_ANCHORS = {
     "ScriptVEdit": "scriptvedit-card",
     "portfolio-assistant": "portfolio-assistant-card",
 }
-EXPECTED_CREDLY = "https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url"
+# 資格ごとのCredly検証URL（AWS Certified AI Practitioner／AWS Certified Cloud Practitioner）
+EXPECTED_CREDLY_AIF = "https://www.credly.com/badges/fb68c752-94ef-46e9-a339-fa398107e3a7/public_url"
+EXPECTED_CREDLY_CLF = "https://www.credly.com/badges/0045d984-825f-4110-bc04-3f929dbd961f/public_url"
+EXPECTED_CREDLY = {EXPECTED_CREDLY_AIF, EXPECTED_CREDLY_CLF}
 VOID_ELEMENTS = {
     "area", "base", "br", "col", "embed", "hr", "img", "input", "link",
     "meta", "param", "source", "track", "wbr",
@@ -242,20 +246,21 @@ def check_structure(parser: _Parser) -> list[str]:
 
 
 def check_credential_links(parser: _Parser, html: str) -> list[str]:
-    """同じ証明URLを表示リンクと構造化データに保ち、重複掲載の数は問わない。"""
+    """資格ごとの証明URLを表示リンクと構造化データの両方に保ち、重複掲載の数は問わない。"""
     errors: list[str] = []
     credly_urls = re.findall(r"https?://(?:www\.)?credly\.com/[^\s\"'<>]+", html)
-    if set(credly_urls) != {EXPECTED_CREDLY}:
+    if set(credly_urls) != EXPECTED_CREDLY:
         errors.append(f"Credlyの検証URLが不一致: {sorted(set(credly_urls))}")
-    if EXPECTED_CREDLY not in parser.external_links:
-        errors.append("Credlyの検証URLへの表示リンクがない")
-    if not any(
-        element.tag == "script"
-        and element.attrs.get("type") == "application/ld+json"
-        and EXPECTED_CREDLY in "".join(element.text_parts)
+    json_ld = "".join(
+        "".join(element.text_parts)
         for element in parser.elements
-    ):
-        errors.append("JSON-LDにCredlyの検証URLがない")
+        if element.tag == "script" and element.attrs.get("type") == "application/ld+json"
+    )
+    for url in sorted(EXPECTED_CREDLY):
+        if url not in parser.external_links:
+            errors.append(f"Credlyの検証URLへの表示リンクがない: {url}")
+        if url not in json_ld:
+            errors.append(f"JSON-LDにCredlyの検証URLがない: {url}")
     return errors
 
 

@@ -2,6 +2,22 @@
 
 このフォルダのログは，実行した時点の成果物に対する記録です．後から変更したHTML・PDFに対する合格判定や，GitHub Pagesへの公開反映を保証するものではありません．新しい検証は実行日・対象・方法と一緒に追記し，古いログを未実行の新結果として扱わないでください．
 
+## 2026-10-27：AWS Certified Cloud Practitioner のCredly検証リンクとバッジを追加
+
+2026-10-26に検証リンク・バッジ画像なしで掲載したAWS Certified Cloud Practitionerに，Credlyの検証リンク（`https://www.credly.com/badges/0045d984-825f-4110-bc04-3f929dbd961f/public_url`）とデジタルバッジを追加しました．CredlyのOpen Badges assertionで，バッジ名「AWS Certified Cloud Practitioner」・発行日2026-10-26・受領者ハッシュが既存のAI Practitionerバッジと同一であることを確認しています．扱いはAI Practitionerに揃え，Heroの資格欄の表記をCredlyへのリンク（新しいタブ・`noopener noreferrer`・末尾↗）にし，JSON-LDの`hasCredential`に`url`を追加し，詳細経歴のバッジ列にAI Practitionerの直後へバッジ（`media/badge-aws-cloud-practitioner.png`，Credly公式の600×600 PNGをPillowのLanczos法で256×256 RGBAへ縮小．図柄の改変なし・36,301 bytes）を置きました．詳細経歴の資格の段落の文字列は，AI Practitionerと同じくリンクなしのままです．G検定・GitHub Foundationsの扱いは変えていません．
+
+- バッジの並びはAI Practitioner→Cloud Practitioner→G検定としました．既存のバッジ列はすでに資格の段落（G検定→AI Practitioner）と同じ順ではなく，同じ発行元の正方形バッジ2枚を並べ，横長のG検定ロゴを最後に置く方が見た目がまとまるためです．
+- バッジが3枚になると，PC幅の横並びでは資格の段落が約180px（1024px幅）まで狭くなったため，画面表示（`@media screen`）では全幅でバッジ列の下へ本文を折り返すようにしました（従来は767.98px以下だけ）．印刷・PDFは横並びのままです．
+- `make_pdf.py`の再圧縮から保護する画像に新バッジを追加しました．従来の対応付けは寸法だけで行っていたため，同じ256×256の2バッジでは両方が後に登録した画像で置き換わる不具合になることが分かり，同寸法の候補が複数ある場合はRGB画素の差が最小の元画像を選ぶよう直しました．`tests/test_make_pdf.py`に2バッジの対応付けの回帰テストを追加し，修正前のコードでは失敗することを確認しました．
+- `scripts/check_portfolio.py`のCredly検査を，AI Practitioner・Cloud Practitionerの2つのURLの集合と一致し，それぞれが表示リンクとJSON-LDの両方にあることを求める形に変え，`tests/test_check_portfolio.py`に2資格分の期待値・片方欠落の検出のテストを追加しました．
+- `python -m unittest discover -s tests`は50件成功．`node --test tests/*.test.cjs`は62件成功・失敗0・skip 0．
+- `python scripts/check_portfolio.py`はエラー0・警告0（ID 26個・画像36枚・外部リンク26件）．`python scripts/import_figures.py --check`は更新要0件・参照元PDF欠損0件でした．`--external`は未実施です．
+- `python make_pdf.py`で両PDFを再生成しました．採用向けPDFは2ページ・451,246 bytes，完全版は8ページ・1,375,439 bytesです．両版ともURIリンクにCredlyの2URLがあり（採用向け14件・完全版60件），`127.0.0.1`を指すリンクは0件です．完全版7ページ目の2バッジの埋め込み画像は，それぞれAI Practitioner・Cloud Practitionerの元画像と画素差が小さい側に対応していることを確認しました．採用向けの2ページと完全版の7ページ目を画像化して目視し，資格欄・バッジ列が切れていないことを確認しました．完全版の他ページの目視は未実施です．
+- OGP（`make_ogp.py`）は資格を記載していないことをgrepで確認し，再生成していません．
+- Playwright Chromiumのローカル配信で1440×1000／1024×900／390×844／360×800／320×700のライト・ダーク10条件を確認し，すべてページ全体の`scrollWidth == clientWidth`，資格欄（`.cert-row`）の`scrollWidth`は要素幅と同じで内部要素の横はみ出し0件，3バッジの画像は読込済み，コンソールのerror／warning 0件でした．320px幅ではG検定ロゴが2段目に折り返します．ページ内で表示幅を超える要素はスマホ幅で1件ありますが，横スクロールする既存の帯図（`figure.fig-band`）内の画像です．これはブラウザのviewport検査であり，実機検証ではありません．
+- `git diff --check`は指摘なし．変更したテキストファイルはUTF-8（BOMなし）・CRLFです．
+- axe-core，W3C Nu，Androidなどの実機検証，スクリーンリーダーでの確認，GitHub Pages公開後の確認は未実施です．
+
 ## 2026-10-26：AWS Certified Cloud Practitioner の資格掲載
 
 本人が試験直後の画面で合格表示を確認したAWS Certified Cloud Practitioner（発行元Amazon Web Services）を，Heroの資格欄・詳細経歴の資格の段落・JSON-LDの`hasCredential`へ「AWS Certified Cloud Practitioner 取得（2026年10月）」として追加しました．正式通知とCredlyバッジは後日のため，検証リンクもバッジ画像も付けていません（JSON-LDにも`url`なし）．表示上の並びは既存の取得順（基本情報技術者→G検定→AWS Certified AI Practitioner→GitHub Foundations→AWS Certified Cloud Practitioner）を守って末尾に置き，順序に意味のないJSON-LDだけは同じAWSのAI Practitionerの直後に置きました．DOM順・CSSは変えていません．`scripts/check_portfolio.py`の資格表記チェックに新表記を追加し，`README.md`の資格の記述も更新しました．

@@ -6,7 +6,8 @@ C:\\code\\slide\\cases\\2026-09-18_履歴書用_受託案件構成図\\ にあ�
 `python C:\\code\\slide\\tools\\slide.py check <html>` で PDF を作り直し、このスクリプトを再実行する。
 
 SVG は文字をパス化する（閲覧側に源真ゴシックが無くても崩れない）。座標の桁を落として容量を抑える。
-使い方: python scripts/import_figures.py [--check]
+使い方: python scripts/import_figures.py [--check] [names...]
+  names    指定した図だけを対象にする（省略時は全部。名前は FIGURES のキー）
   --check  書き込まず、slide 側の PDF から生成した SVG と media/fig/*.svg の内容を比較する
 """
 from __future__ import annotations
@@ -43,16 +44,19 @@ def _round_numbers(svg: str) -> str:
 def _render_svg(pdf: Path) -> str:
     """PDFを、保存時と同じ条件でSVG文字列へ変換する。"""
     try:
-        import fitz  # PyMuPDF
+        import pymupdf
     except ImportError as exc:  # pragma: no cover
-        raise SystemExit("PyMuPDF が必要です: python -m pip install pymupdf") from exc
+        raise SystemExit(
+            "PyMuPDF がありません。`python -m pip install -r requirements-pdf.txt` "
+            "を実行してください。"
+        ) from exc
 
-    with fitz.open(pdf) as doc:
+    with pymupdf.open(pdf) as doc:
         if len(doc) != 1:
             raise SystemExit(f"{pdf.name}: 1ページのはずが {len(doc)} ページ")
         svg = doc[0].get_svg_image(text_as_path=True)
     svg = _round_numbers(svg)
-    # 図の意味はページ側の alt / 本文で説明するので、装飾画像として扱えるよう role を付ける
+    # 図の意味はページ側の img の alt / 本文で説明する。SVG 自体には画像であることを示す role="img" を付ける
     return svg.replace("<svg ", '<svg role="img" ', 1)
 
 

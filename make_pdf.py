@@ -19,8 +19,13 @@ from urllib.parse import quote, urlsplit, urlunsplit
 PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_SOURCE = PROJECT_ROOT / "index.html"
 DEFAULT_OUTPUT = PROJECT_ROOT / "media" / "Akira_Kojima_Portfolio.pdf"
-DEFAULT_SUMMARY_OUTPUT = PROJECT_ROOT / "media" / "Akira_Kojima_Portfolio_Summary.pdf"
 PUBLIC_SITE_URL = "https://kojima8924.github.io/"
+
+
+def summary_output_for(output: Path) -> Path:
+    """完全版の出力パスから採用向けサマリーの出力パス（<stem>_Summary.pdf）を返す。"""
+
+    return output.with_name(f"{output.stem}_Summary.pdf")
 
 
 class _QuietRequestHandler(SimpleHTTPRequestHandler):
@@ -69,6 +74,16 @@ def _server_location(source: Path) -> tuple[Path, str]:
     return server_root, url_path
 
 
+# 「表示中の画像」の判定。読込待ち・decode・欠落判定の3か所で同じ集合を使うため1か所に置く。
+# window へ関数を定義するとページ側JSと名前が衝突し得るので、式として各JS文字列へ埋め込む。
+_IS_VISIBLE_IMAGE_JS = """(image => {
+            const style = getComputedStyle(image);
+            return style.display !== 'none'
+              && style.visibility !== 'hidden'
+              && image.getClientRects().length > 0;
+          })"""
+
+
 def _wait_until_ready(page: object, timeout_ms: int) -> list[str]:
     """印刷に必要なスタイル、フォント、画像の読込完了を待つ。"""
 
@@ -96,46 +111,29 @@ def _wait_until_ready(page: object, timeout_ms: int) -> list[str]:
     page.wait_for_function(
         """
         () => [...document.images]
-          .filter(image => {
-            const style = getComputedStyle(image);
-            return style.display !== 'none'
-              && style.visibility !== 'hidden'
-              && image.getClientRects().length > 0;
-          })
+          .filter(image => %s(image))
           .every(image => image.complete)
-        """,
+        """ % _IS_VISIBLE_IMAGE_JS,
         timeout=timeout_ms,
     )
     page.evaluate(
         """
         async () => {
           const decodes = [...document.images]
-            .filter(image => {
-              const style = getComputedStyle(image);
-              const visible = style.display !== 'none'
-                && style.visibility !== 'hidden'
-                && image.getClientRects().length > 0;
-              return visible && image.complete && image.naturalWidth > 0;
-            })
+            .filter(image => %s(image) && image.complete && image.naturalWidth > 0)
             .map(image => image.decode().catch(() => undefined));
           await Promise.all(decodes);
         }
-        """
+        """ % _IS_VISIBLE_IMAGE_JS
     )
 
     return page.eval_on_selector_all(
         "img",
         """
         images => images
-          .filter(image => {
-            const style = getComputedStyle(image);
-            const visible = style.display !== 'none'
-              && style.visibility !== 'hidden'
-              && image.getClientRects().length > 0;
-            return visible && image.naturalWidth === 0;
-          })
+          .filter(image => %s(image) && image.naturalWidth === 0)
           .map(image => image.currentSrc || image.src || '(srcなし)')
-        """,
+        """ % _IS_VISIBLE_IMAGE_JS,
     )
 
 
@@ -155,9 +153,9 @@ PDF_METADATA = {
 
 # 再圧縮しない資格画像（発行元の図柄を、サイト掲載用の縮小以外では改変しない）
 UNALTERED_IMAGES = [
-    Path(__file__).resolve().parent / "media" / "badge-aws-ai-practitioner.png",
-    Path(__file__).resolve().parent / "media" / "badge-aws-cloud-practitioner.png",
-    Path(__file__).resolve().parent / "media" / "badge-g-kentei-2026-5.png",
+    PROJECT_ROOT / "media" / "badge-aws-ai-practitioner.png",
+    PROJECT_ROOT / "media" / "badge-aws-cloud-practitioner.png",
+    PROJECT_ROOT / "media" / "badge-g-kentei-2026-5.png",
 ]
 
 
@@ -279,10 +277,72 @@ def _rewrite_local_pdf_links(document, local_origin: str) -> int:
     return updated
 
 
-def _compress_pdf_images(output: Path, mode: str = "full", *, local_origin: str | None = None) -> int:
-    """埋め込み画像を印刷十分な解像度へ再圧縮し、配布しやすいサイズに抑える。
+def _validated_pdf_size(path: Path, message: str) -> int:
+    """path が PDF 署名で始まり 1024 バイト以上ならそのサイズを返し、そうでなければ message で失敗する。"""
 
-    あわせてメタデータを設定し，生成用サーバーのURIを公開サイトへ向ける．
+    size = path.stat().st_size
+    with path.open("rb") as stream:
+        signature = stream.read(5)
+    if signature != b"%PDF-" or size < 1024:
+        raise RuntimeError(message)
+    return size
+
+
+@contextmanager
+def _atomic_output(output: Path, prefix: str, suffix: str = ".tmp.pdf") -> Iterator[Path]:
+    """output と同じディレクトリの一時パスを渡し、with 本体が例外なく終わったときだけ output へ置き換える。
+
+    本体（書き出しと _validated_pdf_size による検証）が例外を投げると os.replace には到達しないので、
+    壊れたファイルが output に置かれることはない。一時ファイルは成否にかかわらず削除する。
+    """
+
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=prefix,
+        suffix=suffix,
+        dir=output.parent,
+    )
+    os.close(descriptor)
+    temporary_path = Path(temporary_name)
+
+    try:
+        yield temporary_path
+        os.replace(temporary_path, output)
+    finally:
+        temporary_path.unlink(missing_ok=True)
+
+
+def _postprocess_document(document, mode: str, local_origin: str | None) -> None:
+    """開いた PDF に配布用の後処理を順に施す。
+
+    メタデータの設定、資格画像と小さな画像の退避、埋め込み画像の再圧縮、資格画像の復元、
+    小さな画像の復元、生成用サーバーのURIの公開サイトへの書換、の順。退避は再圧縮の前、
+    リンク書換は再圧縮の後でなければならないので順序を変えないこと。
+    """
+
+    metadata = dict(document.metadata or {})
+    metadata.update(PDF_METADATA.get(mode, PDF_METADATA["full"]))
+    document.set_metadata(metadata)
+    keep = _find_unaltered_images(document)
+    small = _find_small_images(document)
+    document.rewrite_images(
+        dpi_threshold=180,
+        dpi_target=150,
+        quality=80,
+        lossy=True,
+        lossless=True,
+    )
+    for page_number, xref, path in keep:
+        document[page_number].replace_image(xref, filename=str(path))
+    _restore_small_images(document, small)
+    if local_origin is not None:
+        _rewrite_local_pdf_links(document, local_origin)
+
+
+def _postprocess_pdf(output: Path, mode: str = "full", *, local_origin: str | None = None) -> int:
+    """output の PDF に配布用の後処理を施して置き換え、新しいサイズを返す。
+
+    後処理（_postprocess_document）はメタデータ設定・資格画像の保護・小さな画像の復元・
+    ローカルリンクの書換・埋め込み画像の再圧縮。
     """
 
     try:
@@ -293,58 +353,17 @@ def _compress_pdf_images(output: Path, mode: str = "full", *, local_origin: str 
             "を実行してください。"
         ) from exc
 
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{output.stem}-compress-",
-        suffix=".tmp.pdf",
-        dir=output.parent,
-    )
-    os.close(descriptor)
-    temporary_path = Path(temporary_name)
-
-    try:
+    with _atomic_output(output, prefix=f".{output.stem}-compress-") as temporary_path:
         with pymupdf.open(output) as document:
-            metadata = dict(document.metadata or {})
-            metadata.update(PDF_METADATA.get(mode, PDF_METADATA["full"]))
-            document.set_metadata(metadata)
-            keep = _find_unaltered_images(document)
-            small = _find_small_images(document)
-            document.rewrite_images(
-                dpi_threshold=180,
-                dpi_target=150,
-                quality=80,
-                lossy=True,
-                lossless=True,
-            )
-            for page_number, xref, path in keep:
-                document[page_number].replace_image(xref, filename=str(path))
-            _restore_small_images(document, small)
-            if local_origin is not None:
-                _rewrite_local_pdf_links(document, local_origin)
+            _postprocess_document(document, mode, local_origin)
             document.ez_save(str(temporary_path))
-
-        size = temporary_path.stat().st_size
-        with temporary_path.open("rb") as stream:
-            signature = stream.read(5)
-        if signature != b"%PDF-" or size < 1024:
-            raise RuntimeError("画像再圧縮後の PDF が不正です。")
-
-        os.replace(temporary_path, output)
-        return size
-    finally:
-        temporary_path.unlink(missing_ok=True)
+        size = _validated_pdf_size(temporary_path, "画像再圧縮後の PDF が不正です。")
+    return size
 
 
 def _write_pdf_atomically(page: object, output: Path) -> int:
     output.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{output.stem}-",
-        suffix=".tmp.pdf",
-        dir=output.parent,
-    )
-    os.close(descriptor)
-    temporary_path = Path(temporary_name)
-
-    try:
+    with _atomic_output(output, prefix=f".{output.stem}-") as temporary_path:
         page.pdf(
             path=str(temporary_path),
             format="A4",
@@ -353,17 +372,8 @@ def _write_pdf_atomically(page: object, output: Path) -> int:
             landscape=False,
             display_header_footer=False,
         )
-
-        size = temporary_path.stat().st_size
-        with temporary_path.open("rb") as stream:
-            signature = stream.read(5)
-        if signature != b"%PDF-" or size < 1024:
-            raise RuntimeError("Chromium が有効な PDF を生成しませんでした。")
-
-        os.replace(temporary_path, output)
-        return size
-    finally:
-        temporary_path.unlink(missing_ok=True)
+        size = _validated_pdf_size(temporary_path, "Chromium が有効な PDF を生成しませんでした。")
+    return size
 
 
 def _count_pages(output: Path) -> int:
@@ -434,7 +444,7 @@ def make_pdf(source: Path, output: Path, timeout_seconds: float, mode: str = "fu
                         )
 
                     _write_pdf_atomically(page, output)
-                    size = _compress_pdf_images(output, mode, local_origin=base_url)
+                    size = _postprocess_pdf(output, mode, local_origin=base_url)
                     context.close()
                 finally:
                     browser.close()
@@ -500,21 +510,16 @@ def main() -> int:
     if args.mode in ("full", "both"):
         jobs.append(("full", args.output))
     if args.mode in ("summary", "both"):
-        summary_output = (
-            DEFAULT_SUMMARY_OUTPUT
-            if args.output == DEFAULT_OUTPUT
-            else args.output.with_name(f"{args.output.stem}_Summary.pdf")
-        )
-        jobs.append(("summary", summary_output))
+        jobs.append(("summary", summary_output_for(args.output)))
 
     for mode, output in jobs:
         try:
-            size = make_pdf(args.source, output, args.timeout, mode=mode)
-            pages = _count_pages(output.expanduser().resolve())
+            resolved = output.expanduser().resolve()
+            size = make_pdf(args.source, resolved, args.timeout, mode=mode)
+            pages = _count_pages(resolved)
         except (OSError, RuntimeError, ValueError) as exc:
             print(f"PDF生成失敗（{mode}）: {exc}", file=sys.stderr)
             return 1
-        resolved = output.expanduser().resolve()
         print(
             f"PDF生成完了（{mode}）: {resolved} "
             f"({size / (1024 * 1024):.1f} MiB / {pages}ページ)"

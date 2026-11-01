@@ -1,4 +1,7 @@
+import tempfile
 import unittest
+from pathlib import Path
+from urllib.parse import quote
 
 import make_pdf
 
@@ -6,6 +9,37 @@ try:
     import pymupdf
 except ImportError:
     pymupdf = None
+
+
+class 配信位置テスト(unittest.TestCase):
+    def test_プロジェクト内のHTMLはプロジェクトルートから配信する(self) -> None:
+        self.assertEqual(
+            make_pdf._server_location(make_pdf.PROJECT_ROOT / "index.html"),
+            (make_pdf.PROJECT_ROOT, "index.html"),
+        )
+
+    def test_プロジェクト外のHTMLは親ディレクトリから引用符付きの名前で配信する(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "日本語 空白.html"
+            source.write_text("<!doctype html>", encoding="utf-8")
+            server_root, url_path = make_pdf._server_location(source)
+        self.assertEqual(server_root, source.parent)
+        self.assertEqual(url_path, quote("日本語 空白.html"))
+        self.assertNotIn(" ", url_path)
+
+
+class 出力名規則テスト(unittest.TestCase):
+    def test_既定の出力先から採用向けの既定出力先を導く(self) -> None:
+        self.assertEqual(
+            make_pdf.summary_output_for(make_pdf.DEFAULT_OUTPUT),
+            make_pdf.PROJECT_ROOT / "media" / "Akira_Kojima_Portfolio_Summary.pdf",
+        )
+
+    def test_任意の出力先では同じディレクトリに_Summaryを付ける(self) -> None:
+        self.assertEqual(
+            make_pdf.summary_output_for(Path("out") / "sub" / "X.pdf"),
+            Path("out") / "sub" / "X_Summary.pdf",
+        )
 
 
 class PDF公開リンク変換テスト(unittest.TestCase):
@@ -120,6 +154,59 @@ class PDFリンク後処理テスト(unittest.TestCase):
             self.assertEqual(after_links[4]["page"], 1)
             self.assertEqual(after_links[4]["to"], before_links[4]["to"])
             self.assertEqual(make_pdf._rewrite_local_pdf_links(document, origin), 0)
+
+
+@unittest.skipIf(pymupdf is None, "PyMuPDFが必要")
+class PDF後処理テスト(unittest.TestCase):
+    origin = "http://127.0.0.1:54321"
+
+    def _source_pdf(self) -> bytes:
+        """再圧縮される大きなJPEG・小さなPNG・ローカル/外部リンクを持つ1ページPDFをメモリ内で作る．"""
+        large = pymupdf.Pixmap(pymupdf.csRGB, pymupdf.IRect(0, 0, 1500, 1000), False)
+        large.clear_with(200)
+        large.set_rect(pymupdf.IRect(100, 100, 900, 700), (30, 90, 160))
+        small = pymupdf.Pixmap(pymupdf.csRGB, pymupdf.IRect(0, 0, 200, 200), False)
+        small.clear_with(255)
+        small.set_rect(pymupdf.IRect(40, 40, 160, 160), (220, 40, 40))
+        with pymupdf.open() as source:
+            page = source.new_page()
+            page.insert_image(pymupdf.Rect(30, 30, 230, 163), stream=large.tobytes("jpg"))
+            # 20pt 四方に置くと 720dpi 相当になり，復元しなければ再圧縮で縮められる．
+            page.insert_image(pymupdf.Rect(30, 200, 50, 220), stream=small.tobytes("png"))
+            for index, uri in enumerate((f"{self.origin}/media/x.pdf", "https://github.com/kojima8924")):
+                page.insert_link({
+                    "kind": pymupdf.LINK_URI,
+                    "from": pymupdf.Rect(30, 250 + index * 30, 220, 270 + index * 30),
+                    "uri": uri,
+                })
+            return source.tobytes()
+
+    def _small_image_bytes(self, document) -> bytes:
+        small = [
+            info for info in document[0].get_image_info(xrefs=True)
+            if max(info["width"], info["height"]) <= make_pdf.SMALL_IMAGE_MAX_PX
+        ]
+        self.assertEqual(len(small), 1)
+        return document.extract_image(small[0]["xref"])["image"]
+
+    def test_メタデータ設定と小画像の保持とローカルリンクの書換を行う(self) -> None:
+        original = self._source_pdf()
+        with pymupdf.open(stream=original, filetype="pdf") as document:
+            small_before = self._small_image_bytes(document)
+            make_pdf._postprocess_document(document, "summary", self.origin)
+            processed = document.tobytes()
+
+        with pymupdf.open(stream=processed, filetype="pdf") as document:
+            expected = make_pdf.PDF_METADATA["summary"]
+            self.assertEqual(
+                {key: document.metadata[key] for key in ("title", "author", "subject")},
+                expected,
+            )
+            self.assertEqual(self._small_image_bytes(document), small_before)
+            self.assertEqual(
+                [link["uri"] for link in document[0].get_links()],
+                ["https://kojima8924.github.io/media/x.pdf", "https://github.com/kojima8924"],
+            )
 
 
 

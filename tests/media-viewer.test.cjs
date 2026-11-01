@@ -16,8 +16,7 @@ class Element {
     this.attributes = new Map(); this.children = []; this.parentElement = null;
     this.style = {}; this.dataset = {}; this.listeners = new Map(); this._text = '';
     this.disabled = false; this.hidden = false; this.clientWidth = 900; this.clientHeight = 600;
-    this.scrollLeft = 0; this.scrollTop = 0; this.pauseCalls = 0; this.loadCalls = 0;
-    this.complete = true; this.naturalWidth = 1200; this.naturalHeight = 800;
+    this.scrollLeft = 0; this.scrollTop = 0; this.naturalWidth = 1200; this.naturalHeight = 800;
     this.classList = {
       contains: (name) => this.className.split(/\s+/).includes(name),
       add: (...names) => { this.className = [...new Set([...this.className.split(/\s+/).filter(Boolean), ...names])].join(' '); },
@@ -33,16 +32,11 @@ class Element {
   set href(value) { this.setAttribute('href', value); }
   get src() { return this.getAttribute('src') ? new URL(this.getAttribute('src'), this.ownerDocument.baseURI).href : ''; }
   set src(value) { this.setAttribute('src', value); }
-  get currentSrc() { return this.src; }
   get alt() { return this.getAttribute('alt') || ''; }
   set alt(value) { this.setAttribute('alt', value); }
   get textContent() { return this._text + this.children.map((child) => child.textContent).join(''); }
   set textContent(value) { this._text = String(value); this.replaceChildren(); }
   get isConnected() { return this === this.ownerDocument.body || Boolean(this.parentElement?.isConnected); }
-  get parentNode() { return this.parentElement; }
-  get childNodes() { return this.children; }
-  get firstChild() { return this.children[0] || null; }
-  get nextSibling() { const list = this.parentElement?.children || []; return list[list.indexOf(this) + 1] || null; }
   setAttribute(name, value) {
     this.attributes.set(name, String(value));
     if (name.startsWith('data-')) this.dataset[camel(name.slice(5))] = String(value);
@@ -58,8 +52,6 @@ class Element {
     if (name === 'hidden') this.hidden = false;
   }
   append(...children) { for (const child of children) { if (typeof child === 'string') { this._text += child; continue; } child.remove(); child.parentElement = this; this.children.push(child); } }
-  appendChild(child) { this.append(child); return child; }
-  prepend(...children) { for (const child of children.reverse()) { child.remove(); child.parentElement = this; this.children.unshift(child); } }
   replaceChildren(...children) { for (const child of this.children) child.parentElement = null; this.children = []; this.append(...children); }
   remove() { if (this.parentElement) this.parentElement.children = this.parentElement.children.filter((child) => child !== this); this.parentElement = null; }
   contains(node) { return node === this || this.children.some((child) => child.contains(node)); }
@@ -109,18 +101,15 @@ class Element {
   addEventListener(type, callback) { const list = this.listeners.get(type) || []; list.push(callback); this.listeners.set(type, list); }
   removeEventListener(type, callback) { this.listeners.set(type, (this.listeners.get(type) || []).filter((item) => item !== callback)); }
   emit(type, properties = {}) {
-    const event = { type, target: this, currentTarget: this, button: 0, defaultPrevented: false, preventDefault() { this.defaultPrevented = true; }, stopPropagation() {}, ...properties };
+    const event = { type, target: this, currentTarget: this, button: 0, defaultPrevented: false, preventDefault() { this.defaultPrevented = true; }, ...properties };
     for (const callback of [...(this.listeners.get(type) || [])]) callback(event);
     return event;
   }
   focus(options) { this.ownerDocument.activeElement = this; this.focusOptions = options; }
-  getBoundingClientRect() { return { width: this.clientWidth, height: this.clientHeight }; }
-  pause() { this.pauseCalls++; }
-  load() { this.loadCalls++; }
 }
 
 function fixture(html = '') {
-  const document = { baseURI: BASE, activeElement: null, readyState: 'complete' };
+  const document = { baseURI: BASE, activeElement: null };
   document.body = new Element('body', document);
   document.createElement = (tag) => new Element(tag, document);
   document.getElementById = (id) => document.body.querySelector('#' + id);
@@ -131,10 +120,7 @@ function fixture(html = '') {
   document.removeEventListener = events.removeEventListener.bind(events);
   document.emit = events.emit.bind(events);
   const window = new Element('window', document);
-  window.innerWidth = 960; window.innerHeight = 800;
-  window.setTimeout = () => 1; window.clearTimeout = () => {};
   window.requestAnimationFrame = (callback) => { callback(); return 1; };
-  document.defaultView = window;
   // HTML本文だけを読み，script/style/commentをDOM fixtureへ混入させない．
   const body = html.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || html;
   const clean = body.replace(/<!--[^]*?-->|<(script|style)\b[^>]*>[^]*?<\/\1>/gi, '');
@@ -235,7 +221,7 @@ test('通常クリックは同じページで開き，修飾クリックとdestr
 
 test('Escで閉じ，Tab/Shift+Tabはモーダルの両端を循環する', () => {
   const state = linkFixture(); const api = mount(state); api.open(state.document.querySelector('a'));
-  const controls = state.overlay.querySelectorAll('button, a[href], iframe, video[controls], [tabindex]:not([tabindex="-1"])').filter((element) => !element.disabled && !element.hidden);
+  const controls = state.overlay.querySelectorAll('button, a[href], iframe, [tabindex]:not([tabindex="-1"])').filter((element) => !element.disabled && !element.hidden);
   assert.ok(controls.length > 2);
   controls.at(-1).focus(); const tab = state.document.emit('keydown', { key: 'Tab' });
   assert.equal(tab.defaultPrevented, true); assert.equal(state.document.activeElement, controls[0]);

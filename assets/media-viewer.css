@@ -24,7 +24,7 @@
 .lightbox-help { margin:4px 0 0; font-size:12px; line-height:1.4; color:#cbd9e7; }
 .lightbox-error { margin:10px; color:#fff; }
 .lightbox-overlay.is-video .lightbox-viewport { display:flex; align-items:center; justify-content:center; }
-.lightbox-overlay iframe, .lightbox-overlay video { display:block; max-width:100%; max-height:100%; width:100%; aspect-ratio:16/9; border:0; border-radius:8px; background:#000; }
+.lightbox-overlay iframe { display:block; max-width:100%; max-height:100%; width:100%; aspect-ratio:16/9; border:0; border-radius:8px; background:#000; }
 .lightbox-video-close { margin-top:7px; }
 .lightbox-overlay :focus-visible { outline:3px solid #8acaff; outline-offset:2px; }
 @media (max-width:767.98px) {

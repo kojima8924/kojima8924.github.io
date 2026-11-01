@@ -10,6 +10,10 @@
 })(typeof window === "undefined" ? globalThis : window, function () {
   "use strict";
 
+  // 作品の範囲（キャプションのタイトルとギャラリーの前後移動の範囲）を決める要素．
+  const OWNER_SELECTOR = ".archive-item, article, #chromiumfora-card";
+  const kindLabel = kind => kind === "video" ? "動画" : "画像";
+
   function isPlainActivation(event) {
     return !event.defaultPrevented && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && (event.button === undefined || event.button === 0);
   }
@@ -22,7 +26,7 @@
     let base;
     try { base = new URL(baseURI); url = new URL(source, base); } catch (_) { return null; }
     if (!source || !["http:", "https:"].includes(url.protocol) || url.username || url.password) return null;
-    const owner = link.closest(".archive-item, article, #chromiumfora-card");
+    const owner = link.closest(OWNER_SELECTOR);
     const title = owner?.querySelector("h3, h4, summary")?.textContent.trim() || "作品";
     const caption = link.dataset.mediaCaption || link.closest("figure")?.querySelector("figcaption")?.textContent.trim() || image?.alt || link.getAttribute("aria-label") || title;
     if (kind === "video") {
@@ -43,7 +47,7 @@
     let lastTrigger = null;
     let background = [];
     let previousOverflow = "";
-    let resizeImage = null;
+    let onResize = null;
     let gallery = [];
     let position = 0;
     let active = false;
@@ -70,10 +74,10 @@
       return link;
     }
     function stopMedia() {
-      overlay.querySelectorAll("video").forEach(video => video.pause());
+      // 動画は外部 iframe だけなので replaceChildren で停止する．
       // iframeをDOMから外すことで，閉じた後や画像へ切り替えた後の再生を止める．
       overlay.replaceChildren();
-      resizeImage = null;
+      onResize = null;
     }
     function close() {
       if (!active) return;
@@ -97,7 +101,7 @@
       const focusedLabel = document.activeElement?.getAttribute("aria-label");
       stopMedia();
       overlay.classList.toggle("is-video", media.kind === "video");
-      overlay.setAttribute("aria-label", media.title + "の" + (media.kind === "video" ? "動画" : "画像") + "を拡大表示");
+      overlay.setAttribute("aria-label", media.title + "の" + kindLabel(media.kind) + "を拡大表示");
       const toolbar = document.createElement("div");
       toolbar.className = "lightbox-toolbar";
       if (gallery.length > 1) {
@@ -113,7 +117,7 @@
       meta.className = "lightbox-meta";
       const counter = document.createElement("span");
       counter.className = "lightbox-position";
-      counter.textContent = (position + 1) + " / " + gallery.length + " · " + (media.kind === "video" ? "動画" : "画像");
+      counter.textContent = (position + 1) + " / " + gallery.length + " · " + kindLabel(media.kind);
       const caption = document.createElement("p");
       caption.className = "lightbox-caption";
       caption.setAttribute("aria-live", "polite");
@@ -137,7 +141,7 @@
           iframe.style.width = width + "px";
           iframe.style.height = (width * 9 / 16) + "px";
         }
-        resizeImage = measureVideo;
+        onResize = measureVideo;
         window.requestAnimationFrame(measureVideo);
         toolbar.append(externalLink(media.source, "配信元で見る ↗"));
         help.textContent = "再生できない場合は「配信元で見る」から開けます．";
@@ -189,7 +193,7 @@
         image.addEventListener("error", () => {
           if (!active || sequence !== renderSequence) return;
           failed = true;
-          resizeImage = null;
+          onResize = null;
           const error = document.createElement("p");
           error.className = "lightbox-error";
           error.textContent = "画像を読み込めませんでした．「原画像」からも確認できます．";
@@ -197,7 +201,7 @@
           zoomOut.disabled = zoomIn.disabled = fit.disabled = true;
         }, { once:true });
         image.src = media.src;
-        resizeImage = () => measure(false);
+        onResize = () => measure(false);
         help.textContent = "拡大後はスワイプ・スクロール・矢印キーで移動できます．";
         meta.append(help);
         // DOM配置後に表示領域の大きさを測る．
@@ -215,7 +219,7 @@
       const media = describeMedia(link, document.baseURI);
       if (!media) return false;
       if (active) close();
-      const owner = link.closest(".archive-item, article, #chromiumfora-card") || link;
+      const owner = link.closest(OWNER_SELECTOR) || link;
       const candidates = owner === link ? [link] : [...owner.querySelectorAll(selectors)];
       const seen = new Map();
       candidates.forEach(candidate => {
@@ -249,13 +253,13 @@
       });
     });
     listen(overlay, "click", event => { if (event.target === overlay) close(); });
-    listen(window, "resize", () => { if (resizeImage) resizeImage(); });
+    listen(window, "resize", () => { if (onResize) onResize(); });
     listen(window, "beforeprint", close);
     listen(document, "keydown", event => {
       if (!active) return;
       if (event.key === "Escape") { event.preventDefault(); close(); return; }
       if (event.key !== "Tab") return;
-      const focusable = [...overlay.querySelectorAll("button, a[href], iframe, video[controls], [tabindex]:not([tabindex='-1'])")].filter(element => !element.disabled);
+      const focusable = [...overlay.querySelectorAll("button, a[href], iframe, [tabindex]:not([tabindex='-1'])")].filter(element => !element.disabled);
       const first = focusable[0], last = focusable[focusable.length - 1];
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }

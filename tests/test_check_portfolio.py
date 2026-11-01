@@ -1,3 +1,4 @@
+import json
 import re
 import unittest
 
@@ -241,6 +242,229 @@ class プログラミング実績表記検査テスト(unittest.TestCase):
         for separator in ("。", "．", ".", "！", "?", "\n"):
             with self.subTest(separator=separator):
                 self.assertIsNone(re.search(self.pattern, f"AtCoder 水色{separator}基本情報を取得"))
+
+
+class 文言検査関数テスト(unittest.TestCase):
+    def test_約21パーセントまで低減は許容する(self) -> None:
+        for text in ("従来法の約21%まで低減", "約21％まで低減した"):
+            with self.subTest(text=text):
+                self.assertEqual(check_portfolio._percent_wording_errors(text), [])
+
+    def test_21パーセント低減型の表現を検出する(self) -> None:
+        for text in ("誤差を21%低減", "誤差を22%削減", "精度が21％改善"):
+            with self.subTest(text=text):
+                self.assertEqual(len(check_portfolio._percent_wording_errors(text)), 1)
+
+    def test_誤解表現の文面と接頭辞(self) -> None:
+        self.assertEqual(
+            check_portfolio._percent_wording_errors("位置誤差を21%低減", "[README.md] "),
+            ["[README.md] 『22%低減』型の誤解表現: …位置誤差を21%低減…"],
+        )
+        self.assertEqual(
+            check_portfolio._percent_wording_errors("位置誤差を22%削減"),
+            ["『22%低減』型の誤解表現: …位置誤差を22%削減…"],
+        )
+
+    def test_禁止パターンの文面(self) -> None:
+        patterns = [(r"ダメ出し", "口語的表現"), (r"無関係", "一致しない規則")]
+        self.assertEqual(
+            check_portfolio._pattern_errors(patterns, "ダメ出しとダメ出し", "[表示テキスト] "),
+            ["[表示テキスト] 口語的表現: 2件（例: 'ダメ出し'）"],
+        )
+        self.assertEqual(check_portfolio._pattern_errors(patterns, "本文"), [])
+
+    def test_必須文字列の文面(self) -> None:
+        required = [("ScriptVEdit", "公式プロジェクト名"), ("本文", "存在する語")]
+        self.assertEqual(
+            check_portfolio._missing_errors(required, "本文", "[README.md] "),
+            ["[README.md] 必須文字列が見つからない（公式プロジェクト名）: 'ScriptVEdit'"],
+        )
+        self.assertEqual(
+            check_portfolio._missing_errors(required, "本文"),
+            ["必須文字列が見つからない（公式プロジェクト名）: 'ScriptVEdit'"],
+        )
+
+    def test_関連文書の検査は接頭辞付きで3種を通す(self) -> None:
+        errors = check_portfolio.check_doc("README.md", "Scriptvedit で誤差を21%低減")
+        self.assertEqual(errors, [
+            "[README.md] プロジェクト名の表記揺れ: 1件（例: 'Scriptvedit'）",
+            "[README.md] 必須文字列が見つからない（研究の21%表現）: '約21%まで低減'",
+            "[README.md] 必須文字列が見つからない（公式プロジェクト名）: 'ScriptVEdit'",
+            "[README.md] 『22%低減』型の誤解表現: …dit で誤差を21%低減…",
+        ])
+
+
+class 禁止パターン整理の同値性テスト(unittest.TestCase):
+    """冗長な選択肢を削った正規表現が、旧パターンと同じ一致有無を返すこと。"""
+
+    CASES = (
+        (
+            r"(?<!バッジ)(?<!学習実績バッジ)実績\s*61\s*種",
+            "研究・Trivium の誤読されやすい表現",
+            ("学習実績バッジ実績61種", "バッジ実績 61 種", "実績61種"),
+        ),
+        (
+            r"クラウドLLM|クラウド\s*LLM|再監査",
+            "受託案件の匿名化の説明は",
+            ("クラウドLLM", "クラウド LLM", "再監査"),
+        ),
+    )
+
+    def test_旧パターンと一致有無が同じ(self) -> None:
+        for old, reason, texts in self.CASES:
+            new = next(
+                pattern for pattern, r in check_portfolio.FORBIDDEN_PATTERNS if r.startswith(reason)
+            )
+            for text in texts:
+                with self.subTest(text=text):
+                    self.assertEqual(re.search(old, text) is None, re.search(new, text) is None)
+
+
+CREDENTIALS = (
+    ("AWS Certified AI Practitioner", "2026-09"),
+    ("AWS Certified Cloud Practitioner", "2026-10"),
+    ("基本情報技術者", "2026-08"),
+    ("G検定", "2026-09"),
+    ("GitHub Foundations", "2026-10"),
+)
+
+
+def display(name: str, date: str) -> str:
+    year, month = date.split("-")
+    return f"{name} 取得（{int(year)}年{int(month)}月）"
+
+
+def credential_html(
+    credentials=CREDENTIALS, profile=CREDENTIALS, career=CREDENTIALS, atcoder="水色・最高1541／<strong>上位4.24%</strong>"
+) -> str:
+    data = {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "mainEntity": {
+            "@type": "Person",
+            "hasCredential": [{"name": name, "dateCreated": date} for name, date in credentials],
+        },
+    }
+    profile_dd = "<br>".join(display(*item) for item in profile)
+    career_p = "，".join(display(*item) for item in career)
+    return (
+        f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False, indent=2)}</script>'
+        f'<div class="profile-facts"><dl><dt>資格</dt><dd>{profile_dd}</dd>'
+        f"<dt>AtCoder</dt><dd>{atcoder}</dd></dl></div>"
+        f'<section id="career"><p><strong>資格：</strong>{career_p}．</p></section>'
+    )
+
+
+class 資格同期検査テスト(unittest.TestCase):
+    def check(self, html: str) -> list[str]:
+        return check_portfolio.check_credentials(parse(html))
+
+    def test_検査表とフィクスチャの資格が一致する(self) -> None:
+        needles = [n for n, reason in check_portfolio.TEXT_REQUIRED_STRINGS if reason == "資格表記"]
+        self.assertEqual(sorted(needles), sorted(display(*item) for item in CREDENTIALS))
+
+    def test_3か所が同期していればエラーなし(self) -> None:
+        self.assertEqual(self.check(credential_html()), [])
+
+    def test_全角スペースや改行の差は許容する(self) -> None:
+        html = credential_html().replace("G検定 取得", "G検定　\n取得", 1)
+        self.assertEqual(self.check(html), [])
+
+    def test_JSONLDの年月ずれを検出する(self) -> None:
+        shifted = tuple((name, "2026-11" if name == "GitHub Foundations" else date) for name, date in CREDENTIALS)
+        errors = self.check(credential_html(credentials=shifted))
+        self.assertIn("JSON-LDの資格がプロフィール（.profile-facts）の表示テキストにない: 'GitHub Foundations 取得（2026年11月）'", errors)
+        self.assertIn("JSON-LDの資格が#careerの表示テキストにない: 'GitHub Foundations 取得（2026年11月）'", errors)
+        self.assertIn("検査表の資格表記がJSON-LDのhasCredentialにない: 'GitHub Foundations 取得（2026年10月）'", errors)
+
+    def test_プロフィールだけの欠落を検出する(self) -> None:
+        errors = self.check(credential_html(profile=CREDENTIALS[:-1]))
+        self.assertEqual(errors, ["JSON-LDの資格がプロフィール（.profile-facts）の表示テキストにない: 'GitHub Foundations 取得（2026年10月）'"])
+
+    def test_careerだけの欠落を検出する(self) -> None:
+        errors = self.check(credential_html(career=CREDENTIALS[1:]))
+        self.assertEqual(errors, ["JSON-LDの資格が#careerの表示テキストにない: 'AWS Certified AI Practitioner 取得（2026年9月）'"])
+
+    def test_hasCredentialの1件欠落を検出する(self) -> None:
+        errors = self.check(credential_html(credentials=CREDENTIALS[:-1]))
+        self.assertIn("JSON-LDのhasCredentialは検査表の資格表記と同じ5件を期待: 4件", errors)
+        self.assertIn("検査表の資格表記がJSON-LDのhasCredentialにない: 'GitHub Foundations 取得（2026年10月）'", errors)
+
+    def test_壊れたJSONLDは1件のエラー(self) -> None:
+        html = credential_html().replace('"@type": "ProfilePage",', '"@type": "ProfilePage",,', 1)
+        errors = self.check(html)
+        self.assertEqual(len(errors), 1)
+        self.assertTrue(errors[0].startswith("JSON-LDを解析できない"))
+
+
+class プロフィールAtCoder検査テスト(unittest.TestCase):
+    def check(self, html: str) -> list[str]:
+        return check_portfolio.check_profile_facts(parse(html))
+
+    def test_検査表の値と一致すればエラーなし(self) -> None:
+        self.assertEqual(self.check(credential_html()), [])
+
+    def test_最高レーティングの取り残しを検出する(self) -> None:
+        errors = self.check(credential_html(atcoder="水色・最高1540／<strong>上位4.24%</strong>"))
+        self.assertEqual(errors, ["プロフィール（.profile-facts）にAtCoderの値がない: '最高1541'"])
+
+    def test_上位パーセントの取り残しを検出する(self) -> None:
+        errors = self.check(credential_html(atcoder="水色・最高1541／<strong>上位5.00%</strong>"))
+        self.assertEqual(errors, ["プロフィール（.profile-facts）にAtCoderの値がない: '上位4.24%'"])
+
+
+META = """
+<title>小嶋 明 | Portfolio</title>
+<meta property="og:title" content="小嶋 明 | Portfolio" />
+<meta property="og:description" content="説明文" />
+<meta property="og:image" content="https://example.com/ogp.png" />
+<meta property="og:image:alt" content="代替テキスト" />
+<meta name="twitter:title" content="小嶋 明 | Portfolio" />
+<meta name="twitter:description" content="説明文" />
+<meta name="twitter:image" content="https://example.com/ogp.png" />
+<meta name="twitter:image:alt" content="代替テキスト" />
+"""
+
+
+class メタ情報同期検査テスト(unittest.TestCase):
+    def check(self, html: str) -> list[str]:
+        return check_portfolio.check_meta_consistency(parse(html))
+
+    def test_一致していればエラーなし(self) -> None:
+        self.assertEqual(self.check(META), [])
+
+    def test_twitter_titleだけの変更を検出する(self) -> None:
+        html = META.replace('name="twitter:title" content="小嶋 明 | Portfolio"', 'name="twitter:title" content="旧タイトル"')
+        self.assertEqual(self.check(html), ["titleとtwitter:titleが不一致: '小嶋 明 | Portfolio' / '旧タイトル'"])
+
+    def test_meta欠落を検出する(self) -> None:
+        html = META.replace('<meta name="twitter:image:alt" content="代替テキスト" />', "")
+        self.assertEqual(self.check(html), ["metaがない: twitter:image:alt"])
+
+
+MEDIA = (
+    '<a class="media-trigger" data-media-kind="image" href="media/a.webp" aria-label="画像を拡大：比較グラフ">'
+    '<img src="media/a.webp" alt="比較グラフ"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>'
+    '<a class="cg-media media-trigger" data-media-kind="image" href="media/shadow.jpg" aria-label="シャドウマッピングの出力画像を拡大">'
+    '<img src="media/shadow.jpg" alt="別文言の説明"></a>'
+    '<a data-media-kind="video" href="media/v.mp4" aria-label="画像を拡大：動画は対象外"></a>'
+)
+
+
+class 画像拡大ラベル検査テスト(unittest.TestCase):
+    def check(self, html: str) -> list[str]:
+        return check_portfolio.check_media_labels(parse(html))
+
+    def test_一致と対象外はエラーなし(self) -> None:
+        self.assertEqual(self.check(MEDIA), [])
+
+    def test_altを1文字変えると検出する(self) -> None:
+        errors = self.check(MEDIA.replace('alt="比較グラフ"', 'alt="比較グラ"'))
+        self.assertEqual(errors, ["画像拡大リンクのaria-labelとimgのaltが不一致: media/a.webp（aria-label: '比較グラフ' / alt: '比較グラ'）"])
+
+    def test_子imgがなければ検出する(self) -> None:
+        html = '<a data-media-kind="image" href="media/b.webp" aria-label="画像を拡大：説明"></a><img src="x.webp" alt="説明">'
+        self.assertEqual(self.check(html), ["画像拡大リンクに子imgがない: media/b.webp"])
 
 
 if __name__ == "__main__":

@@ -32,15 +32,15 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 
   <!-- 初回描画前にテーマを確定し、ライト設定ユーザーのダークフラッシュを防ぐ -->
+  <!-- テーマ判定の正本．body側は現在値をUIへ反映するだけ -->
   <script>
     (function(){
-      try{
-        var t = localStorage.getItem("portfolio-theme");
-        if(t !== "light" && t !== "dark"){
-          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-        }
-        document.documentElement.setAttribute("data-theme", t);
-      }catch(e){}
+      var k = "portfolio-theme", t = null;
+      try{ t = localStorage.getItem(k); }catch(e){}
+      if(t !== "light" && t !== "dark"){
+        t = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
     })();
   </script>
 
@@ -143,22 +143,17 @@
     .navbar-collapse { max-height:calc(100dvh - 62px); overflow-y:auto; }
     .hero { padding:52px 0 34px; border-bottom:1px solid var(--border); }
     .hero-grid { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(0,1fr); gap:38px; align-items:start; }
-    .hero h1 { font-size:clamp(1.8rem,3vw,2.7rem); font-weight:750; letter-spacing:.02em; margin-bottom:12px; }
-    .hero .lead { font-size:1.2rem; line-height:1.6; font-weight:650; }
+    .hero h1 { font-size:clamp(1.8rem,3vw,2.7rem); letter-spacing:.02em; }
     .hero-lead { max-width:45rem; line-height:1.55; font-size:1.45rem; margin:18px 0; }
     .hero-name-en { font-size:.53em; color:var(--muted); font-weight:500; white-space:nowrap; }
     .hero-description { max-width:43rem; }
-    .hero-degree { color:var(--muted); font-size:.92rem; }
     .profile-facts {
       border-left:3px solid var(--accent); background:var(--card);
       padding:18px 22px; border-radius:0 12px 12px 0; font-size:.9rem;
     }
-    .profile-facts p:last-child, .profile-facts ul:last-child { margin-bottom:0; }
-    .profile-facts p { margin-bottom:10px; }
     .profile-facts strong { color:var(--fg); }
     .profile-facts dl { margin:12px 0; display:grid; grid-template-columns:54px minmax(0,1fr); gap:12px 14px; }
     .profile-facts dt { font-size:.8rem; color:var(--muted); margin-top:0; }
-    .profile-facts dt:first-child { margin-top:0; }
     .profile-facts dd { margin:2px 0 0; }
     .hero-actions { margin-top:20px; }
     .hero-actions .btn { min-height:44px; display:inline-flex; align-items:center; justify-content:center; padding:8px 14px; }
@@ -171,7 +166,6 @@
     .section-title { color:var(--fg); font-size:1.55rem; font-weight:750; margin:0; }
     .section-kicker { color:var(--accent); font-size:.76rem; font-weight:700; letter-spacing:.13em; margin-bottom:5px; }
     .section-intro { color:var(--muted); max-width:70rem; margin-bottom:18px; }
-    hr.border-subtle { opacity:1; border:0; height:1px; background:var(--border); margin:20px 0; }
     .card, .case-card, .cg-card, .project-card {
       color:var(--fg); background:var(--card); border:1px solid var(--border);
       border-radius:14px; box-shadow:0 4px 18px var(--shadow);
@@ -186,7 +180,7 @@
     .case-points strong { color:var(--fg); }
     .case-visual { min-width:0; }
     .case-visual figure { margin-bottom:0; }
-    .case-visual figcaption, .media-caption { font-size:.83rem; color:var(--muted); margin-top:7px; }
+    .case-visual figcaption { font-size:.83rem; color:var(--muted); margin-top:7px; }
     .project-grid { display:grid; gap:20px; }
     .project-details { border-top:1px solid var(--border); margin-top:18px; padding-top:10px; }
     details > summary { color:var(--accent); cursor:pointer; padding:7px 0; font-size:.92rem; }
@@ -197,7 +191,7 @@
     .metric { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
     .metric strong { display:block; font-size:1.4rem; line-height:1.3; color:var(--accent); margin-bottom:5px; }
     .metric p { margin-bottom:4px; }
-    .metric small, .metric .small { color:var(--muted); line-height:1.6; }
+    .metric .small { color:var(--muted); line-height:1.6; }
     .cg-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
     .cg-card { overflow:hidden; display:flex; flex-direction:column; padding:18px; }
     .cg-card h3 { font-size:1.07rem; margin:15px 0 6px; font-weight:700; }
@@ -211,8 +205,6 @@
     .cg-copy h3 { margin-top:0; }
     .cg-copy p:last-child { margin-bottom:0; }
     .tech-line { font-size:.86rem; }
-    .badges { display:flex; flex-wrap:wrap; gap:5px; }
-    .tbadge { display:inline-flex; border:1px solid var(--border); color:var(--muted); border-radius:4px; font-size:.73rem; line-height:1.3; padding:3px 7px; background:var(--bg); }
     .btn-outline-info {
       --bs-btn-color:var(--accent); --bs-btn-border-color:color-mix(in srgb,var(--accent) 55%,transparent);
       --bs-btn-hover-bg:color-mix(in srgb,var(--accent) 10%,var(--card)); --bs-btn-hover-color:var(--fg);
@@ -224,9 +216,8 @@
       --bs-btn-hover-border-color:var(--accent); --bs-btn-hover-bg:var(--bg);
     }
     .btn-sm { min-height:36px; padding:5px 10px; display:inline-flex; align-items:center; gap:4px; }
-    .media-box { padding:8px; background:var(--imgbg); border:1px solid var(--border); border-radius:10px; }
     .media-hero, .media-thumb { position:relative; overflow:hidden; aspect-ratio:16/9; border-radius:8px; background:var(--imgbg); border:1px solid var(--border); }
-    .media-hero img, .media-thumb img, .media-hero video, .media-thumb video { width:100%; height:100%; object-fit:contain; display:block; cursor:zoom-in; }
+    .media-hero img, .media-thumb img { width:100%; height:100%; object-fit:contain; display:block; cursor:zoom-in; }
     .media-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
     .media-grid > * { min-width:0; }
     .shot-row { display:flex; justify-content:center; gap:12px; }
@@ -234,15 +225,10 @@
     .shot-row > div, .shot-row > figure { min-width:0; flex:0 1 180px; margin:0; }
     .media-phone { position:relative; aspect-ratio:9/19; width:100%; max-height:380px; overflow:hidden; border-radius:12px; border:1px solid var(--border); padding:4px; background:var(--imgbg); }
     .media-phone img { width:100%; height:100%; object-fit:contain; display:block; cursor:zoom-in; border-radius:8px; }
-    .flow-shot-row { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
-    .flow-shot { flex:0 1 260px; max-width:100%; align-self:start; }
-    .flow-shot img { width:100%; height:auto; display:block; cursor:zoom-in; }
     .cfa-compare { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; max-width:650px; margin:0 auto; }
     .cfa-compare figure { margin:0; }
     .cfa-shot { position:relative; height:310px; background:var(--imgbg); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
     .cfa-shot img { width:100%; height:100%; object-fit:contain; cursor:zoom-in; }
-    .cfa-swipe-hint { display:none; }
-    .cfa-feature-list { padding-left:1.2em; color:var(--muted); }
     .media-hero.media-dialog { aspect-ratio:840/1485; max-width:340px; margin-inline:auto; }
     .arch-figure { margin:0 0 16px; }
     .arch-figure figcaption { margin-top:7px; }
@@ -254,7 +240,6 @@
     .arch-branches li { min-width:0; border:1px solid var(--border); border-left:3px solid var(--accent); background:var(--bg); border-radius:8px; padding:8px 10px; font-size:.86rem; line-height:1.55; }
     .arch-branches strong { display:block; color:var(--fg); }
     .arch-branches span { color:var(--muted); overflow-wrap:anywhere; }
-    img[role="button"]:focus-visible { outline:3px solid var(--accent); outline-offset:-3px; }
     .fig-band { margin:18px 0 0; background:#fff; border:1px solid var(--border); border-radius:10px; padding:10px; overflow-x:auto; }
     .fig-band img { width:100%; height:auto; display:block; cursor:zoom-in; }
     .fig-band figcaption, .fig-band .text-muted { color:#42566d !important; font-size:.83rem; margin-top:8px; }
@@ -271,20 +256,20 @@
     .cert-badge img { width:64px; height:64px; display:block; }
     .cert-badge--wide { padding:8px; }
     .cert-badge--wide img { width:auto; height:64px; }
-    .cert-names { overflow-wrap:anywhere; }
     .nowrap { white-space:nowrap; }
     .archive-item { display:grid; grid-template-columns:180px minmax(0,1fr); gap:18px; padding:18px 0; border-bottom:1px solid var(--border); }
     .archive-item:last-child { border:0; }
     .archive-title { font-size:1.03rem; margin:0 0 4px; }
     .archive-item p { font-size:.9rem; margin-bottom:8px; }
     .archive-item .media-thumb { max-width:320px; }
-    .summary-only { display:none; }
     #contact { border-top:1px solid var(--border); margin-top:24px; padding-top:30px; }
     #contact a { overflow-wrap:anywhere; }
+    /* A4印刷（make_pdf.py，幅約794px）では 1199.98px の条件も成立する．PDFのレイアウトは @media print 側で上書きしているので，ここを変えるときは両PDFのページ数とラスタを比較する． */
     @media (max-width:1199.98px) {
       .navbar-brand { font-size:.95rem; }
       .navbar .nav-link { padding-left:6px; padding-right:6px; font-size:.86rem; }
     }
+    /* A4印刷（make_pdf.py，幅約794px）では 991.98px の条件も成立する．PDFのレイアウトは @media print 側で上書きしているので，ここを変えるときは両PDFのページ数とラスタを比較する． */
     @media (max-width:991.98px) {
       .brand-full { display:none; } .brand-short { display:inline; }
       .navbar .nav-link { min-height:44px; display:flex; align-items:center; font-size:1rem; }
@@ -293,11 +278,11 @@
       .case-visual { max-width:660px; width:100%; margin:0 auto; }
       .cg-grid { gap:12px; }
     }
+    /* 767.98px の条件は A4印刷（make_pdf.py，幅約794px）では成立しない（画面専用）． */
     @media (max-width:767.98px) {
       .container { padding-left:18px; padding-right:18px; }
       .hero { padding:32px 0 22px; }
       .hero-grid { grid-template-columns:1fr; gap:22px; }
-      .hero .lead { font-size:1.05rem; }
       .hero-lead { font-size:1.15rem; }
       .hero-actions { margin-top:16px; }
       .profile-facts { padding:13px 16px; font-size:.86rem; }
@@ -312,8 +297,6 @@
       .metric { padding:12px 14px; }
       .metric strong { font-size:1.25rem; }
       .cg-grid { grid-template-columns:1fr; gap:16px; }
-      .cg-card { padding:18px; }
-      .cg-media { aspect-ratio:1; }
       .fig-band img { min-width:760px; }
       .fig-band { padding:8px; }
       .archive-item { grid-template-columns:1fr; gap:12px; }
@@ -323,8 +306,6 @@
       .cfa-shot { height:230px; }
       .arch-branches { grid-template-columns:1fr; }
       .btn-sm { min-height:40px; }
-      .lightbox-overlay { padding-left:10px; padding-right:10px; }
-      .lightbox-toolbar { left:10px; right:10px; gap:5px; }
     }
     /* 資格バッジが3枚になり，横並びでは本文の列が狭くなるため，画面表示では全幅でバッジ列と本文を折り返す（印刷は横並びのまま） */
     @media screen {
@@ -346,19 +327,17 @@
       .container { max-width:none; width:100%; padding:0 !important; }
       .hero { padding:0 0 9px !important; background:none; }
       .hero-grid { grid-template-columns:1.3fr 1fr; gap:15px; }
-      .hero h1, .hero .display-6 { font-size:22px !important; margin:0 0 5px !important; }
-      .hero .lead { font-size:12px !important; margin-bottom:5px !important; }
-      .hero-lead, .hero-degree { font-size:10px; margin-bottom:4px !important; }
+      .hero h1 { font-size:22px !important; margin:0 0 5px !important; }
+      .hero-lead { font-size:10px; margin-bottom:4px !important; }
       .hero-actions { margin-top:6px; }
       .hero-actions .btn { min-height:0; font-size:9px; padding:2px 5px; }
       .profile-facts { padding:7px 9px; font-size:9px; border-left-width:2px; }
-      .profile-facts p { margin-bottom:5px; }
       .profile-facts dl { grid-template-columns:34px minmax(0,1fr); gap:5px 7px; margin:4px 0; }
-      .profile-facts dt { font-size:9px; margin-top:0; }
+      .profile-facts dt { font-size:9px; }
       .profile-facts > a { display:none; }
       .profile-facts .d-block { display:block !important; }
       main > section { padding:8px 0 !important; }
-      .section-heading { margin-bottom:7px; gap:4px; break-after:avoid; }
+      .section-heading { margin-bottom:7px; break-after:avoid; }
       .section-kicker { font-size:8px; margin-bottom:2px; }
       .section-title { font-size:15px !important; }
       .section-intro { font-size:10px; margin-bottom:8px; }
@@ -394,8 +373,6 @@
       .shot-row { gap:8px; }
       .shot-row > div, .shot-row > figure { flex:0 1 110px; }
       .media-phone { max-height:220px; }
-      .flow-shot { flex-basis:190px; }
-      .flow-shot img { max-height:100mm; object-fit:contain; }
       .cfa-shot { height:190px; }
       .case-visual .media-hero.media-dialog { max-height:none; max-width:150px; }
       .arch-flow li, .arch-branches li { font-size:9px; }
@@ -406,7 +383,7 @@
       #portfolio-assistant-card .case-copy { display:block; }
       #portfolio-assistant-card .case-points li { break-inside:avoid; }
       .media-hero::after, .media-thumb::after, .media-phone::after, .cfa-shot::after { display:none; }
-      figure, .print-keep, .shot-row > div { break-inside:avoid; }
+      figure, .shot-row > div { break-inside:avoid; }
       figure { margin:0 0 6px; }
       #research .details-content .media-thumb { max-height:250px; margin-inline:auto; }
       #research .case-visual .media-grid { grid-template-columns:1fr; }
@@ -416,7 +393,7 @@
       p, li { orphans:3; widows:3; }
       h2, h3, h4 { break-after:avoid; }
       .btn, .btn-sm { min-height:0; padding:2px 5px; font-size:9px; color:var(--accent) !important; }
-      .tbadge, .tech-line { font-size:8px; }
+      .tech-line { font-size:8px; }
       .cert-badge img { width:42px; height:42px; }
       .cert-badge--wide img { width:auto; height:42px; }
       .timeline { grid-template-columns:auto 1fr; font-size:10px; gap:5px 12px; }
@@ -426,22 +403,17 @@
       .archive-title { font-size:11px; }
       .archive-item p { font-size:10px; line-height:1.45; margin:0 0 4px; }
       #contact { margin-top:8px; padding-top:8px !important; }
-      hr.border-subtle { margin:8px 0; }
       body:not(.pdf-summary) #client, body:not(.pdf-summary) #craft { break-before:page; }
       body:not(.pdf-summary) #archive .archive-item { padding:6px 0; }
       body:not(.pdf-summary) #archive .media-thumb { max-height:60px; }
       body:not(.pdf-summary) #contact { break-inside:avoid; }
       body.pdf-summary .pdf-full-only, body.pdf-summary .summary-hide { display:none !important; }
-      body.pdf-summary .summary-only { display:block !important; }
       body.pdf-summary #craft { break-before:page; }
       body.pdf-summary .case-card, body.pdf-summary .project-card { break-inside:avoid; }
       body.pdf-summary .project-details { display:none !important; }
       body.pdf-summary .project-card .case-visual { display:none; }
       body.pdf-summary .project-card .case-grid { grid-template-columns:1fr; }
-      body.pdf-summary .project-card { padding:8px !important; }
-      body.pdf-summary .project-grid { gap:8px; }
       body.pdf-summary .project-card .case-points { gap:2px; margin-bottom:5px; }
-      body.pdf-summary .section-intro { margin-bottom:6px; }
       body.pdf-summary #contact .section-heading { display:none; }
       /* サマリーは研究の根拠を本文，CGは3画像で伝え，詳細版と役割を分ける． */
       body.pdf-summary #research .case-grid { display:block; }
@@ -452,7 +424,7 @@
       body.pdf-summary .section-heading { margin-bottom:5px; break-inside:avoid; }
       body.pdf-summary .section-kicker { font-size:7px; margin-bottom:2px; }
       body.pdf-summary .section-title { font-size:13px !important; }
-      body.pdf-summary .section-intro { font-size:9px; margin-top:5px; }
+      body.pdf-summary .section-intro { font-size:9px; margin-top:5px; margin-bottom:6px; }
       body.pdf-summary .case-copy h3 { margin-bottom:4px; }
       body.pdf-summary .case-copy p { font-size:9.5px; line-height:1.45; margin-bottom:4px; }
       body.pdf-summary .case-points { font-size:9.5px; line-height:1.45; }
@@ -580,11 +552,11 @@
           <div class="case-visual">
             <div class="media-grid">
               <figure>
-                <a class="media-thumb media-trigger" data-media-kind="image" href="media/research-eval.webp" aria-label="画像を拡大：CNNによる再構成で，空間分解能指標と位置誤差が線形手法の約21%まで低減した比較グラフ" target="_blank" rel="noopener noreferrer"><img class="fit-contain" src="media/research-eval.webp" alt="CNNによる再構成で，空間分解能指標と位置誤差が線形手法の約21%まで低減した比較グラフ" width="1068" height="644" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
+                <a class="media-thumb media-trigger" data-media-kind="image" href="media/research-eval.webp" aria-label="画像を拡大：CNNによる再構成で，空間分解能指標と位置誤差が線形手法の約21%まで低減した比較グラフ" target="_blank" rel="noopener noreferrer"><img src="media/research-eval.webp" alt="CNNによる再構成で，空間分解能指標と位置誤差が線形手法の約21%まで低減した比較グラフ" width="1068" height="644" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
                 <figcaption class="small text-muted">1点接触：空間分解能指標・位置誤差</figcaption>
               </figure>
               <figure>
-                <a class="media-thumb media-trigger" data-media-kind="image" href="media/research-recon.webp?v=contact-legend" aria-label="画像を拡大：2点接触の再構成比較．接触点の注記と導電率カラーバー付き．線形手法ではにじむ接触点がCNNでは分離されている" target="_blank" rel="noopener noreferrer"><img class="fit-contain" src="media/research-recon.webp?v=contact-legend" alt="2点接触の再構成比較．接触点の注記と導電率カラーバー付き．線形手法ではにじむ接触点がCNNでは分離されている" loading="lazy" width="1112" height="584" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
+                <a class="media-thumb media-trigger" data-media-kind="image" href="media/research-recon.webp?v=contact-legend" aria-label="画像を拡大：2点接触の再構成比較．接触点の注記と導電率カラーバー付き．線形手法ではにじむ接触点がCNNでは分離されている" target="_blank" rel="noopener noreferrer"><img src="media/research-recon.webp?v=contact-legend" alt="2点接触の再構成比較．接触点の注記と導電率カラーバー付き．線形手法ではにじむ接触点がCNNでは分離されている" loading="lazy" width="1112" height="584" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
                 <figcaption class="small text-muted">2点接触：再構成画像の比較</figcaption>
               </figure>
             </div>
@@ -595,7 +567,7 @@
           <summary>研究の測定条件・発表資料</summary>
           <div class="details-content">
             <p class="text-muted">CNN再構成の1点接触シミュレーションでは，空間分解能指標RESは48.1% → 10.2%，位置誤差は13.0mm → 2.8mm．電極配置の研究では，16電極シミュレーションの最悪領域19.2%低減とは別に，64電極の試作基板の中央領域でHWHMを19.5%低減しました．</p>
-            <a class="media-thumb media-trigger" data-media-kind="image" href="media/SI2022_poster-web.webp" aria-label="画像を拡大：EIT触覚センサのCNN再構成をまとめたSI2022ポスター全体" target="_blank" rel="noopener noreferrer"><img class="fit-contain" src="media/SI2022_poster-web.webp" alt="EIT触覚センサのCNN再構成をまとめたSI2022ポスター全体" loading="lazy" width="2400" height="1697" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
+            <a class="media-thumb media-trigger" data-media-kind="image" href="media/SI2022_poster-web.webp" aria-label="画像を拡大：EIT触覚センサのCNN再構成をまとめたSI2022ポスター全体" target="_blank" rel="noopener noreferrer"><img src="media/SI2022_poster-web.webp" alt="EIT触覚センサのCNN再構成をまとめたSI2022ポスター全体" loading="lazy" width="2400" height="1697" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a>
             <p class="small text-muted mt-2 mb-0">SI2022ポスター．画像をクリックして拡大できます．</p>
           </div>
         </details>
@@ -874,7 +846,6 @@
             <figure><a class="cfa-shot media-trigger" data-media-kind="image" href="media/cfa-serp-before.png" aria-label="画像を拡大：通常の「人工知能」Google検索結果．人工知能学会・FPTソフトウェア・IBMの順に表示" target="_blank" rel="noopener noreferrer"><img src="media/cfa-serp-before.png" alt="通常の「人工知能」Google検索結果．人工知能学会・FPTソフトウェア・IBMの順に表示" loading="lazy" width="1080" height="1300" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">通常の検索結果</figcaption></figure>
             <figure><a class="cfa-shot media-trigger" data-media-kind="image" href="media/cfa-serp-after.png" aria-label="画像を拡大：AI評価後の検索結果．IBM・Wikipedia・人工知能学会の順になり，緑色の評価コメントを挿入" target="_blank" rel="noopener noreferrer"><img src="media/cfa-serp-after.png" alt="AI評価後の検索結果．IBM・Wikipedia・人工知能学会の順になり，緑色の評価コメントを挿入" loading="lazy" width="1080" height="1300" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">AIによる評価コメントと順位変更</figcaption></figure>
           </div>
-          <p class="cfa-swipe-hint small text-muted" aria-hidden="true">横にスワイプして比較 →</p>
           <div class="shot-row">
             <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/cfa-fab-menu.png" aria-label="画像を拡大：Wikipedia上でページ要約・翻訳などのメニューを開いたAndroid画面" target="_blank" rel="noopener noreferrer"><img src="media/cfa-fab-menu.png" alt="Wikipedia上でページ要約・翻訳などのメニューを開いたAndroid画面" loading="lazy" width="1080" height="2340" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">操作メニュー</figcaption></figure>
             <figure><a class="media-phone media-trigger" data-media-kind="image" href="media/cfa-page-summary.png" aria-label="画像を拡大：Wikipediaの人工知能ページを要約したAndroid画面" target="_blank" rel="noopener noreferrer"><img src="media/cfa-page-summary.png" alt="Wikipediaの人工知能ページを要約したAndroid画面" loading="lazy" width="1080" height="2340" decoding="async"><span class="media-label" aria-hidden="true">⤢ 画像を拡大</span></a><figcaption class="small text-muted">ページの要約</figcaption></figure>
@@ -981,7 +952,7 @@
         <h2 class="h4 section-title">その他の作品</h2>
         <p class="section-intro text-muted">上に掲載したCG3作品以外の，制御・画像処理・AIクライアントなどの制作記録です．</p>
       </div>
-      <details class="archive project-details">
+      <details class="project-details">
         <summary>その他の作品を開く（7件）</summary>
         <div class="details-content">
           <h3 class="h6 mb-3">生成AI不使用の自力実装（4作品）</h3>
@@ -1124,14 +1095,8 @@
         btn.setAttribute("aria-label", isLight ? "現在ライトテーマ。ダークテーマに切り替え" : "現在ダークテーマ。ライトテーマに切り替え");
       }
 
-      let saved;
-      try { saved = localStorage.getItem(key); } catch(e) {}
-      if(saved === "light" || saved === "dark"){
-        apply(saved);
-      } else {
-        const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
-        apply(prefersLight ? "light" : "dark");
-      }
+      // 判定は head のスクリプトで確定済み．ここでは現在値をUIへ反映するだけ
+      apply(root.getAttribute("data-theme") === "light" ? "light" : "dark");
 
       btn.addEventListener("click", () => {
         const cur = root.getAttribute("data-theme") || "dark";
@@ -1144,7 +1109,7 @@
       if(window.matchMedia){
         window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", e => {
           let s; try { s = localStorage.getItem(key); } catch(ex) {}
-          if(!s) apply(e.matches ? "light" : "dark");
+          if(s !== "light" && s !== "dark") apply(e.matches ? "light" : "dark");
         });
       }
     })();

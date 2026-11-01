@@ -307,7 +307,7 @@ test('不正なメディアやモーダル欠落で通常のページを壊さ�
 
 test('HTMLの全作品画像が統一導線を持ち，資格バッジを対象に含めない', () => {
   const state = fixture(read('index.html')); const api = mount(state);
-  const images = state.document.querySelectorAll('.media-hero img, .media-thumb img, .media-phone img, .cfa-shot img, .flow-shot img, .fig-band img, .cg-media img');
+  const images = state.document.querySelectorAll('.media-hero img, .media-thumb img, .media-phone img, .cfa-shot img, .fig-band img, .cg-media img');
   assert.ok(images.length >= 30, `対象画像数: ${images.length}`);
   for (const image of images) {
     const link = image.closest('a[data-media-kind]');

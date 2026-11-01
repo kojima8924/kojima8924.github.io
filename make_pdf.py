@@ -341,8 +341,8 @@ def _postprocess_document(document, mode: str, local_origin: str | None) -> None
 def _postprocess_pdf(output: Path, mode: str = "full", *, local_origin: str | None = None) -> int:
     """output の PDF に配布用の後処理を施して置き換え、新しいサイズを返す。
 
-    後処理（_postprocess_document）はメタデータ設定・資格画像の保護・小さな画像の復元・
-    ローカルリンクの書換・埋め込み画像の再圧縮。
+    後処理の内容と順序は _postprocess_document を参照（再圧縮の後に資格画像・小さな画像を
+    復元し、最後にローカルリンクを書き換える）。
     """
 
     try:

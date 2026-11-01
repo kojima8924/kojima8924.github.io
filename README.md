@@ -144,11 +144,11 @@ python make_ogp.py
 python scripts/check_portfolio.py             # HTML内部の検査
 python scripts/check_portfolio.py --external  # 外部リンクの到達確認も行う
 python scripts/import_figures.py --check      # 図版の参照元PDF欠損・SVGの更新要否を確認
-python -m unittest discover -s tests -v       # Pythonの回帰テスト（検査スクリプト・PDF後処理・図版取込・活動欄）．リポジトリ直下で実行
+python -m unittest discover -s tests -v       # Pythonの回帰テスト（検査スクリプト・PDF後処理・図版取込・活動欄・OGP画像寸法）．リポジトリ直下で実行
 node --test tests/*.test.cjs   # 無通信の質問対応UI・メディア表示検査（Node 21以降）
 ```
 
-重複ID，内部anchor切れ，ローカル参照切れ，alt欠落，`rel`不足，shields.io残存，プロジェクト名の表記揺れ，研究数値の誤解表現などを検査します．AtCoder／paizaの表記検査は表示テキストにのみ適用し，URLを誤検出しません．
+重複ID，内部anchor切れ，ローカル参照切れ，alt欠落，`rel`不足，shields.io残存，プロジェクト名の表記揺れ，研究数値の誤解表現などを検査します．あわせて，資格表記（JSON-LDの`hasCredential`・プロフィール・`#career`・検査表）の同期，プロフィールのAtCoder最高レーティング・上位%と検査表の一致，`<title>`・OGP・Twitter Cardのtitle／description／image／image:altの一致，「画像を拡大：」ラベルと子imgのaltの一致を確認します．AtCoder／paizaの表記検査は表示テキストにのみ適用し，URLを誤検出しません．
 
 `import_figures.py --check`は参照元PDFからSVGをメモリ内で生成し，改行を正規化して既存SVGと内容を比較します．参照元PDF・出力SVGの欠損，または内容の差異があれば終了コード1を返します．内容比較にはPyMuPDFが必要です．ファイルの更新時刻は判定に使いません．
 

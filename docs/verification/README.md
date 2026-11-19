@@ -12,6 +12,21 @@
 | `axe-core.json` | 「2026-10-03：AI質問機能（portfolio-assistant）の作品紹介を追加」 | `19f18aa`（2026-09-30） | violations 0件（両テーマ）．2026-10-03に再出力したが前回と内容が同一のため，ファイルの最終コミットは2026-09-30の「axe-coreとW3C Nuの再実行」のまま |
 | `check_portfolio.log` | 「2026-09-19の保存済み結果（旧構成）」 | `eceb378`（2026-09-19） | エラー0・警告0（ID 15個・画像43枚・外部リンク18件） |
 
+## 2026-11-20：Triviumの作問検証の表現を一次情報（同じモデルへの別の呼び出し）に合わせる
+
+Triviumの作品紹介で，生成問題の解き直しを「別AI」「別のAI」と書いていた2箇所を直しました．一次情報は公開リポジトリ`trivium-ai`（確認版`8a8e75e`）の`README.md`86〜87行（Pythonの出力予測はコード実行で照合，バグ発見問題は構文チェック，それ以外の選択式は「正解を見ずに解く別の呼び出し」である独立したソルバー），`scripts/stock/verify.mts`93〜95行（`parse(SOLVER_MODEL, SOLVER_ROLE, …)`），`scripts/stock/config.mts`12〜13行（`GEN_MODEL`と`SOLVER_MODEL`は同じ値），`scripts/stock/codex.mts`46・83行（既定のCodex CLI経路では全呼び出しが同じ`CODEX_MODEL`）です．解き直しは生成と同じモデルへの，正解を伏せた別の呼び出しであり，別のAI（別モデル）ではありません．回答ナレッジ（`portfolio-assistant`の`knowledge/docs/trivium.md`）の表現とも揃えています．
+
+- 常時表示の「設計判断」は「生成問題はコード実行や，正解を伏せた解き直しで検証し，基準を満たしたものだけ採用．」としました．「別の呼び出し（独立したソルバー）による」まで書くと採用向けPDFが3ページ（3ページ目は連絡先の1行だけ）になったため，詳しい説明は完全版の折りたたみに任せています．「や」の後の読点は，「コード実行や正解を伏せた」と続けて読まれないためです．
+- 完全版の「生成問題の採否」は「Pythonの出力予測問題はコード実行で解答を照合．それ以外の選択式は，正解を伏せた別の呼び出し（独立したソルバー）で解き直して一致を確認しました．」としました．旧文の「Python問題」はバグ発見問題まで含めて読めたため，範囲を出力予測問題に限っています（バグ発見問題も構文チェックの後に独立したソルバーを通ります）．
+- `scripts/check_portfolio.py`の禁止表現に，解き直しを別AI・別モデルと読める表現（`別の?(?:AI|モデル)[^。．.\n]{0,12}解き直`）を加え，`tests/test_check_portfolio.py`に検出4例・許容3例のテストを追加しました．この規則はHEADの`index.html`の旧表現2件を検出し，現行版では0件です．
+- `make_pdf.py`は，採用向けPDFが2ページを超えたときに標準エラーへ警告を出すようにしました（PDFは出力し，終了コードは0のまま）．`tests/test_make_pdf.py`に3件のテストを追加し，`README.md`にも記載しました．
+- `python -m unittest discover -s tests`は87件成功．`node --test tests/*.test.cjs`は62件成功・失敗0・skip 0．`python scripts/import_figures.py --check`は更新要0件・参照元PDF欠損0件でした．`git diff --check`は指摘なしです．
+- 内部検査（`scripts/check_portfolio.py`）は未実行です．スクリプトがメールアドレスを含むため，実行環境のプライバシー用プラグインが実行を拒否しました．本人の手元での実行結果を確認するまで，この版の内部検査は成功扱いにしません．
+- `python make_pdf.py`で両PDFを再生成しました．採用向けは2ページ・451,541 bytes，完全版は8ページ・1,375,943 bytesです．PyMuPDFの本文抽出で，両版とも「別AI」「別のAI」は0件，新しい表現は採用向け2ページ目・完全版3ページ目にあります．採用向けの該当行は1行に収まっています（右端約503.6pt）．URIリンクは採用向け14件・完全版60件（ほかにページ内移動1件）で，`127.0.0.1`を指すリンクは両版とも0件です．
+- HEADのPDFと60dpiで画素比較し，差分は採用向け2ページ目・完全版3ページ目だけでした（他の8ページは同一）．差分のあるページを80dpiで画像化して目視し，文字切れ・重なり・改ページの変化がないことを確認しました．確認画像はGit対象外の`tmp/trivium-solver-20261120/`にあります．
+- Playwrightでのviewport・横はみ出し確認，axe-core，W3C Nu，`--external`，実機検証，GitHub Pages公開後の確認は未実施です．文面だけの変更で，DOM構造・CSSは変えていません．
+- 残課題：`media/fig/trivium-flow.svg`（`index.html`からは未参照だがGit追跡・公開対象）は，slide側の元PDFに合わせて「選択式: 正解を伏せた別のAIが解き直して一致を確認」の旧表現をグリフ輪郭として含みます．文字列検索では見つからないため，上の検査規則でも検出できません．`trivium-ai`の`scripts/stock/gen_stock.mts`12〜13行のコメント（独立ソルバー「gpt-5.5」，レビュー担当「gpt-5.4-mini」）も`config.mts`と食い違ったままです．どちらもこの作業では変更していません．
+
 ## 2026-10-27：AWS Certified Cloud Practitioner のCredly検証リンクとバッジを追加
 
 2026-10-26に検証リンク・バッジ画像なしで掲載したAWS Certified Cloud Practitionerに，Credlyの検証リンク（`https://www.credly.com/badges/0045d984-825f-4110-bc04-3f929dbd961f/public_url`）とデジタルバッジを追加しました．CredlyのOpen Badges assertionで，バッジ名「AWS Certified Cloud Practitioner」・発行日2026-10-26・受領者ハッシュが既存のAI Practitionerバッジと同一であることを確認しています．扱いはAI Practitionerに揃え，Heroの資格欄の表記をCredlyへのリンク（新しいタブ・`noopener noreferrer`・末尾↗）にし，JSON-LDの`hasCredential`に`url`を追加し，詳細経歴のバッジ列にAI Practitionerの直後へバッジ（`media/badge-aws-cloud-practitioner.png`，Credly公式の600×600 PNGをPillowのLanczos法で256×256 RGBAへ縮小．図柄の改変なし・36,301 bytes）を置きました．詳細経歴の資格の段落の文字列は，AI Practitionerと同じくリンクなしのままです．G検定・GitHub Foundationsの扱いは変えていません．

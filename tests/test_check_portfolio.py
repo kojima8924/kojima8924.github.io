@@ -206,6 +206,35 @@ class 非公開作品の掲載検査テスト(unittest.TestCase):
                 self.assertIsNone(re.search(self.pattern, text))
 
 
+class Trivium解き直し表現検査テスト(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.pattern = next(
+            pattern
+            for pattern, reason in check_portfolio.FORBIDDEN_PATTERNS
+            if reason.startswith("Trivium の解き直しを別AI")
+        )
+
+    def test_別AIや別モデルによる解き直しを検出する(self) -> None:
+        for text in (
+            "コード実行や別AIによる解き直しで検証し",
+            "選択式は正解を伏せた別のAIが解き直して一致を確認",
+            "別モデルで解き直し",
+            "別のAIが問題を解き直し",
+        ):
+            with self.subTest(text=text):
+                self.assertIsNotNone(re.search(self.pattern, text))
+
+    def test_同じモデルへの別の呼び出しの表現と無関係な別モデルは許容する(self) -> None:
+        for text in (
+            "生成問題はコード実行や，正解を伏せた解き直しで検証し",
+            "正解を伏せた別の呼び出し（独立したソルバー）で解き直して一致を確認",
+            "モデル障害時も別モデルへ自動で切り替えません．回答は解き直しません",
+        ):
+            with self.subTest(text=text):
+                self.assertIsNone(re.search(self.pattern, text))
+
+
 class Paiza表記検査テスト(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:

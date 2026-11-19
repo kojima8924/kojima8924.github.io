@@ -42,6 +42,19 @@ class 出力名規則テスト(unittest.TestCase):
         )
 
 
+class ページ数警告テスト(unittest.TestCase):
+    def test_採用向けが目標ページ数を超えると警告する(self) -> None:
+        warning = make_pdf._page_count_warning("summary", make_pdf.SUMMARY_TARGET_PAGES + 1)
+        self.assertIsNotNone(warning)
+        self.assertIn(f"{make_pdf.SUMMARY_TARGET_PAGES + 1}ページ", warning)
+
+    def test_採用向けが目標ページ数以内なら警告しない(self) -> None:
+        self.assertIsNone(make_pdf._page_count_warning("summary", make_pdf.SUMMARY_TARGET_PAGES))
+
+    def test_完全版はページ数で警告しない(self) -> None:
+        self.assertIsNone(make_pdf._page_count_warning("full", 8))
+
+
 class PDF公開リンク変換テスト(unittest.TestCase):
     origin = "http://127.0.0.1:54321"
 

@@ -125,7 +125,7 @@ python make_pdf.py            # 両方生成（--mode summary|fullで個別生�
 
 採用向けはA4 2ページを目標にしますが，ページ数・サイズは生成時の実測値で確認します．旧版の「2ページ／9ページ」やファイルサイズを，新版の検証結果として流用しません．再生成後に，本文・画像・キャプションの同居，孤立見出し，改ページ，リンク，AI委任と実装経験の区別を全ページで目視確認してください．
 
-生成後，埋め込み画像を150dpi・JPEG品質80へ再圧縮し，実ページ数を表示します．資格バッジと小さいサービスロゴは保護します．`--source`，`--output`，`--timeout`で入出力と待ち時間を変更できます．
+生成後，埋め込み画像を150dpi・JPEG品質80へ再圧縮し，実ページ数を表示します．採用向けが2ページを超えた場合は標準エラーに警告を出します（PDFは出力し，終了コードは0のままなので，警告を見て紙面を確認してください）．資格バッジと小さいサービスロゴは保護します．`--source`，`--output`，`--timeout`で入出力と待ち時間を変更できます．
 
 PDF生成用の一時ローカルサーバーを参照するリンクは，後処理で公開URLへ変換します．外部URL・`mailto:`・PDF内の移動先は変更しません．この区別は回帰テストで検証します．
 
@@ -148,7 +148,7 @@ python -m unittest discover -s tests -v       # Pythonの回帰テスト（検�
 node --test tests/*.test.cjs   # 無通信の質問対応UI・メディア表示検査（Node 21以降）
 ```
 
-重複ID，内部anchor切れ，ローカル参照切れ，alt欠落，`rel`不足，shields.io残存，プロジェクト名の表記揺れ，研究数値の誤解表現などを検査します．あわせて，資格表記（JSON-LDの`hasCredential`・プロフィール・`#career`・検査表）の同期，プロフィールのAtCoder最高レーティング・上位%と検査表の一致，`<title>`・OGP・Twitter Cardのtitle／description／image／image:altの一致，「画像を拡大：」ラベルと子imgのaltの一致を確認します．AtCoder／paizaの表記検査は表示テキストにのみ適用し，URLを誤検出しません．
+重複ID，内部anchor切れ，ローカル参照切れ，alt欠落，`rel`不足，shields.io残存，プロジェクト名の表記揺れ，研究数値の誤解表現，Triviumの作問検証の解き直しを別AI・別モデルと読める表現などを検査します．あわせて，資格表記（JSON-LDの`hasCredential`・プロフィール・`#career`・検査表）の同期，プロフィールのAtCoder最高レーティング・上位%と検査表の一致，`<title>`・OGP・Twitter Cardのtitle／description／image／image:altの一致，「画像を拡大：」ラベルと子imgのaltの一致を確認します．AtCoder／paizaの表記検査は表示テキストにのみ適用し，URLを誤検出しません．
 
 `import_figures.py --check`は参照元PDFからSVGをメモリ内で生成し，改行を正規化して既存SVGと内容を比較します．参照元PDF・出力SVGの欠損，または内容の差異があれば終了コード1を返します．内容比較にはPyMuPDFが必要です．ファイルの更新時刻は判定に使いません．
 

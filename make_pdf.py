@@ -22,6 +22,10 @@ DEFAULT_OUTPUT = PROJECT_ROOT / "media" / "Akira_Kojima_Portfolio.pdf"
 PUBLIC_SITE_URL = "https://kojima8924.github.io/"
 
 
+# 採用向けPDFの目標ページ数（README の PDF 節）。超えても生成物は残し、警告だけ出す
+SUMMARY_TARGET_PAGES = 2
+
+
 def summary_output_for(output: Path) -> Path:
     """完全版の出力パスから採用向けサマリーの出力パス（<stem>_Summary.pdf）を返す。"""
 
@@ -376,6 +380,17 @@ def _write_pdf_atomically(page: object, output: Path) -> int:
     return size
 
 
+def _page_count_warning(mode: str, pages: int) -> str | None:
+    """採用向けPDFが目標ページ数を超えたときの警告文を返す（それ以外は None）。"""
+
+    if mode == "summary" and pages > SUMMARY_TARGET_PAGES:
+        return (
+            f"警告: 採用向けPDFが{pages}ページで、目標の{SUMMARY_TARGET_PAGES}ページを超えています。"
+            "最終ページが連絡先などの数行だけになっていないか確認してください。"
+        )
+    return None
+
+
 def _count_pages(output: Path) -> int:
     """生成後のPDFの実ページ数を返す（README記載との整合確認用）。"""
 
@@ -524,6 +539,9 @@ def main() -> int:
             f"PDF生成完了（{mode}）: {resolved} "
             f"({size / (1024 * 1024):.1f} MiB / {pages}ページ)"
         )
+        warning = _page_count_warning(mode, pages)
+        if warning:
+            print(warning, file=sys.stderr)
     return 0
 
 

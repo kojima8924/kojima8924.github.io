@@ -676,7 +676,7 @@
               <p class="text-muted">読む・書く・論理の3分野から各1問，1日3問をLINEで学ぶサービス．出題・ヒント・講評と学習記録を，LINEとWebで共有します．</p>
               <ul class="case-points">
                 <li><strong>本人の担当：</strong>企画・到達レベルと出題難易度の仕様・検証基準を決定し，統合レビューと本番検証を担当．実装はAIエージェントへ委任．</li>
-                <li><strong>設計判断：</strong>学習指標の集計は決定論，LLMは解釈・生成に限定．生成問題はコード実行や別AIによる解き直しで検証し，基準を満たしたものだけ採用．</li>
+                <li><strong>設計判断：</strong>学習指標の集計は決定論，LLMは解釈・生成に限定．生成問題はコード実行や，正解を伏せた解き直しで検証し，基準を満たしたものだけ採用．</li>
                 <li><strong>検証と公開：</strong>初回コミットから約21時間でLINE・Web・本番デプロイまで完成．単体テスト226件とCIを備え，VPSで稼働しています．</li>
               </ul>
               <p class="tech-line">Next.js / TypeScript / PostgreSQL / LINE / Docker</p>
@@ -701,7 +701,7 @@
           <details class="project-details pdf-full-only">
             <summary>検証基準・サービス構成・追加画面</summary>
             <div class="details-content">
-              <p class="text-muted"><strong>生成問題の採否：</strong>Python問題はコード実行で解答を照合．選択式は正解を伏せた別のAIが解き直して一致を確認しました．計画250スロットのうち246問を採用し，最大3回で基準を満たさなかった4スロットは不採用．課題は手書き63問を含む計309問です．</p>
+              <p class="text-muted"><strong>生成問題の採否：</strong>Pythonの出力予測問題はコード実行で解答を照合．それ以外の選択式は，正解を伏せた別の呼び出し（独立したソルバー）で解き直して一致を確認しました．計画250スロットのうち246問を採用し，最大3回で基準を満たさなかった4スロットは不採用．課題は手書き63問を含む計309問です．</p>
               <p class="text-muted"><strong>品質確認：</strong>DB・APIキー不要の単体テスト226件．CIで型検査・lint・テスト・ビルドを実行し，Dockerワークフローでは本番と同じDockerfileのビルド，PostgreSQLへのマイグレーション，ヘルスチェックを確認します．</p>
               <p class="text-muted"><strong>設計：</strong>LINEには先に短い返信を返し，生成後にプッシュ配信．学習レベルの昇格・降格にはしきい値差を設けています．4人格の担当AI，Googleログイン，教材カタログ145件，実績バッジ61種，設定時刻のリマインドを備えます．初回デプロイまで105コミット，MIT Licenseで公開．</p>
               <p class="tech-line">React / Prisma / OpenAI API（Dify経由も選択可）/ GitHub Actions</p>

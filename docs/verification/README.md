@@ -21,7 +21,7 @@ Triviumの作品紹介で，生成問題の解き直しを「別AI」「別のAI
 - `scripts/check_portfolio.py`の禁止表現に，解き直しを別AI・別モデルと読める表現（`別の?(?:AI|モデル)[^。．.\n]{0,12}解き直`）を加え，`tests/test_check_portfolio.py`に検出4例・許容3例のテストを追加しました．この規則はHEADの`index.html`の旧表現2件を検出し，現行版では0件です．
 - `make_pdf.py`は，採用向けPDFが2ページを超えたときに標準エラーへ警告を出すようにしました（PDFは出力し，終了コードは0のまま）．`tests/test_make_pdf.py`に3件のテストを追加し，`README.md`にも記載しました．
 - `python -m unittest discover -s tests`は87件成功．`node --test tests/*.test.cjs`は62件成功・失敗0・skip 0．`python scripts/import_figures.py --check`は更新要0件・参照元PDF欠損0件でした．`git diff --check`は指摘なしです．
-- 内部検査（`scripts/check_portfolio.py`）は未実行です．スクリプトがメールアドレスを含むため，実行環境のプライバシー用プラグインが実行を拒否しました．本人の手元での実行結果を確認するまで，この版の内部検査は成功扱いにしません．
+- 内部検査（`scripts/check_portfolio.py`）は，Claude Code の実行環境ではスクリプトがメールアドレスを含むためプライバシー用プラグインに拒否されました．公開（push）後に本人が手元で実行し，エラー0件・警告0件（ID 26個・画像36枚・外部リンク26件）を確認しました．外部リンクの到達確認（`--external`）は実行していません．
 - `python make_pdf.py`で両PDFを再生成しました．採用向けは2ページ・451,541 bytes，完全版は8ページ・1,375,943 bytesです．PyMuPDFの本文抽出で，両版とも「別AI」「別のAI」は0件，新しい表現は採用向け2ページ目・完全版3ページ目にあります．採用向けの該当行は1行に収まっています（右端約503.6pt）．URIリンクは採用向け14件・完全版60件（ほかにページ内移動1件）で，`127.0.0.1`を指すリンクは両版とも0件です．
 - HEADのPDFと60dpiで画素比較し，差分は採用向け2ページ目・完全版3ページ目だけでした（他の8ページは同一）．差分のあるページを80dpiで画像化して目視し，文字切れ・重なり・改ページの変化がないことを確認しました．確認画像はGit対象外の`tmp/trivium-solver-20261120/`にあります．
 - Playwrightでのviewport・横はみ出し確認，axe-core，W3C Nu，`--external`，実機検証，GitHub Pages公開後の確認は未実施です．文面だけの変更で，DOM構造・CSSは変えていません．
